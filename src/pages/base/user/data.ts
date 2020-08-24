@@ -12,7 +12,7 @@ export interface TableListItem {
 
 export interface UserDetailInfo {
   key?: number;
-  uuid: string;
+  uuid?: string;
   username: string;
   nickname: string;
   deptID: string,
@@ -20,6 +20,12 @@ export interface UserDetailInfo {
   sex?: string,
   status?: number,
   DeptName?: string
+  createdAt?: number
+}
+
+export interface DisplayUserInfo{
+  Data: UserDetailInfo,
+  Status: string
 }
 
 export interface TableListData {

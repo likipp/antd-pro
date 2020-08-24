@@ -22,7 +22,6 @@ import CreateForm from '@/pages/base/user/components/CreateForm';
 import UpdateForm from '@/pages/base/user/components/UpdateForm';
 import {UserDetailInfo} from './data'
 
-
 const TableList: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalUserVisible, handleUpdateModalVisible] = useState<boolean>(false);
@@ -158,9 +157,8 @@ const TableList: React.FC = () => {
         return defaultRender(_);
       },
       render: (_, row) => [
-        // console.log(row, 'row')
-        <Tag color={row.sex ? "blue" : "magenta"} key={row.uuid}>
-          {row.sex ? "男" : "女"}
+        <Tag color={row.sex ? "magenta" : "blue"} key={row.uuid}>
+          {row.sex ? "女" : "男"}
         </Tag>
       ]
     },
@@ -277,18 +275,21 @@ const TableList: React.FC = () => {
       SetUserInfoVisible('inline')
       queryUserByID(uuid).then(res => {
         setUserInfo({
-          // uuid: res.data.uuid,
-          // username: res.data.username,
-          // nickname: res.data.nickname,
-          // deptID: res.data.deptID
-          userInfo: res.data
+          deptID: res.data.deptID,
+          nickname: res.data.nickname,
+          remark: '',
+          sex: res.data.sex,
+          status: res.data.status,
+          username: res.data.username,
+          createdAt: res.data.createdAt
         })
-        console.log(userInfo, "userInfo")
       })
     } else {
       SetUserInfoVisible('none')
     }
   }
+
+
   useEffect(() => {
     handleMouseUp(userID)
   }, [userID])
@@ -320,7 +321,7 @@ const TableList: React.FC = () => {
               justifyContent: 'flex-end'
             }}
           >
-            <div style={{display:userInfoVisible, width:"400px"}}>
+            <div style={{width:"200px", borderRight: "1px solid #eee"}}>
               <span>组织树</span>
             </div>
             <div
@@ -330,7 +331,7 @@ const TableList: React.FC = () => {
             >
               {dom}
             </div>
-            <UserDetailInfoCard data={userInfo}/>
+            <UserDetailInfoCard Data={userInfo} Status={userInfoVisible}/>
           </div>
         )}
         toolBarRender={() => [
@@ -339,7 +340,8 @@ const TableList: React.FC = () => {
           </Button>
         ]}
         request={(params, sorter, filter) => (
-          queryUser({ ...params, sorter, filter }))}
+          queryUser({ ...params, sorter, filter })
+        )}
         onRow={record => {
           return {
             // 点击行时，显示出用户信息
