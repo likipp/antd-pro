@@ -21,11 +21,7 @@ export interface UserDetailInfo {
   status?: number,
   DeptName?: string
   createdAt?: number
-}
-
-export interface DisplayUserInfo{
-  Data: UserDetailInfo,
-  Status: string
+  updatedAt?: number
 }
 
 export interface TableListData {

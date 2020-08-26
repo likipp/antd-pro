@@ -1,10 +1,11 @@
 import React from 'react';
+import moment from 'moment/moment';
 
 import { Layout, Button, Space,  Row, Col, Avatar, Tag, Divider } from 'antd'
 import { CloseOutlined, ManOutlined, WomanOutlined } from '@ant-design/icons'
 
-import style from './index.less'
 import { UserDetailInfo } from '@/pages/base/user/data';
+import style from './index.less'
 
 interface DisplayUserInfo{
   Data: UserDetailInfo,
@@ -14,7 +15,7 @@ interface DisplayUserInfo{
 const { Header, Footer, Content } = Layout
 
 const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
-  console.log(info, "prp")
+  // const [showDisplay, setDisplay] = useState("none")
   const DemoBox = (props: any) => {
     return (
       <Row>
@@ -26,30 +27,18 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
         </Col>
       </Row>
     )
+  }
+
+  const handleCloseCard = () => {
 
   }
   return (
-    // <div className="details-info" style={{
-    //   width:"400px",
-    //   height: "100%",
-    //   position: "absolute",
-    //   zIndex: 13,
-    //   top: 0,
-    //   display: "block",
-    //   background: "#fff",
-    //   boxSizing: "border-box"
-    //   // transition: all .3s ease
-    // }}>
-    //   <header>
-    //     <p>用户信息</p>
-    //   </header>
-    // </div>
     <Layout className={style.DetailLayout} style={{display: info.Status}}>
       <Header className={style.DetailHeader}>
         <Row>
           <Col span={8}>用户信息</Col>
           <Col span={2} offset={14}>
-            <CloseOutlined/>
+            <CloseOutlined onClick={handleCloseCard}/>
           </Col>
         </Row>
       </Header>
@@ -57,11 +46,8 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
         <Row justify="space-around" align="middle">
           <Col span={4}>
             <Row>
-              {info.Data.sex
-                ? <Avatar size={60} style={{lineHeight: "33px", marginBottom: "10px", backgroundColor: 'red'}}>
+              <Avatar size={60} className={info.Data.sex ? style.Woman : style.Man}>
                   {info.Data.nickname.substring(1)}</Avatar>
-                : <Avatar size={60} style={{lineHeight: "33px", marginBottom: "10px", backgroundColor: '#08c'}}>
-                  {info.Data.nickname.substring(1)}</Avatar>}
             </Row>
           </Col>
           <Col span={16}>
@@ -79,10 +65,15 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
           </Col>
         </Row>
         <DemoBox title="登录名" value="" />
-        <DemoBox title="创建日期" value={info.Data.createdAt} />
+        <DemoBox title="创建日期" value={moment(info.Data.createdAt).format("YYYY-MM-DD hh:mm")} />
+        <DemoBox title="更新日期" value={moment(info.Data.updatedAt).format("YYYY-MM-DD hh:mm")} />
+        <DemoBox title="部门" value="信息部" />
+        <DemoBox title="岗位" value="管理员" />
+        <DemoBox title="上级领导" value={0} />
+        <DemoBox title="下级" value={1} />
         <Divider style={{margin: "10px 0px"}} type="horizontal"/>
       </Content>
-      <Footer className={style.DetailFooter}>
+      <Footer className={style.DetailFooter} style={{textAlign: "center"}}>
         <Space size={5}>
           <Button size="middle">编辑</Button>
           <Button size="middle">启用</Button>

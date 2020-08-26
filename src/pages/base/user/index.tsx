@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { PlusOutlined, EditOutlined, DeleteOutlined, FileTextOutlined, DownOutlined } from '@ant-design/icons'
 import {
   Button,
@@ -270,32 +270,58 @@ const TableList: React.FC = () => {
     //   showDrawer()
     // }
   }
-  function handleMouseUp(uuid: string): void {
-    if (uuid) {
-      SetUserInfoVisible('inline')
-      queryUserByID(uuid).then(res => {
-        setUserInfo({
-          deptID: res.data.deptID,
-          nickname: res.data.nickname,
-          remark: '',
-          sex: res.data.sex,
-          status: res.data.status,
-          username: res.data.username,
-          createdAt: res.data.createdAt
+
+  // function handleMouseUp(uuid: string): void {
+  //   if (uuid) {
+  //     SetUserInfoVisible('inline')
+  //     queryUserByID(uuid).then(res => {
+  //       setUserInfo({
+  //         deptID: res.data.deptID,
+  //         nickname: res.data.nickname,
+  //         remark: '',
+  //         sex: res.data.sex,
+  //         status: res.data.status,
+  //         username: res.data.username,
+  //         createdAt: res.data.createdAt
+  //       })
+  //     })
+  //   } else {
+  //     SetUserInfoVisible('none')
+  //   }
+  // }
+
+  const MouseUp = useCallback((uuid: string) => {
+      if (uuid) {
+        SetUserInfoVisible('inline')
+        queryUserByID(uuid).then(res => {
+          // setUserInfo({
+          //   deptID: res.data.deptID,
+          //   nickname: res.data.nickname,
+          //   remark: '',
+          //   sex: res.data.sex,
+          //   status: res.data.status,
+          //   username: res.data.username,
+          //   createdAt: res.data.createdAt
+          // })
+          setUserInfo(prevState => {
+            return {...prevState, ...res.data}
+          })
         })
-      })
-    } else {
-      SetUserInfoVisible('none')
-    }
-  }
-
-
-  useEffect(() => {
-    handleMouseUp(userID)
+      } else {
+        SetUserInfoVisible('none')
+      }
   }, [userID])
 
+  useEffect(() => {
+    MouseUp(userID)
+  }, [MouseUp])
+
+  // useEffect(() => {
+  //   handleMouseUp(userID)
+  // }, [userID])
+
   return (
-    <PageContainer>
+    <PageContainer style={{minHeight: "645px"}}>
       <ProTable<TableListItem>
         className="userTable"
         id="userTable"
