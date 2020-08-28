@@ -22,6 +22,7 @@ export interface UserDetailInfo {
   DeptName?: string
   createdAt?: number
   updatedAt?: number
+  roles: Array<any>
 }
 
 export interface TableListData {
@@ -35,4 +36,9 @@ export interface TableListParams {
   currentPage?: number;
   filter?: { [key: string]: any[] };
   sorter?: { [key: string]: any };
+}
+
+export interface UserStatus {
+  status: number;
+  uuid: string
 }

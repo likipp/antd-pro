@@ -15,11 +15,11 @@ import { PageContainer } from '@ant-design/pro-layout';
 
 import { TableListItem } from '@/pages/base/user/data';
 // 不需要加{}, 加了会报错 Module '"./components/UserDetailInfoCard"' has no exported member 'UserDetailInfoCard'
-import UserDetailInfoCard from './components/UserDetailInfoCard'
 
 import { queryUser, getDeptTree, queryUserByID } from '@/pages/base/user/service';
 import CreateForm from '@/pages/base/user/components/CreateForm';
 import UpdateForm from '@/pages/base/user/components/UpdateForm';
+import UserDetailInfoCard from './components/UserDetailInfoCard'
 import {UserDetailInfo} from './data'
 
 const TableList: React.FC = () => {
@@ -33,6 +33,7 @@ const TableList: React.FC = () => {
   const [userInfoVisible, SetUserInfoVisible] = useState('none')
   const [userID, SetUserID] = useState('')
   const defaultUserInfo: UserDetailInfo = {
+    roles: [],
     uuid: '',
     username: '',
     nickname: '',
@@ -290,19 +291,28 @@ const TableList: React.FC = () => {
   //   }
   // }
 
+
+
+  // 设置用户卡片的动态显示隐藏
+  const GetAndSetDisplayStatus = (status: string) => {
+    SetUserInfoVisible(status)
+    // actionRef.current.reload()
+  }
+
+  // 通过子组件传递过来用户的状态
+  const GetAndSetUserInfo = (status: number) => {
+    // setUserInfo(prevState => {
+    //   return {...prevState, status}
+    // })
+    setUserInfo(prevState => {
+      return {...prevState, status}
+    })
+  }
+
   const MouseUp = useCallback((uuid: string) => {
       if (uuid) {
         SetUserInfoVisible('inline')
         queryUserByID(uuid).then(res => {
-          // setUserInfo({
-          //   deptID: res.data.deptID,
-          //   nickname: res.data.nickname,
-          //   remark: '',
-          //   sex: res.data.sex,
-          //   status: res.data.status,
-          //   username: res.data.username,
-          //   createdAt: res.data.createdAt
-          // })
           setUserInfo(prevState => {
             return {...prevState, ...res.data}
           })
@@ -357,7 +367,10 @@ const TableList: React.FC = () => {
             >
               {dom}
             </div>
-            <UserDetailInfoCard Data={userInfo} Status={userInfoVisible}/>
+            <UserDetailInfoCard Data={userInfo}
+                                Status={userInfoVisible}
+                                DisplayStatus={GetAndSetDisplayStatus}
+                                UserInfo={GetAndSetUserInfo} />
           </div>
         )}
         toolBarRender={() => [
