@@ -3,11 +3,21 @@ export interface TableListItem {
   uuid: string;
   username: string;
   nickname: string;
-  deptID: string,
-  remark: string,
-  sex: string,
-  status: number,
-  DeptName: string
+  deptID: string;
+  remark: string;
+  sex: string;
+  status: number;
+  DeptName: string;
+}
+
+export interface UserInfo {
+  username: string;
+  nickname: string;
+  deptID: string;
+  remark?: string;
+  sex?: string;
+  status?: number;
+  roles?: Array<any>;
 }
 
 export interface UserDetailInfo {
@@ -15,18 +25,18 @@ export interface UserDetailInfo {
   uuid?: string;
   username: string;
   nickname: string;
-  deptID: string,
-  remark?: string,
-  sex?: string,
-  status?: number,
-  DeptName?: string
-  createdAt?: number
-  updatedAt?: number
-  roles: Array<any>
+  deptID: string;
+  remark?: string;
+  sex?: string;
+  status?: number;
+  DeptName?: string;
+  createdAt?: number;
+  updatedAt?: number;
+  roles: Array<any>;
 }
 
 export interface TableListData {
-  list: TableListItem[]
+  list: TableListItem[];
 }
 
 export interface TableListParams {
@@ -40,5 +50,5 @@ export interface TableListParams {
 
 export interface UserStatus {
   status: number;
-  uuid: string
+  uuid: string;
 }

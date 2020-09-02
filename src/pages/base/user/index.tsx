@@ -18,7 +18,7 @@ import { queryUser, getDeptTree, queryUserByID, CreateUser } from '@/pages/base/
 import CreateForm from '@/pages/base/user/components/CreateForm';
 import UpdateForm from '@/pages/base/user/components/UpdateForm';
 import UserDetailInfoCard from './components/UserDetailInfoCard';
-import { UserDetailInfo } from './data';
+import { UserDetailInfo, UserInfo } from './data';
 
 const { Option } = Select;
 
@@ -257,7 +257,7 @@ const TableList: React.FC = () => {
       dataIndex: 'remark',
       valueType: 'textarea',
       hideInTable: true,
-      fieldProps: {
+      formItemProps: {
         labelCol: {
           xs: { span: 4 },
         },
@@ -440,7 +440,7 @@ const TableList: React.FC = () => {
           onSubmit={async (value) => {
             // console.log(ref.current.getFieldsValue("status"), "status")
             console.log(value);
-            CreateUser(value).then((res) => {
+            CreateUser(value as UserInfo).then((res) => {
               console.log(res, 'res');
             });
           }}
