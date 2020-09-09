@@ -35,9 +35,9 @@ export interface UserDetailInfo {
   roles: Array<any>;
 }
 
-// export interface TableListData {
-//   list: TableListItem[];
-// }
+export interface TableListData {
+  list: TableListItem[];
+}
 
 export interface TableListParams {
   status?: string;

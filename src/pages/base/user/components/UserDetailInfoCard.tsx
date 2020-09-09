@@ -21,7 +21,7 @@ const { Header, Footer, Content } = Layout;
 const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
   const { Data, Status, DisplayStatus, UserInfo } = info;
   const [initUUID, setUUID] = useState('');
-  const [initUserStatus, setUserStatusState] = useState(0);
+  const [initUserStatus, setUserStatusState] = useState(Data.status);
   const DemoBox = (props: any) => {
     return (
       <Row>
@@ -52,15 +52,16 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
 
   // useEffect({}, [info.Data.status])
   useEffect(() => {
-    const a = {
-      uuid: initUUID,
-      status: initUserStatus,
-    };
-    setUserStatus(a).then((res) => {
-      message.success(res.msg);
-    });
-    // DisplayStatus(Status)
-    UserInfo(initUserStatus);
+    if (typeof initUserStatus === 'number') {
+      setUserStatus({
+        uuid: initUUID,
+        status: initUserStatus,
+      }).then((res) => {
+        message.success(res.msg);
+      });
+      // DisplayStatus(Status)
+      UserInfo(initUserStatus);
+    }
   }, [initUserStatus]);
   return (
     <Layout className={style.DetailLayout} style={{ display: Status }}>

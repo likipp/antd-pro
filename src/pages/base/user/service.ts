@@ -2,7 +2,7 @@ import { request } from 'umi';
 import { TableListParams, UserStatus, UserInfo } from './data';
 
 export async function queryUser(params?: TableListParams) {
-  return request('/api/v1/base/users/?page=1&test=3', {
+  return request('/api/v1/base/users/?page=1&pageSize=3', {
     params,
   });
 }
@@ -31,5 +31,11 @@ export async function CreateUser(params: UserInfo) {
       'content-type': 'application/json',
       // 'Content-Type': 'application/x-www-form-urlencoded',
     },
+  });
+}
+
+export async function DeleteUser(params: string) {
+  return request(`/api/v1/base/users/${params}`, {
+    method: 'DELETE',
   });
 }
