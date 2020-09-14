@@ -59,8 +59,8 @@ const Login: React.FC<{}> = () => {
     try {
       // 登录
       const msg = await fakeAccountLogin({ ...values, type });
-      console.log(msg, 'msg');
-      if (msg.msg === '操作成功') {
+      console.log(msg, 'msg1111');
+      if (msg.code === 7) {
         message.success('登录成功！');
         replaceGoto();
         setTimeout(() => {

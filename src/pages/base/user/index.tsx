@@ -107,38 +107,38 @@ const TableList: React.FC = () => {
     {
       title: '帐号',
       dataIndex: 'username',
-      // fieldProps: {
-      //   rules: [
-      //     {
-      //       required: true,
-      //       message: '帐号',
-      //     },
-      //   ],
-      //   labelCol: {
-      //     xs: { span: 4 },
-      //   },
-      //   wrapperCol: {
-      //     xs: { span: 20 },
-      //   },
-      // },
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '帐号',
+          },
+        ],
+        labelCol: {
+          xs: { span: 4 },
+        },
+        wrapperCol: {
+          xs: { span: 20 },
+        },
+      },
     },
     {
       title: '姓名',
       dataIndex: 'nickname',
-      // fieldProps: {
-      //   rules: [
-      //     {
-      //       required: true,
-      //       message: '姓名不能为空',
-      //     },
-      //   ],
-      //   labelCol: {
-      //     xs: { span: 4 },
-      //   },
-      //   wrapperCol: {
-      //     xs: { span: 20 },
-      //   },
-      // },
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '姓名不能为空',
+          },
+        ],
+        labelCol: {
+          xs: { span: 4 },
+        },
+        wrapperCol: {
+          xs: { span: 20 },
+        },
+      },
     },
     {
       title: '状态',
@@ -148,15 +148,15 @@ const TableList: React.FC = () => {
         0: { text: '禁用', status: 'Error' },
         1: { text: '启用', status: 'Success' },
       },
-      // fieldProps: {
-      //   labelCol: {
-      //     xs: { span: 4 },
-      //   },
-      //   wrapperCol: {
-      //     xs: { span: 20 },
-      //   },
-      //   initialValues: 1,
-      // },
+      formItemProps: {
+        labelCol: {
+          xs: { span: 4 },
+        },
+        wrapperCol: {
+          xs: { span: 20 },
+        },
+        // initialValues: 1,
+      },
       renderFormItem: (_, { type, defaultRender }) => {
         // console.log('item:', _);
         // console.log('config:', { type, defaultRender, ...rest });
@@ -168,7 +168,7 @@ const TableList: React.FC = () => {
             });
           }
           return (
-            <Select defaultValue={1} allowClear onChange={handleSelectStatus}>
+            <Select allowClear onChange={handleSelectStatus}>
               <Option value={0}>禁用</Option>
               <Option value={1}>启用</Option>
             </Select>
@@ -181,15 +181,15 @@ const TableList: React.FC = () => {
       title: '性别',
       dataIndex: 'sex',
       filters: true,
-      // fieldProps: {
-      //   labelCol: {
-      //     xs: { span: 4 },
-      //   },
-      //   wrapperCol: {
-      //     xs: { span: 20 },
-      //   },
-      //   initialValues: 0,
-      // },
+      formItemProps: {
+        labelCol: {
+          xs: { span: 4 },
+        },
+        wrapperCol: {
+          xs: { span: 20 },
+        },
+        // initialValues: 0,
+      },
       renderFormItem: (_, { type, defaultRender }) => {
         if (type === 'form') {
           if (ref.current !== undefined) {
@@ -215,14 +215,16 @@ const TableList: React.FC = () => {
     {
       title: '部门',
       dataIndex: 'deptID',
-      // fieldProps: {
-      //   labelCol: {
-      //     xs: { span: 4 },
-      //   },
-      //   wrapperCol: {
-      //     xs: { span: 20 },
-      //   },
-      // },
+      formItemProps: {
+        labelCol: {
+          xs: { span: 4 },
+        },
+        wrapperCol: {
+          xs: { span: 20 },
+        },
+        validateStatus: 'validating',
+        hasFeedback: true,
+      },
       renderFormItem: (_, { type, defaultRender }) => {
         if (type === 'form') {
           return (
@@ -258,11 +260,6 @@ const TableList: React.FC = () => {
             />
           );
         }
-        // if (type === 'table') {
-        //   return (
-        //
-        //   )
-        // }
         return defaultRender(_);
       },
       render: (_, row) => [<span key={row.uuid}>{row.DeptName}</span>],
@@ -272,23 +269,17 @@ const TableList: React.FC = () => {
       dataIndex: 'remark',
       valueType: 'textarea',
       hideInTable: true,
-      fieldProps: {
+      formItemProps: {
         labelCol: {
           xs: { span: 4 },
         },
         wrapperCol: {
           xs: { span: 20 },
         },
-        rules: [
-          {
-            required: true,
-            message: '帐号',
-          },
-        ],
       },
       renderFormItem: (_, { type, defaultRender }) => {
         if (type === 'form') {
-          return <Input placeholder="Basic usage" />;
+          return <Input placeholder="请输入描述" />;
         }
         return defaultRender(_);
       },
@@ -354,7 +345,6 @@ const TableList: React.FC = () => {
   // 设置用户卡片的动态显示隐藏
   const GetAndSetDisplayStatus = (status: string) => {
     SetUserInfoVisible(status);
-    // actionRef.current.reload()
   };
 
   // 通过子组件传递过来用户的状态， 卡片上的按钮及状态Tag实时变更
@@ -385,6 +375,19 @@ const TableList: React.FC = () => {
     [userID],
   );
 
+  // 设置loading条件，获取用户列表，
+  useEffect(() => {
+    setLoading(true);
+    queryUser().then((res) => {
+      setDataSource(res.data);
+      setLoading(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    MouseUp(userID);
+  }, [MouseUp]);
+
   // 删除用户
   const handleDeleteUser = async () => {
     const hide = message.loading('正在删除');
@@ -400,19 +403,6 @@ const TableList: React.FC = () => {
       message.error(error);
     }
   };
-
-  // 设置loading条件，获取用户列表，
-  useEffect(() => {
-    setLoading(true);
-    queryUser().then((res) => {
-      setDataSource(res.data);
-      setLoading(false);
-    });
-  }, []);
-
-  useEffect(() => {
-    MouseUp(userID);
-  }, [MouseUp]);
 
   return (
     <PageContainer style={{ minHeight: '645px' }}>
@@ -434,12 +424,21 @@ const TableList: React.FC = () => {
             </Space>
           );
         }}
-        //   (
-        //   // SetSelectUserID({...selectedRowKeys})
-        //   <Space size={24}>
-        //     <span>已选 {selectedRowKeys.length} 项</span>
-        //   </Space>
-        // )}
+        options={{
+          // reload: () => {
+          //   setLoading(true);
+          //   // setTimeout(() => {
+          //   //   console.log("刷新了")
+          //   //   setLoading(false);
+          //   // }, 1000)
+          //   queryUser().then((res) => {
+          //     setDataSource(res.data);
+          //     setLoading(false);
+          //   });
+          // },
+          fullScreen: false,
+          setting: false,
+        }}
         tableAlertOptionRender={(props) => {
           const { onCleanSelected } = props;
           return (
@@ -481,6 +480,16 @@ const TableList: React.FC = () => {
           </div>
         )}
         toolBarRender={() => [
+          <Button
+            onClick={() => {
+              queryUser().then((res) => {
+                setDataSource(res.data);
+                setLoading(false);
+              });
+            }}
+          >
+            刷新
+          </Button>,
           <Button type="primary" onClick={() => handleModalVisible(true)}>
             新建
           </Button>,
@@ -489,13 +498,18 @@ const TableList: React.FC = () => {
             onClick={async () => {
               await handleDeleteUser();
               setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
+              // actionRef.current?.reload?.();
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
             }}
           >
             删除
           </Button>,
         ]}
-        // request={(params, sorter, filter) => queryUser({ ...params, sorter, filter })}
+        // 使用request时， actionRef.current.reload()可以生效
+        // request={(params, sorter, filter) => queryUser()}
+        // 使用dataSource时， actionRef.current.reload()不能生效， 需要手动重新获取列表
         dataSource={dataSource}
         onRow={(record) => {
           return {
@@ -520,6 +534,9 @@ const TableList: React.FC = () => {
             CreateUser(value as UserInfo).then((res) => {
               console.log(res, 'res');
             });
+          }}
+          form={{
+            layout: 'vertical',
           }}
         />
       </CreateForm>
