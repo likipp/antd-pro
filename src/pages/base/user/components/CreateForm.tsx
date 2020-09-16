@@ -12,13 +12,14 @@ const CreateForm: React.FC<CreateFormProps> = (props) => {
     <Modal
       destroyOnClose
       title="新增用户"
-        visible={modalVisible}
-        onCancel={() => onCancel()}
-        footer={null }
+      width={700}
+      visible={modalVisible}
+      onCancel={() => onCancel()}
+      footer={null}
     >
       {props.children}
     </Modal>
   );
 };
 
-export default CreateForm
+export default CreateForm;

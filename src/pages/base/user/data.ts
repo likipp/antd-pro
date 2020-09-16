@@ -1,3 +1,7 @@
+export interface RolesItem {
+  id: number;
+}
+
 export interface TableListItem {
   key: number;
   uuid: string;
@@ -8,6 +12,7 @@ export interface TableListItem {
   sex: string;
   status: number;
   DeptName: string;
+  roles: RolesItem[];
 }
 
 export interface UserInfo {
