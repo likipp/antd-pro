@@ -12,7 +12,7 @@ export interface TableListItem {
   sex: string;
   status: number;
   DeptName: string;
-  roles: RolesItem[];
+  roles: number[];
 }
 
 export interface UserInfo {
@@ -56,4 +56,9 @@ export interface TableListParams {
 export interface UserStatus {
   status: number;
   uuid: string;
+}
+
+export interface Page {
+  pageSize: number;
+  current: number;
 }
