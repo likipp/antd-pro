@@ -2,7 +2,7 @@ import { request } from 'umi';
 import { TableListParams, UserStatus, UserInfo } from './data';
 
 export async function queryUser(params?: TableListParams) {
-  console.log(params, 'params');
+  console.log(params, 'queryUser API');
   return request('/api/v1/base/users', {
     params,
   });
