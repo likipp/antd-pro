@@ -12,7 +12,7 @@ export interface TableListItem {
   sex: string;
   status: number;
   DeptName: string;
-  roles: number[];
+  roles: Array<any>;
 }
 
 export interface UserInfo {
