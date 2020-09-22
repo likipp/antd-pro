@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { EditOutlined, DeleteOutlined, FileTextOutlined, DownOutlined } from '@ant-design/icons';
 import {
+  Transfer,
   Button,
   Divider,
   Menu,
@@ -27,15 +28,18 @@ import {
   CreateUser,
   DeleteUser,
 } from '@/pages/base/user/service';
+import { queryRole } from '@/pages/base/role/service'
 import CreateForm from '@/pages/base/user/components/CreateForm';
 import UpdateForm from '@/pages/base/user/components/UpdateForm';
+import {TransferItem} from "antd/es/transfer";
 import UserDetailInfoCard from './components/UserDetailInfoCard';
-import { UserDetailInfo, UserInfo } from './data';
+import { UserDetailInfo, UserInfo, Page, RolesItem } from './data';
 
 const { Option } = Select;
 
 const TableList: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  // const [transferLoading, setTransferLoading] = useState(true);
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalUserVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
@@ -46,13 +50,11 @@ const TableList: React.FC = () => {
   const [userInfoVisible, SetUserInfoVisible] = useState('none');
   const [userID, SetUserID] = useState('');
   const [selectedRowsState, setSelectedRows] = useState<string[]>([]);
-  // const defaultUserInfo: UserDetailInfo = {
-  //   roles: [],
-  //   uuid: '',
-  //   username: '',
-  //   nickname: '',
-  //   deptID: '',
-  // };
+
+  // const [oneWay, setOneWay] = useState(false);
+  const [sourceData, setSourceData] = useState<TransferItem[]>();
+  const [targetKeys, setTargetKeys] = useState<string[]>();
+  const [targetData, setTargetData] = useState<RolesItem[]>([])
   const [userInfo, setUserInfo] = useState<UserDetailInfo>({
     roles: [],
     uuid: '',
@@ -63,9 +65,12 @@ const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const ref = useRef<FormInstance>();
   const [dataSource, setDataSource] = useState<TableListItem[]>([]);
+  const [initPageInfo, setPageInfo] = useState<Page>({pageSize: 5, current: 1})
+  // const [initStatus, setStatus] = useState(undefined)
+  // const [transferSource, setTransferSource] = useState([]);
 
   const menu = (
-    <Menu onClick={handleMenuClick}>
+    <Menu>
       <Menu.Item key="1" icon={<FileTextOutlined />}>
         详情
       </Menu.Item>
@@ -93,8 +98,38 @@ const TableList: React.FC = () => {
     });
   };
 
-  const handleSelectStatus = (value: number) => {
-    console.log(value, '选中值');
+  // const handleSelectStatus = (value: number) => {
+  //   console.log(value, '选中值');
+  // };
+
+  useEffect(() => {
+    const newTargetKeys: string[] =[];
+    const newMockData: TransferItem[] = [];
+    queryRole().then((res) => {
+      for (let i = 0; i < res.data.length; i += 1) {
+        const data: TransferItem = {
+          key: res.data[i].ID,
+          title: res.data[i].roleName,
+          name: res.data[i].roleName,
+        };
+        newMockData.push(data);
+      }
+    })
+    setTargetKeys(newTargetKeys);
+    setSourceData(newMockData);
+  }, []);
+
+  const handleChange = (newTargetKeys: string[]) => {
+    // console.log(newTargetKeys, direction, moveKeys, newTargetKeys.length);
+    const newTarData: any[] = []
+    for (let i = 0; i < newTargetKeys.length; i += 1) {
+      const tarData = {
+        id: newTargetKeys[i]
+      }
+      newTarData.push(tarData)
+    }
+    setTargetData(newTarData)
+    setTargetKeys(newTargetKeys);
   };
 
   const columns: ProColumns<TableListItem>[] = [
@@ -108,6 +143,7 @@ const TableList: React.FC = () => {
       title: '帐号',
       dataIndex: 'username',
       formItemProps: {
+        hasFeedback: true,
         rules: [
           {
             required: true,
@@ -126,6 +162,7 @@ const TableList: React.FC = () => {
       title: '姓名',
       dataIndex: 'nickname',
       formItemProps: {
+        hasFeedback: true,
         rules: [
           {
             required: true,
@@ -149,6 +186,7 @@ const TableList: React.FC = () => {
         1: { text: '启用', status: 'Success' },
       },
       formItemProps: {
+        hasFeedback: true,
         labelCol: {
           xs: { span: 4 },
         },
@@ -162,13 +200,13 @@ const TableList: React.FC = () => {
         // console.log('config:', { type, defaultRender, ...rest });
         // console.log('form:', form);
         if (type === 'form') {
-          if (ref.current !== undefined) {
-            ref.current.setFieldsValue({
-              status: 1,
-            });
-          }
+          // if (ref.current !== undefined) {
+          //   ref.current.setFieldsValue({
+          //     status: 1,
+          //   });
+          // }
           return (
-            <Select allowClear onChange={handleSelectStatus}>
+            <Select defaultValue={1}>
               <Option value={0}>禁用</Option>
               <Option value={1}>启用</Option>
             </Select>
@@ -182,21 +220,21 @@ const TableList: React.FC = () => {
       dataIndex: 'sex',
       filters: true,
       formItemProps: {
+        hasFeedback: true,
         labelCol: {
           xs: { span: 4 },
         },
         wrapperCol: {
           xs: { span: 20 },
         },
-        // initialValues: 0,
       },
       renderFormItem: (_, { type, defaultRender }) => {
         if (type === 'form') {
-          if (ref.current !== undefined) {
-            ref.current.setFieldsValue({
-              sex: 0,
-            });
-          }
+          // if (ref.current !== undefined) {
+          //   ref.current.setFieldsValue({
+          //     sex: 0,
+          //   });
+          // }
           return (
             <Radio.Group defaultValue={0}>
               <Radio value={0}>男</Radio>
@@ -222,8 +260,11 @@ const TableList: React.FC = () => {
         wrapperCol: {
           xs: { span: 20 },
         },
-        validateStatus: 'validating',
         hasFeedback: true,
+        rules: [
+          // eslint-disable-next-line prefer-promise-reject-errors
+          { validator:(_, value) => value ? Promise.resolve() : Promise.reject('请至少选择一个所属部门') }
+        ]
       },
       renderFormItem: (_, { type, defaultRender }) => {
         if (type === 'form') {
@@ -263,6 +304,31 @@ const TableList: React.FC = () => {
         return defaultRender(_);
       },
       render: (_, row) => [<span key={row.uuid}>{row.DeptName}</span>],
+    },
+    {
+      title: '角色',
+      dataIndex: 'roles',
+      hideInTable: true,
+      formItemProps: {
+        labelCol: {
+          xs: { span: 4 },
+        },
+        wrapperCol: {
+          xs: { span: 20 },
+        },
+      },
+      renderFormItem: (_, { type, defaultRender }) => {
+        if (type === 'form') {
+          return <Transfer
+            dataSource={sourceData}
+            targetKeys={targetKeys}
+            onChange={handleChange}
+            render={item => item.title as string}
+            pagination
+          />
+        }
+        return defaultRender(_);
+      },
     },
     {
       title: '描述',
@@ -316,12 +382,6 @@ const TableList: React.FC = () => {
     },
   ];
 
-  function handleMenuClick(e: any) {
-    console.log(e, 'e', typeof e);
-    // if (e.key === '1') {
-    //   showDrawer()
-    // }
-  }
 
   // function handleMouseUp(uuid: string): void {
   //   if (uuid) {
@@ -380,9 +440,15 @@ const TableList: React.FC = () => {
     setLoading(true);
     queryUser().then((res) => {
       setDataSource(res.data);
+      // console.log(dataSource)
       setLoading(false);
     });
   }, []);
+
+  // useEffect(() => {
+  //   setTransferLoading(true);
+  //
+  // })
 
   useEffect(() => {
     MouseUp(userID);
@@ -400,9 +466,19 @@ const TableList: React.FC = () => {
         });
       }
     } catch (error) {
-      // message.error(error);
+      message.error(error);
     }
   };
+
+  // 页码发生变化时回调的方法
+  const pageOnChange = (pageNumber: number, pageSize: number | undefined) => {
+    setPageInfo({pageSize: pageSize as number, current: pageNumber as number})
+
+  }
+  // 页面条目数量变化时回调方法
+  const pageSizeOnChange = (current: number, size: number) => {
+    setPageInfo({pageSize: size, current})
+  }
 
   return (
     <PageContainer style={{ minHeight: '645px' }}>
@@ -414,6 +490,7 @@ const TableList: React.FC = () => {
         loading={loading}
         columns={columns}
         actionRef={actionRef}
+        dataSource={dataSource}
         rowSelection={{
           onChange: (selectedRowKeys) => setSelectedRows(selectedRowKeys as string[]),
         }}
@@ -510,7 +587,8 @@ const TableList: React.FC = () => {
         // 使用request时， actionRef.current.reload()可以生效
         // request={(params, sorter, filter) => queryUser()}
         // 使用dataSource时， actionRef.current.reload()不能生效， 需要手动重新获取列表
-        dataSource={dataSource}
+        request={(params, sorter, filter) => queryUser({ ...initPageInfo, sorter, filter })}
+        // dataSource={dataSource}
         onRow={(record) => {
           return {
             // 点击行时，显示出用户信息
@@ -519,6 +597,15 @@ const TableList: React.FC = () => {
             },
             // onMouseLeave: () => {SetUserID(0)}
           };
+        }}
+        pagination={{
+          showSizeChanger: true,
+          showQuickJumper: true,
+          // hideOnSinglePage: true,
+          defaultPageSize: 5,
+          onChange: pageOnChange,
+          onShowSizeChange: pageSizeOnChange,
+          // pageSizeOptions: ['3', '6', '9', '12', '15']
         }}
       />
 
@@ -529,11 +616,17 @@ const TableList: React.FC = () => {
           columns={columns}
           formRef={ref}
           onSubmit={async (value) => {
-            // console.log(ref.current.getFieldsValue("status"), "status")
-            // console.log(value);
-            CreateUser(value as UserInfo).then((res) => {
-              console.log(res, 'res');
-            });
+            // ES建议不修改原始数据, 所以重新创建了一个变更接收数据
+            const temValue: UserInfo = value
+            temValue.roles = targetData
+            CreateUser(temValue).then((res) => {
+              if (res.code === 0) {
+                message.success(res.msg)
+                handleModalVisible(false)
+              } else {
+                message.error(res.msg)
+              }
+            })
           }}
           form={{
             layout: 'vertical',
