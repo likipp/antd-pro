@@ -2,9 +2,22 @@ import { request } from 'umi';
 import { TableListParams, UserStatus, UserInfo } from './data';
 
 export async function queryUser(params?: TableListParams) {
-  return request('/api/v1/base/users', {
-    params,
-  });
+  console.log(params?.filter === undefined, 'params', params?.filter);
+  if (params?.filter !== undefined) {
+    if (Object.keys(params.filter).length) {
+      console.log(Object.keys(params.filter).length, 'filter', params.filter.status[0]);
+      return request('/api/v1/base/users', {
+        params: {
+          current: params.currentPage,
+          pageSize: params.pageSize,
+          status: params.filter.status[0],
+        },
+      });
+    }
+
+    return request('/api/v1/base/users', { params });
+  }
+  return request('/api/v1/base/users', { params });
 }
 
 export async function queryUserByID(params: string) {

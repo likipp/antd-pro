@@ -7,7 +7,6 @@ import { DeptListItem } from '@/pages/base/department/data';
 import { queryDept } from '@/pages/base/department/service';
 
 const DeptList: React.FC<{}> = () => {
-
   const treeData = [
     {
       title: 'parent 1',
@@ -38,33 +37,20 @@ const DeptList: React.FC<{}> = () => {
     },
   ];
 
-
   const columns: ProColumns<DeptListItem>[] = [
     {
       title: '名称',
       dataIndex: 'deptName',
-      rules: [
-        {
-          required: true,
-          message: '名称不能为空'
-        }
-      ]
     },
     {
       title: '状态',
       dataIndex: 'status',
       valueEnum: {
         0: { text: '禁用', status: 'Error' },
-        1: { text: '启用', status: 'Success' }
+        1: { text: '启用', status: 'Success' },
       },
-      rules: [
-        {
-          required: true,
-          message: '状态不能为空'
-        }
-      ]
-    }
-  ]
+    },
+  ];
 
   return (
     <PageContainer>
@@ -82,11 +68,7 @@ const DeptList: React.FC<{}> = () => {
         treeData={treeData}
       />
     </PageContainer>
+  );
+};
 
-  )
-}
-
-export default DeptList
-
-
-
+export default DeptList;
