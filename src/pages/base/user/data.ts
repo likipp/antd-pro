@@ -47,6 +47,7 @@ export interface TableListData {
 export interface TableListParams {
   status?: string;
   username?: string;
+  nickname?: string;
   pageSize?: number;
   currentPage?: number;
   filter?: { [key: string]: any[] };
