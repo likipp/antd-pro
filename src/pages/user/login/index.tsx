@@ -60,7 +60,7 @@ const Login: React.FC<{}> = () => {
       // 登录
       const msg = await fakeAccountLogin({ ...values, type });
       console.log(msg, 'msg1111');
-      if (msg.code === 7) {
+      if (msg.code === 200) {
         message.success('登录成功！');
         replaceGoto();
         setTimeout(() => {
