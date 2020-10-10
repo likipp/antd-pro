@@ -7,35 +7,6 @@ import { DeptListItem, DepTreeData } from '@/pages/base/department/data';
 import { queryDept, queryDeptTree } from '@/pages/base/department/service';
 
 const DeptList: React.FC<{}> = () => {
-  // const treeData1 = [
-  //   {
-  //     title: 'parent 1',
-  //     key: '0-0',
-  //     children: [
-  //       {
-  //         title: 'parent 1-0',
-  //         key: '0-0-0',
-  //         disabled: true,
-  //         children: [
-  //           {
-  //             title: 'leaf',
-  //             key: '0-0-0-0',
-  //             disableCheckbox: true,
-  //           },
-  //           {
-  //             title: 'leaf',
-  //             key: '0-0-0-1',
-  //           },
-  //         ],
-  //       },
-  //       {
-  //         title: 'parent 1-1',
-  //         key: '0-0-1',
-  //         children: [{ title: <span style={{ color: '#1890ff' }}>sss</span>, key: '0-0-1-0' }],
-  //       },
-  //     ],
-  //   },
-  // ];
   const initTreeDate: DepTreeData[] = [
     { title: 'Expand to load', key: '0' },
     { title: 'Expand to load', key: '1' },
