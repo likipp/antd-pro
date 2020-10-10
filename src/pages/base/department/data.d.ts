@@ -1,3 +1,5 @@
+import React from 'react';
+
 export interface DeptListItem {
   key: number;
   id: string;
@@ -26,5 +28,6 @@ export interface DepTreeData {
   status?: string;
   sort?: number;
   isLeaf?: boolean;
+  icon?: React.ReactNode;
   children?: Array[DepTreeData];
 }
