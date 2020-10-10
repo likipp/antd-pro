@@ -2,10 +2,10 @@ export interface DeptListItem {
   key: number;
   id: string;
   parent_id: string;
-  deptName: string
+  deptName: string;
   deptPath: string;
   leader: number;
-  status: string
+  status: string;
 }
 
 export interface DeptListParams {
@@ -16,11 +16,15 @@ export interface DeptListParams {
   sorter?: { [key: string]: any };
 }
 
-
 export interface DepTreeData {
-  id: number;
   key: string;
-  value: string;
   title: string;
+  parent_id?: string;
+  deptName?: string;
+  deptPath?: string;
+  leader?: number;
+  status?: string;
+  sort?: number;
+  isLeaf?: boolean;
   children?: Array[DepTreeData];
 }

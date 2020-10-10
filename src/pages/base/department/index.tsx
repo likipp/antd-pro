@@ -1,42 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tree } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 
-import { DeptListItem } from '@/pages/base/department/data';
-import { queryDept } from '@/pages/base/department/service';
+import { DeptListItem, DepTreeData } from '@/pages/base/department/data';
+import { queryDept, queryDeptTree } from '@/pages/base/department/service';
 
 const DeptList: React.FC<{}> = () => {
-  const treeData = [
-    {
-      title: 'parent 1',
-      key: '0-0',
-      children: [
-        {
-          title: 'parent 1-0',
-          key: '0-0-0',
-          disabled: true,
-          children: [
-            {
-              title: 'leaf',
-              key: '0-0-0-0',
-              disableCheckbox: true,
-            },
-            {
-              title: 'leaf',
-              key: '0-0-0-1',
-            },
-          ],
-        },
-        {
-          title: 'parent 1-1',
-          key: '0-0-1',
-          children: [{ title: <span style={{ color: '#1890ff' }}>sss</span>, key: '0-0-1-0' }],
-        },
-      ],
-    },
+  // const treeData1 = [
+  //   {
+  //     title: 'parent 1',
+  //     key: '0-0',
+  //     children: [
+  //       {
+  //         title: 'parent 1-0',
+  //         key: '0-0-0',
+  //         disabled: true,
+  //         children: [
+  //           {
+  //             title: 'leaf',
+  //             key: '0-0-0-0',
+  //             disableCheckbox: true,
+  //           },
+  //           {
+  //             title: 'leaf',
+  //             key: '0-0-0-1',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         title: 'parent 1-1',
+  //         key: '0-0-1',
+  //         children: [{ title: <span style={{ color: '#1890ff' }}>sss</span>, key: '0-0-1-0' }],
+  //       },
+  //     ],
+  //   },
+  // ];
+  const initTreeDate: DepTreeData[] = [
+    { title: 'Expand to load', key: '0' },
+    { title: 'Expand to load', key: '1' },
+    { title: 'Tree Node', key: '2', isLeaf: true },
   ];
-
+  const [treeData, setTreeData] = useState(initTreeDate);
   const columns: ProColumns<DeptListItem>[] = [
     {
       title: '名称',
@@ -52,6 +57,12 @@ const DeptList: React.FC<{}> = () => {
     },
   ];
 
+  useEffect(() => {
+    queryDeptTree().then((res) => {
+      setTreeData(res.depTree);
+    });
+  });
+
   return (
     <PageContainer>
       <ProTable<DeptListItem>
@@ -60,13 +71,7 @@ const DeptList: React.FC<{}> = () => {
         rowKey="id"
         request={(params, sorter, filter) => queryDept({ ...params, sorter, filter })}
       />
-      <Tree
-        checkable
-        defaultExpandedKeys={['0-0-0', '0-0-1']}
-        defaultSelectedKeys={['0-0-0', '0-0-1']}
-        defaultCheckedKeys={['0-0-0', '0-0-1']}
-        treeData={treeData}
-      />
+      <Tree treeData={treeData} />
     </PageContainer>
   );
 };
