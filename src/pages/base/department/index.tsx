@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Tree } from 'antd';
+import { Tree, Input } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 
@@ -42,7 +43,8 @@ const DeptList: React.FC<{}> = () => {
         rowKey="id"
         request={(params, sorter, filter) => queryDept({ ...params, sorter, filter })}
       />
-      <Tree treeData={treeData} />
+      <Input style={{ marginBottom: 8 }} placeholder="Search" />
+      <Tree showIcon treeData={treeData} switcherIcon={<DownOutlined />} />
     </PageContainer>
   );
 };
