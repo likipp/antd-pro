@@ -2,7 +2,6 @@ import { request } from 'umi';
 import { TableListParams, UserStatus, UserInfo } from './data';
 
 export async function queryUser(params?: TableListParams) {
-  console.log(params?.filter !== undefined, 'params', params?.filter);
   if (params?.filter !== undefined) {
     if (Object.keys(params.filter).length) {
       if (params.filter.status !== null) {
@@ -11,16 +10,17 @@ export async function queryUser(params?: TableListParams) {
             current: params.currentPage,
             pageSize: params.pageSize,
             status: params.filter.status[0],
+            nickname: '张三三',
           },
         });
       }
-      console.log(Object.keys(params.filter).length, 'filter');
     }
     return request('/api/v1/base/users', {
       params: {
         current: params.currentPage,
         pageSize: params.pageSize,
         status: 3,
+        nickname: '张三三',
       },
     });
   }
