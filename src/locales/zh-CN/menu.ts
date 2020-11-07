@@ -7,10 +7,10 @@ export default {
   'menu.login': '登录',
   'menu.register': '注册',
   'menu.register.result': '注册结果',
-  'menu.dashboard': 'Dashboard',
-  'menu.dashboard.analysis': '分析页',
-  'menu.dashboard.monitor': '监控页',
-  'menu.dashboard.workplace': '工作台',
+  // 'menu.dashboard': 'Dashboard',
+  // 'menu.dashboard.analysis': '分析页',
+  // 'menu.dashboard.monitor': '监控页',
+  // 'menu.dashboard.workplace': '工作台',
   'menu.exception.403': '403',
   'menu.exception.404': '404',
   'menu.exception.500': '500',
@@ -52,5 +52,7 @@ export default {
   'menu.base': '基础设置',
   'menu.base.userManager': '用户管理',
   'menu.base.deptManager': '部门管理',
-  'menu.base.roleManager': '角色管理'
+  'menu.base.roleManager': '角色管理',
+  'menu.dashboard': '图表中心',
+  'menu.dashboard.kpiDashboard': 'KPI图表',
 };

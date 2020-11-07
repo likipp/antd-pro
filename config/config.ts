@@ -72,19 +72,31 @@ export default defineConfig({
         {
           path: '/base/user',
           name: 'userManager',
-          component: './base/user'
+          component: './base/user',
         },
         {
           path: '/base/department',
           name: 'deptManager',
-          component: './base/department'
+          component: './base/department',
         },
         {
           path: '/base/role',
           name: 'roleManager',
-          component: './base/role'
-        }
-      ]
+          component: './base/role',
+        },
+      ],
+    },
+    {
+      path: '/kpi',
+      name: 'dashboard',
+      icon: 'setting',
+      routes: [
+        {
+          path: '/kpi/dashboard',
+          name: 'kpiDashboard',
+          component: './kpi/dashboard',
+        },
+      ],
     },
     {
       name: 'list.table-list',
