@@ -6,24 +6,24 @@ import ProTable, { ProColumns } from '@ant-design/pro-table';
 // import {queryKPIData} from "@/pages/kpi/dashboard/service";
 
 const TableList: React.FC = () => {
-  const [dataSource] = useState<TableListItem[]>([
+  const [dataSource] = useState([
     {
       key: 1,
       kpiName: '测试1',
       tValue: '70',
       uLimit: '30',
-      '2020-01': '30',
-      '2020-02': '30',
-      '2020-03': '40',
-      '2020-04': '100',
-      '2020-05': '30',
-      '2020-06': '40',
-      '2020-07': '40',
-      '2020-08': '100',
-      '2020-09': '30',
-      '2020-10': '100',
-      '2020-11': '30',
-      '2020-12': '20',
+      '2020/01': '30',
+      '2020/02': '30',
+      '2020/03': '40',
+      '2020/04': '100',
+      '2020/05': '30',
+      '2020/06': '40',
+      '2020/07': '40',
+      '2020/08': '100',
+      '2020/09': '30',
+      '2020/10': '100',
+      '2020/11': '30',
+      '2020/12': '20',
     },
     {
       key: 2,
@@ -69,11 +69,12 @@ const TableList: React.FC = () => {
 
   let i;
   let a;
+
   for (i = 1; i <= 12; i += 1) {
     if (i < 10) {
       a = {
-        title: `2020-0${i}`,
-        dataIndex: `2020-0${i}`,
+        title: `2020/0${i}`,
+        dataIndex: `2020/0${i}`,
         render: (value: any, record: any) => {
           if (value !== undefined && value !== null && value !== '-') {
             if (parseInt(value as string, 10) < parseInt(record.uLimit as string, 10)) {
@@ -90,8 +91,8 @@ const TableList: React.FC = () => {
       columns.push(a);
     } else {
       a = {
-        title: `2020-${i}`,
-        dataIndex: `2020-${i}`,
+        title: `2020/${i}`,
+        dataIndex: `2020/${i}`,
         render: (value: any, record: any) => {
           if (value !== undefined && value !== null && value !== '-') {
             if (parseInt(value as string, 10) < parseInt(record.uLimit as string, 10)) {
