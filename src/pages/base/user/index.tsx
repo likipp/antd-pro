@@ -18,7 +18,7 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
 import { FormInstance } from 'antd/lib/form';
 
-import { TableListItem } from '@/pages/base/user/data';
+import {TableListItem, TableListParams} from '@/pages/base/user/data';
 // 不需要加{}, 加了会报错 Module '"./components/UserDetailInfoCard"' has no exported member 'UserDetailInfoCard'
 
 import {
@@ -33,7 +33,8 @@ import CreateForm from '@/pages/base/user/components/CreateForm';
 import UpdateForm from '@/pages/base/user/components/UpdateForm';
 import {TransferItem} from "antd/es/transfer";
 import UserDetailInfoCard from './components/UserDetailInfoCard';
-import { UserDetailInfo, UserInfo, Page, RolesItem } from './data';
+import { UserDetailInfo, UserInfo, RolesItem } from './data';
+import DeptList from "@/pages/base/department";
 
 const { Option } = Select;
 
@@ -65,7 +66,7 @@ const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const ref = useRef<FormInstance>();
   const [dataSource, setDataSource] = useState<TableListItem[]>([]);
-  const [initPageInfo, setPageInfo] = useState<Page>({pageSize: 5, current: 1})
+  const [initPageInfo, setPageInfo] = useState<TableListParams>({pageSize: 5, current: 1})
   // const [initStatus, setStatus] = useState(undefined)
   // const [transferSource, setTransferSource] = useState([]);
 
@@ -438,17 +439,12 @@ const TableList: React.FC = () => {
   // 设置loading条件，获取用户列表，
   useEffect(() => {
     setLoading(true);
-    queryUser().then((res) => {
+    queryUser(initPageInfo).then((res) => {
       setDataSource(res.data);
       // console.log(dataSource)
       setLoading(false);
     });
   }, []);
-
-  // useEffect(() => {
-  //   setTransferLoading(true);
-  //
-  // })
 
   useEffect(() => {
     MouseUp(userID);
@@ -473,11 +469,13 @@ const TableList: React.FC = () => {
   // 页码发生变化时回调的方法
   const pageOnChange = (pageNumber: number, pageSize: number | undefined) => {
     setPageInfo({pageSize: pageSize as number, current: pageNumber as number})
+    console.log(initPageInfo, "pageOnChange")
 
   }
   // 页面条目数量变化时回调方法
   const pageSizeOnChange = (current: number, size: number) => {
     setPageInfo({pageSize: size, current})
+    console.log(initPageInfo, "pageSizeOnChange")
   }
 
   return (
@@ -491,6 +489,9 @@ const TableList: React.FC = () => {
         columns={columns}
         actionRef={actionRef}
         dataSource={dataSource}
+        search={{
+          labelWidth: 120,
+        }}
         rowSelection={{
           onChange: (selectedRowKeys) => setSelectedRows(selectedRowKeys as string[]),
         }}
@@ -539,7 +540,7 @@ const TableList: React.FC = () => {
             }}
           >
             <div style={{ width: '200px', borderRight: '1px solid #eee' }}>
-              <span>组织树</span>
+              <DeptList />
             </div>
             <div
               style={{
@@ -559,7 +560,7 @@ const TableList: React.FC = () => {
         toolBarRender={() => [
           <Button
             onClick={() => {
-              queryUser().then((res) => {
+              queryUser(initPageInfo).then((res) => {
                 setDataSource(res.data);
                 setLoading(false);
               });
@@ -602,7 +603,7 @@ const TableList: React.FC = () => {
           showSizeChanger: true,
           showQuickJumper: true,
           // hideOnSinglePage: true,
-          defaultPageSize: 2,
+          defaultPageSize: 5,
           onChange: pageOnChange,
           onShowSizeChange: pageSizeOnChange,
           // pageSizeOptions: ['3', '6', '9', '12', '15']

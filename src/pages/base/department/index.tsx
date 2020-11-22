@@ -1,32 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Tree, Input } from 'antd';
+import { Input, Tree } from 'antd';
 import { HomeOutlined, FolderOutlined, FolderOpenOutlined } from '@ant-design/icons';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
-import { PageContainer } from '@ant-design/pro-layout';
 
-import { DeptListItem, DepTreeData } from '@/pages/base/department/data';
-import { queryDept, queryDeptTree } from '@/pages/base/department/service';
+import { DepTreeData } from '@/pages/base/department/data';
+import { queryDeptTree } from '@/pages/base/department/service';
 
+const { Search } = Input;
 const DeptList: React.FC<{}> = () => {
   const [treeData, setTreeData] = useState<DepTreeData[]>([]);
   // 用于初始化后默认展开第一层级树, 配合Tree expandedKeys使用
   const [parentNode, setParentNode] = useState('');
   // 用于第一次加载后断数据, 配合useEffect使用
-  const [loading] = useState(false);
-  const columns: ProColumns<DeptListItem>[] = [
-    {
-      title: '名称',
-      dataIndex: 'deptName',
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      valueEnum: {
-        0: { text: '禁用', status: 'Error' },
-        1: { text: '启用', status: 'Success' },
-      },
-    },
-  ];
+  const [loading, setLoading] = useState(false);
 
   // 根据是否有parent_id字段, 设置节点图标
   const SetIcon = (data: DepTreeData[]) => {
@@ -50,6 +35,11 @@ const DeptList: React.FC<{}> = () => {
     }
   };
 
+  const SearchDept = (data: string) => {
+    console.log(data, 'data');
+    setLoading(true);
+  };
+
   useEffect(() => {
     queryDeptTree().then((res) => {
       SetIcon(res.depTree);
@@ -58,16 +48,18 @@ const DeptList: React.FC<{}> = () => {
   }, [loading]);
 
   return (
-    <PageContainer>
-      <ProTable<DeptListItem>
-        headerTitle="查询部门"
-        columns={columns}
-        rowKey="id"
-        request={(params, sorter, filter) => queryDept({ ...params, sorter, filter })}
+    // expandedKeys={[parentNode]}
+    <div>
+      <Search
+        placeholder="请输入要搜索的部门"
+        onSearch={(value) => {
+          SearchDept(value);
+          console.log(value);
+        }}
+        enterButton
       />
-      <Input style={{ marginBottom: 8 }} placeholder="Search" />
       <Tree showIcon treeData={treeData} expandedKeys={[parentNode]} />
-    </PageContainer>
+    </div>
   );
 };
 

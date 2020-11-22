@@ -49,7 +49,7 @@ export interface TableListParams {
   username?: string;
   nickname?: string;
   pageSize?: number;
-  currentPage?: number;
+  current?: number;
   filter?: { [key: string]: any[] };
   sorter?: { [key: string]: any };
 }
