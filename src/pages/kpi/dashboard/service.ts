@@ -1,4 +1,4 @@
-import { TableListParams } from '@/pages/base/user/data';
+import { TableListParams } from '@/pages/kpi/dashboard/data';
 import { request } from '@@/plugin-request/request';
 
 export async function queryKPIData(params?: TableListParams) {
