@@ -49,9 +49,11 @@
     "not ie <= 10"
   ],
   "dependencies": {
+    "@ant-design/charts": "^1.0.9",
     "@ant-design/icons": "^4.0.0",
     "@ant-design/pro-layout": "^6.2.4",
     "@ant-design/pro-table": "^2.9.1",
+    "@antv/g2plot": "^2.2.12",
     "antd": "^4.6.6",
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",

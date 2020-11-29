@@ -1,12 +1,10 @@
 export interface TableListItem {
   id: string;
-  // uuid?: string;
   dept?: string;
   name: string;
   uLimit?: string;
   tValue?: string;
   lLimit?: string;
-  // unit?: string;
 }
 
 export interface TableListParams {
