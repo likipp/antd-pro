@@ -30,17 +30,22 @@ const LineDemo: React.FC = () => {
         },
       },
     },
+    label: {},
     seriesField: 'type',
     color: ['#F4664A', '#30BF78', '#FAAD14'],
+    // 线性上的数据点
     point: {
       size: 5,
-      shape: 'diamond',
+      // 数据点形状
+      shape: 'circle',
+      // 数据点样式
       style: {
         fill: 'white',
-        stroke: '#5B8FF9',
+        stroke: '#69c0ff',
         lineWidth: 2,
       },
     },
+    tooltip: { showMarkers: false },
     lineStyle: function lineStyle(_ref2: any) {
       const { type } = _ref2;
       if (type === 'register') {
