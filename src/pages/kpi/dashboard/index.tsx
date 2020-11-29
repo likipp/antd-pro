@@ -6,6 +6,7 @@ import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { queryKPIData } from '@/pages/kpi/dashboard/service';
 
 import LineDemo from '@/pages/kpi/dashboard/line';
+import LineOne from '@/pages/kpi/dashboard/lineone';
 
 const TableList: React.FC = () => {
   const [dataSource, setDataSource] = useState<TableListItem[]>([]);
@@ -180,6 +181,7 @@ const TableList: React.FC = () => {
       </div>
       <Card>
         <LineDemo />
+        <LineOne />
       </Card>
     </div>
   );
