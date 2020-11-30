@@ -3,7 +3,13 @@ import { Line } from '@ant-design/charts';
 
 import { queryKPILine } from '@/pages/kpi/dashboard/service';
 
-const LineOne: React.FC = () => {
+interface ChildProps {
+  groupKPI: number;
+}
+
+const LineOne: React.FC<ChildProps> = (props) => {
+  const { groupKPI } = props;
+  console.log(groupKPI, 'kpi');
   const [initParams] = useState({ dept: '323404962476326913', group_kpi: '324859406913110017' });
   const [data, setData] = useState([]);
   // const [initValue, setValue] = useState({date: "", value: 0})
@@ -32,18 +38,18 @@ const LineOne: React.FC = () => {
     xField: 'date',
     yField: 'value',
     annotations: [
-      {
-        type: 'regionFilter',
-        start: ['min', 50],
-        end: ['max', '0'],
-        color: '#F4664A',
-      },
-      {
-        type: 'regionFilter',
-        start: ['min', 100],
-        end: [100, 'max'],
-        color: '#52c41a',
-      },
+      // {
+      //   type: 'regionFilter',
+      //   start: ['min', 50],
+      //   end: ['max', '0'],
+      //   color: '#F4664A',
+      // },
+      // {
+      //   type: 'regionFilter',
+      //   start: ['min', 40],
+      //   end: [100, 'max'],
+      //   color: '#52c41a',
+      // },
       {
         type: 'text',
         position: ['min', 50],
@@ -69,8 +75,8 @@ const LineOne: React.FC = () => {
       },
       {
         type: 'line',
-        start: [100, 100],
-        end: [0, 100],
+        start: ['min', 100],
+        end: ['max', 100],
         style: {
           stroke: '#52c41a',
           lineDash: [2, 2],

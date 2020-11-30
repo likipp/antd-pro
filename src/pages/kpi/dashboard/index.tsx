@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TableListItem } from '@/pages/kpi/dashboard/data';
-import { Tag, Space, Card } from 'antd';
+import { Tag, Space, Card, Select, Form, Button, Spin } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 
 import { queryKPIData } from '@/pages/kpi/dashboard/service';
@@ -9,9 +9,13 @@ import LineDemo from '@/pages/kpi/dashboard/line';
 import LineOne from '@/pages/kpi/dashboard/lineone';
 
 const TableList: React.FC = () => {
+  const { Option } = Select;
+  const [form] = Form.useForm();
   const [dataSource, setDataSource] = useState<TableListItem[]>([]);
+  // const [initDept, setDept] = useState(null)
   const [loading, setLoading] = useState(true);
-  const [initParams] = useState({ dept: '323404962476326913' });
+  const [fetching] = useState(false);
+  const [initParams] = useState({ dept: '323404962476326913', group_kpi: null });
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '序号',
@@ -148,6 +152,11 @@ const TableList: React.FC = () => {
     return columns;
   });
 
+  const onReset = () => {
+    form.resetFields();
+  };
+  const handleGetDept = () => {};
+
   useEffect(() => {
     setLoading(true);
 
@@ -159,15 +168,47 @@ const TableList: React.FC = () => {
 
   return (
     <div>
-      <div>
-        <Space>
-          <Tag color="#d9d9d9">未输入</Tag>
-          <Tag color="#f5222d">未达标</Tag>
-          <Tag color="#faad14">已达标</Tag>
-          <Tag color="#52c41a">超额达标</Tag>
-        </Space>
-      </div>
-      <div style={{ paddingTop: '10px', paddingBottom: '30px' }}>
+      <Card style={{ marginBottom: '30px' }}>
+        <Form layout="inline">
+          <Form.Item label="部门:" name="dept">
+            <Select
+              style={{ width: 240 }}
+              // value={initDept}
+              placeholder="请选择部门"
+              notFoundContent={fetching ? <Spin size="small" /> : null}
+              onDropdownVisibleChange={handleGetDept}
+            >
+              <Option value="jack">Jack</Option>
+              <Option value="lucy">Lucy</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item label="KPI指标:">
+            <Select
+              style={{ width: 240 }}
+              placeholder="请选择KPI"
+              notFoundContent={fetching ? <Spin size="small" /> : null}
+            >
+              <Option value="jack">Jack</Option>
+              <Option value="lucy">Lucy</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item>
+            <Button htmlType="button" type="primary" onClick={onReset}>
+              重置
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
+
+      <Card style={{ marginBottom: '30px' }}>
+        <div>
+          <Space style={{ marginBottom: '30px' }}>
+            <Tag color="#d9d9d9">未输入</Tag>
+            <Tag color="#f5222d">未达标</Tag>
+            <Tag color="#faad14">已达标</Tag>
+            <Tag color="#52c41a">超额达标</Tag>
+          </Space>
+        </div>
         <ProTable<TableListItem>
           rowKey="kpi"
           bordered
@@ -178,10 +219,9 @@ const TableList: React.FC = () => {
           pagination={false}
           toolBarRender={false}
         />
-      </div>
+      </Card>
       <Card>
-        <LineDemo />
-        <LineOne />
+        {initParams.group_kpi === null ? <LineDemo /> : <LineOne groupKPI={324859406913110017} />}
       </Card>
     </div>
   );
