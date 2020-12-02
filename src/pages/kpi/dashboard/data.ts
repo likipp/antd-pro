@@ -21,5 +21,5 @@ export interface QueryParams {
   dept_id?: string;
   dept_name?: string;
   kpi?: string;
-  kpi_name?: string;
+  name?: string;
 }

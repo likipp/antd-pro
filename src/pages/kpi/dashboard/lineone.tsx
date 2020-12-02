@@ -7,9 +7,9 @@ interface ChildProps {
   groupKPI: number;
 }
 
-const LineOne: React.FC<ChildProps> = (props) => {
-  const { groupKPI } = props;
-  console.log(groupKPI, 'kpi');
+const LineOne: React.FC<ChildProps> = () => {
+  // const { groupKPI } = props;
+  // console.log(groupKPI, 'kpi');
   const [initParams] = useState({ dept: '323404962476326913', group_kpi: '324859406913110017' });
   const [data, setData] = useState([]);
   // const [initValue, setValue] = useState({date: "", value: 0})

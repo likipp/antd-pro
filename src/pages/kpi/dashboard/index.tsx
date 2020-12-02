@@ -166,8 +166,7 @@ const TableList: React.FC = () => {
     });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  const handleGetKPI = (initParams: any) => {
+  const handleGetKPI = () => {
     console.log(initParams, 'initParams');
     queryKPIDept(initParams).then((res) => {
       console.log(res, 'res');
@@ -178,11 +177,12 @@ const TableList: React.FC = () => {
     });
   };
 
-  const handleChangeQueryParams = (value: string) => {
-    const temp = {
-      dept: value,
-    };
-    setParams(temp);
+  const handleChangeDeptParams = (value: string) => {
+    setParams({ dept: value, kpi: '' });
+  };
+
+  const handleChangeKPIParams = (value: string) => {
+    setParams({ kpi: value });
   };
 
   useEffect(() => {
@@ -204,7 +204,7 @@ const TableList: React.FC = () => {
               placeholder="请选择部门"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               onDropdownVisibleChange={handleGetDept}
-              onSelect={handleChangeQueryParams}
+              onSelect={handleChangeDeptParams}
             >
               {initQueryParams.map((d) =>
                 d.dept_id !== undefined ? (
@@ -221,11 +221,12 @@ const TableList: React.FC = () => {
               placeholder="请选择KPI"
               // notFoundContent={fetching ? <Spin size="small" /> : null}
               onDropdownVisibleChange={handleGetKPI}
+              onSelect={handleChangeKPIParams}
             >
               {initQueryParams.map((d) =>
-                d.kpi_name !== undefined ? (
-                  <Option key={d.kpi} value={d.kpi_name}>
-                    {d.kpi_name}
+                d.kpi !== undefined ? (
+                  <Option key={d.kpi} value={d.kpi}>
+                    {d.name}
                   </Option>
                 ) : null,
               )}
