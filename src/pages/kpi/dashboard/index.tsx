@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TableListItem, QueryParams, TableListParams } from '@/pages/kpi/dashboard/data';
 import { Tag, Space, Card, Select, Form, Button, Spin } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
@@ -13,10 +13,12 @@ const TableList: React.FC = () => {
   const [form] = Form.useForm();
   const [dataSource, setDataSource] = useState<TableListItem[]>([]);
   const [initQueryParams, setQueryParams] = useState<QueryParams[]>([]);
+  const initDept = useRef('');
+  const initKPI = useRef('');
   const [loading, setLoading] = useState(true);
   const [fetching, setFetching] = useState(false);
   // const [initParams, setParams] = useState<TableListParams[]>({ dept: '', group_kpi: null });
-  const [initParams, setParams] = useState<TableListParams>({ dept: '', kpi: '' });
+  const initParams = useRef<TableListParams>({ dept: '', kpi: '' });
   // 323404962476326913
   const columns: ProColumns<TableListItem>[] = [
     {
@@ -167,9 +169,8 @@ const TableList: React.FC = () => {
   };
 
   const handleGetKPI = () => {
-    console.log(initParams, 'initParams');
-    queryKPIDept(initParams).then((res) => {
-      console.log(res, 'res');
+    initParams.current = { dept: initDept.current, kpi: initKPI.current };
+    queryKPIDept(initParams.current).then((res) => {
       if (res.result.length > 0) {
         setQueryParams(res.result);
         setFetching(true);
@@ -178,20 +179,23 @@ const TableList: React.FC = () => {
   };
 
   const handleChangeDeptParams = (value: string) => {
-    setParams({ dept: value, kpi: '' });
+    initDept.current = value;
+    console.log(initDept, 'dept');
+    // setParams({ dept: initDept, kpi: '' });
   };
 
   const handleChangeKPIParams = (value: string) => {
-    setParams({ kpi: value });
+    initKPI.current = value;
+    // setParams({ dept: initDept, kpi: initKPI });
   };
 
   useEffect(() => {
     setLoading(true);
-    queryKPIData(initParams).then((res) => {
+    queryKPIData(initParams.current).then((res) => {
       setDataSource(res.data);
       setLoading(false);
     });
-  }, [initParams]);
+  }, [initParams.current]);
 
   return (
     <div>
@@ -220,6 +224,7 @@ const TableList: React.FC = () => {
               style={{ width: 240 }}
               placeholder="请选择KPI"
               // notFoundContent={fetching ? <Spin size="small" /> : null}
+              disabled={initDept.current === ''}
               onDropdownVisibleChange={handleGetKPI}
               onSelect={handleChangeKPIParams}
             >
@@ -261,7 +266,7 @@ const TableList: React.FC = () => {
         />
       </Card>
       <Card>
-        {initParams.kpi === null ? <LineDemo /> : <LineOne groupKPI={324859406913110017} />}
+        {initParams.current === null ? <LineDemo /> : <LineOne groupKPI={324859406913110017} />}
       </Card>
     </div>
   );
