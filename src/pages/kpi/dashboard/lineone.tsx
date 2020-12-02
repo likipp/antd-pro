@@ -8,9 +8,9 @@ interface ChildProps {
 }
 
 const LineOne: React.FC<ChildProps> = () => {
-  // const { groupKPI } = props;
+  // const { groupKPI, dept } = props;
   // console.log(groupKPI, 'kpi');
-  const [initParams] = useState({ dept: '323404962476326913', group_kpi: '324859406913110017' });
+  const [initParams] = useState({ dept: '323404962476326913' });
   const [data, setData] = useState([]);
   // const [initValue, setValue] = useState({date: "", value: 0})
   // const [lLimit, setLLimit] = useState(0)
@@ -20,6 +20,7 @@ const LineOne: React.FC<ChildProps> = () => {
   // let uLimit = 0
   const asyncFetch = () => {
     queryKPILine(initParams).then((res) => {
+      // console.log(dept, "dept")
       // lLimit = res.data[0].l_limit
       // uLimit = res.data[0].u_limit
       // setLLimit(res.data[0].l_limit)

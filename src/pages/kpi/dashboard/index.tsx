@@ -173,6 +173,7 @@ const TableList: React.FC = () => {
     queryKPIDept(initParams.current).then((res) => {
       if (res.result.length > 0) {
         setQueryParams(res.result);
+        console.log(initQueryParams, 'initQueryParams');
         setFetching(true);
       }
     });
@@ -229,7 +230,7 @@ const TableList: React.FC = () => {
               onSelect={handleChangeKPIParams}
             >
               {initQueryParams.map((d) =>
-                d.kpi !== undefined ? (
+                d.kpi !== '' && d.kpi !== undefined ? (
                   <Option key={d.kpi} value={d.kpi}>
                     {d.name}
                   </Option>
