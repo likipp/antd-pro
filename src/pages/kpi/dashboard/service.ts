@@ -1,4 +1,4 @@
-import { TableListParams } from '@/pages/kpi/dashboard/data';
+import { TableListParams, KPIDept } from '@/pages/kpi/dashboard/data';
 import { request } from '@@/plugin-request/request';
 
 export async function queryKPIData(params?: TableListParams) {
@@ -7,4 +7,8 @@ export async function queryKPIData(params?: TableListParams) {
 
 export async function queryKPILine(params?: TableListParams) {
   return request('/api/v1/base/kpi-line', { params });
+}
+
+export async function queryKPIDept(params?: KPIDept) {
+  return request('/api/v1/base/group-kpi-dept', { params });
 }

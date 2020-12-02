@@ -9,8 +9,17 @@ export interface TableListItem {
 
 export interface TableListParams {
   dept?: string;
-  pageSize?: number;
-  current?: number;
-  filter?: { [key: string]: any[] };
-  sorter?: { [key: string]: any };
+  kpi?: string;
+}
+
+export interface KPIDept {
+  dept?: string;
+  kpi?: string;
+}
+
+export interface QueryParams {
+  dept_id?: string;
+  dept_name?: string;
+  kpi?: string;
+  kpi_name?: string;
 }

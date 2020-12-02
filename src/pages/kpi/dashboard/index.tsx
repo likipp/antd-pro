@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { TableListItem } from '@/pages/kpi/dashboard/data';
+import { TableListItem, QueryParams, TableListParams } from '@/pages/kpi/dashboard/data';
 import { Tag, Space, Card, Select, Form, Button, Spin } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 
-import { queryKPIData } from '@/pages/kpi/dashboard/service';
+import { queryKPIData, queryKPIDept } from '@/pages/kpi/dashboard/service';
 
 import LineDemo from '@/pages/kpi/dashboard/line';
 import LineOne from '@/pages/kpi/dashboard/lineone';
@@ -12,10 +12,13 @@ const TableList: React.FC = () => {
   const { Option } = Select;
   const [form] = Form.useForm();
   const [dataSource, setDataSource] = useState<TableListItem[]>([]);
-  // const [initDept, setDept] = useState(null)
+  const [initQueryParams, setQueryParams] = useState<QueryParams[]>([]);
   const [loading, setLoading] = useState(true);
-  const [fetching] = useState(false);
-  const [initParams] = useState({ dept: '323404962476326913', group_kpi: null });
+  const [fetching, setFetching] = useState(false);
+  // const []
+  // const [initParams, setParams] = useState<TableListParams[]>({ dept: '', group_kpi: null });
+  const [initParams, setParams] = useState<TableListParams>({ dept: '', kpi: '' });
+  // 323404962476326913
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '序号',
@@ -155,16 +158,29 @@ const TableList: React.FC = () => {
   const onReset = () => {
     form.resetFields();
   };
-  const handleGetDept = () => {};
+  const handleGetDept = () => {
+    queryKPIDept(initParams).then((res) => {
+      if (res.result.length > 0) {
+        setQueryParams(res.result);
+        setFetching(true);
+      }
+    });
+  };
+
+  const handleChangeQueryParams = (value: string) => {
+    const temp = {
+      dept: value,
+    };
+    setParams(temp);
+  };
 
   useEffect(() => {
     setLoading(true);
-
     queryKPIData(initParams).then((res) => {
       setDataSource(res.data);
       setLoading(false);
     });
-  }, []);
+  }, [initParams]);
 
   return (
     <div>
@@ -173,23 +189,35 @@ const TableList: React.FC = () => {
           <Form.Item label="部门:" name="dept">
             <Select
               style={{ width: 240 }}
-              // value={initDept}
+              // value={}
               placeholder="请选择部门"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               onDropdownVisibleChange={handleGetDept}
+              onSelect={handleChangeQueryParams}
             >
-              <Option value="jack">Jack</Option>
-              <Option value="lucy">Lucy</Option>
+              {initQueryParams.map((d) =>
+                d.dept_id !== undefined ? (
+                  <Option key={d.dept_id} value={d.dept_id}>
+                    {d.dept_name}
+                  </Option>
+                ) : null,
+              )}
             </Select>
           </Form.Item>
           <Form.Item label="KPI指标:">
             <Select
               style={{ width: 240 }}
               placeholder="请选择KPI"
-              notFoundContent={fetching ? <Spin size="small" /> : null}
+              // notFoundContent={fetching ? <Spin size="small" /> : null}
+              onDropdownVisibleChange={handleGetDept}
             >
-              <Option value="jack">Jack</Option>
-              <Option value="lucy">Lucy</Option>
+              {initQueryParams.map((d) =>
+                d.kpi !== undefined ? (
+                  <Option key={d.kpi} value={d.kpi}>
+                    {d.kpi_name}
+                  </Option>
+                ) : null,
+              )}
             </Select>
           </Form.Item>
           <Form.Item>
@@ -221,7 +249,7 @@ const TableList: React.FC = () => {
         />
       </Card>
       <Card>
-        {initParams.group_kpi === null ? <LineDemo /> : <LineOne groupKPI={324859406913110017} />}
+        {initParams.kpi === null ? <LineDemo /> : <LineOne groupKPI={324859406913110017} />}
       </Card>
     </div>
   );

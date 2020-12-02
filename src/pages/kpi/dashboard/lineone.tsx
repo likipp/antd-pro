@@ -55,7 +55,12 @@ const LineOne: React.FC<ChildProps> = (props) => {
         position: ['min', 50],
         content: '下限值',
         offsetY: -4,
-        style: { textBaseline: 'bottom' },
+        style: {
+          textBaseline: 'bottom',
+          // fill: '#8c8c8c',
+          fontSize: 15,
+          fontWeight: 'normal',
+        },
       },
       {
         type: 'line',
@@ -71,7 +76,11 @@ const LineOne: React.FC<ChildProps> = (props) => {
         position: [0, 100],
         content: '上限值',
         offsetY: -4,
-        style: { textBaseline: 'bottom' },
+        style: {
+          textBaseline: 'bottom',
+          // fontSize: 15,
+          // fontWeight: 'normal'
+        },
       },
       {
         type: 'line',
