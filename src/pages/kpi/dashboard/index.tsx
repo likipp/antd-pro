@@ -15,7 +15,6 @@ const TableList: React.FC = () => {
   const [initQueryParams, setQueryParams] = useState<QueryParams[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetching, setFetching] = useState(false);
-  // const []
   // const [initParams, setParams] = useState<TableListParams[]>({ dept: '', group_kpi: null });
   const [initParams, setParams] = useState<TableListParams>({ dept: '', kpi: '' });
   // 323404962476326913
@@ -159,7 +158,19 @@ const TableList: React.FC = () => {
     form.resetFields();
   };
   const handleGetDept = () => {
+    queryKPIDept().then((res) => {
+      if (res.result.length > 0) {
+        setQueryParams(res.result);
+        setFetching(true);
+      }
+    });
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  const handleGetKPI = (initParams: any) => {
+    console.log(initParams, 'initParams');
     queryKPIDept(initParams).then((res) => {
+      console.log(res, 'res');
       if (res.result.length > 0) {
         setQueryParams(res.result);
         setFetching(true);
@@ -209,11 +220,11 @@ const TableList: React.FC = () => {
               style={{ width: 240 }}
               placeholder="请选择KPI"
               // notFoundContent={fetching ? <Spin size="small" /> : null}
-              onDropdownVisibleChange={handleGetDept}
+              onDropdownVisibleChange={handleGetKPI}
             >
               {initQueryParams.map((d) =>
-                d.kpi !== undefined ? (
-                  <Option key={d.kpi} value={d.kpi}>
+                d.kpi_name !== undefined ? (
+                  <Option key={d.kpi} value={d.kpi_name}>
                     {d.kpi_name}
                   </Option>
                 ) : null,
