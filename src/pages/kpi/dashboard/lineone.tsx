@@ -4,13 +4,14 @@ import { Line } from '@ant-design/charts';
 import { queryKPILine } from '@/pages/kpi/dashboard/service';
 
 interface ChildProps {
-  groupKPI: number;
+  groupKPI: string;
+  dept: string;
 }
 
-const LineOne: React.FC<ChildProps> = () => {
+const LineOne: React.FC<ChildProps> = (props) => {
   // const { groupKPI, dept } = props;
   // console.log(groupKPI, 'kpi');
-  const [initParams] = useState({ dept: '323404962476326913' });
+  const [initParams] = useState({ dept: props.dept, kpi: props.groupKPI });
   const [data, setData] = useState([]);
   // const [initValue, setValue] = useState({date: "", value: 0})
   // const [lLimit, setLLimit] = useState(0)
@@ -19,38 +20,21 @@ const LineOne: React.FC<ChildProps> = () => {
   // let lLimit = 0
   // let uLimit = 0
   const asyncFetch = () => {
+    console.log(initParams, 'initParams');
     queryKPILine(initParams).then((res) => {
-      // console.log(dept, "dept")
-      // lLimit = res.data[0].l_limit
-      // uLimit = res.data[0].u_limit
-      // setLLimit(res.data[0].l_limit)
-      // setULimit(res.data[0].u_limit)
-      // console.log(lLimit, 'cs', uLimit, res.data)
       setData(res.data);
     });
   };
 
   useEffect(() => {
     asyncFetch();
-  }, []);
+  }, [initParams.kpi]);
 
   const config = {
     data,
     xField: 'date',
     yField: 'value',
     annotations: [
-      // {
-      //   type: 'regionFilter',
-      //   start: ['min', 50],
-      //   end: ['max', '0'],
-      //   color: '#F4664A',
-      // },
-      // {
-      //   type: 'regionFilter',
-      //   start: ['min', 40],
-      //   end: [100, 'max'],
-      //   color: '#52c41a',
-      // },
       {
         type: 'text',
         position: ['min', 50],

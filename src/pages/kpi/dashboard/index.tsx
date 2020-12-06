@@ -6,7 +6,7 @@ import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { queryKPIData, queryKPIDept } from '@/pages/kpi/dashboard/service';
 
 import LineDemo from '@/pages/kpi/dashboard/line';
-import LineOne from '@/pages/kpi/dashboard/lineone';
+import DashContext from '@/pages/kpi/dashboard/dashContext';
 
 const TableList: React.FC = () => {
   const { Option } = Select;
@@ -159,6 +159,8 @@ const TableList: React.FC = () => {
   const onReset = () => {
     form.resetFields();
   };
+
+  // 获取有KPI数据的部门
   const handleGetDept = () => {
     queryKPIDept().then((res) => {
       if (res.result.length > 0) {
@@ -168,28 +170,31 @@ const TableList: React.FC = () => {
     });
   };
 
+  // 在部门选择之后, 获取相关的KPI数据
   const handleGetKPI = () => {
     initParams.current = { dept: initDept.current, kpi: initKPI.current };
     queryKPIDept(initParams.current).then((res) => {
       if (res.result.length > 0) {
         setQueryParams(res.result);
-        console.log(initQueryParams, 'initQueryParams');
         setFetching(true);
       }
     });
   };
 
+  // 通过ref设置部门值
   const handleChangeDeptParams = (value: string) => {
     initDept.current = value;
-    console.log(initDept, 'dept');
+    initParams.current = { dept: value, kpi: '' };
     // setParams({ dept: initDept, kpi: '' });
   };
 
+  // 通过ref设置KPI值
   const handleChangeKPIParams = (value: string) => {
     initKPI.current = value;
     // setParams({ dept: initDept, kpi: initKPI });
   };
 
+  // 当部门改变时, 重新获取Table的datasource
   useEffect(() => {
     setLoading(true);
     queryKPIData(initParams.current).then((res) => {
@@ -206,13 +211,14 @@ const TableList: React.FC = () => {
             <Select
               style={{ width: 240 }}
               // value={}
+              allowClear
               placeholder="请选择部门"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               onDropdownVisibleChange={handleGetDept}
               onSelect={handleChangeDeptParams}
             >
               {initQueryParams.map((d) =>
-                d.dept_id !== undefined ? (
+                d.dept_id !== undefined && d.dept_id !== '' ? (
                   <Option key={d.dept_id} value={d.dept_id}>
                     {d.dept_name}
                   </Option>
@@ -224,8 +230,9 @@ const TableList: React.FC = () => {
             <Select
               style={{ width: 240 }}
               placeholder="请选择KPI"
-              // notFoundContent={fetching ? <Spin size="small" /> : null}
+              notFoundContent={fetching ? <Spin size="small" /> : null}
               disabled={initDept.current === ''}
+              allowClear
               onDropdownVisibleChange={handleGetKPI}
               onSelect={handleChangeKPIParams}
             >
@@ -267,7 +274,9 @@ const TableList: React.FC = () => {
         />
       </Card>
       <Card>
-        {initParams.current === null ? <LineDemo /> : <LineOne groupKPI={324859406913110017} />}
+        <DashContext.Provider value={{ dept: initDept.current, kpi: initKPI.current }}>
+          <LineDemo />
+        </DashContext.Provider>
       </Card>
     </div>
   );

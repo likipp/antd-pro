@@ -1,23 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Line } from '@ant-design/charts';
 
 import { queryKPILine } from '@/pages/kpi/dashboard/service';
+import DashContext from '@/pages/kpi/dashboard/dashContext';
 
 const LineDemo: React.FC = () => {
-  const [initParams] = useState({ dept: '323404962476326913' });
+  const { dept, kpi } = useContext(DashContext);
+  // const {dept, kpi} = props
+  // const [initParams] = useState({ dept });
   const [data, setData] = useState([]);
 
   const asyncFetch = () => {
-    queryKPILine(initParams).then((res) => {
+    // console.log(dept, "init Line")
+    // console.log(kpi, "kpi")
+    queryKPILine({ dept, kpi }).then((res) => {
       setData(res.data);
     });
   };
 
   useEffect(() => {
     asyncFetch();
-  }, []);
+  }, [dept, kpi]);
 
-  const config = {
+  const allConfig = {
     data,
     xField: 'date',
     yField: 'value',
@@ -57,7 +62,61 @@ const LineDemo: React.FC = () => {
       return { opacity: 0.5 };
     },
   };
-  return <Line {...config} />;
+
+  const oneConfig = {
+    data,
+    xField: 'date',
+    yField: 'value',
+    annotations: [
+      {
+        type: 'text',
+        position: ['min', 50],
+        content: '下限值',
+        offsetY: -4,
+        style: {
+          textBaseline: 'bottom',
+          // fill: '#8c8c8c',
+          fontSize: 15,
+          fontWeight: 'normal',
+        },
+      },
+      {
+        type: 'line',
+        start: ['min', 50],
+        end: ['max', 50],
+        style: {
+          stroke: '#F4664A',
+          lineDash: [2, 2],
+        },
+      },
+      {
+        type: 'text',
+        position: [0, 100],
+        content: '上限值',
+        offsetY: -4,
+        style: {
+          textBaseline: 'bottom',
+          // fontSize: 15,
+          // fontWeight: 'normal'
+        },
+      },
+      {
+        type: 'line',
+        start: ['min', 100],
+        end: ['max', 100],
+        style: {
+          stroke: '#52c41a',
+          lineDash: [2, 2],
+        },
+      },
+    ],
+  };
+
+  if (kpi === '') {
+    return <Line {...allConfig} />;
+  }
+  // @ts-ignore
+  return <Line {...oneConfig} />;
 };
 
 export default LineDemo;
