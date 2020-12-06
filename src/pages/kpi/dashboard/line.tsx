@@ -14,6 +14,7 @@ const LineDemo: React.FC = () => {
     // console.log(dept, "init Line")
     // console.log(kpi, "kpi")
     queryKPILine({ dept, kpi }).then((res) => {
+      console.log(dept, 'dept', kpi);
       setData(res.data);
     });
   };
