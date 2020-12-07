@@ -23,3 +23,8 @@ export interface QueryParams {
   kpi?: string;
   name?: string;
 }
+
+export interface LineTitle {
+  type: string;
+  unit: string;
+}
