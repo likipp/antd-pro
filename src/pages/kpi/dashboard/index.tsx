@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TableListItem, QueryParams, TableListParams } from '@/pages/kpi/dashboard/data';
-import { Tag, Space, Card, Select, Form, Button, Spin } from 'antd';
+import { Tag, Space, Card, Select, Form, Button, Spin, Alert } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 
 import { queryKPIData, queryKPIDept } from '@/pages/kpi/dashboard/service';
-
+import styles from './databoard.less';
 import LineDemo from '@/pages/kpi/dashboard/line';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
 
@@ -198,13 +198,30 @@ const TableList: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     queryKPIData(initParams.current).then((res) => {
+      console.log(res, 'res');
       setDataSource(res.data);
       setLoading(false);
     });
   }, [initParams.current]);
 
+  // if (initDept.current !== '') {
+  //
+  // }
+  // return (
+  //   <div>
+  //
+  //     {select}
+  //   </div>
+  // )
   return (
     <div>
+      <Alert
+        message="提醒"
+        description="请选择相应部门或者KPI以显示报表."
+        type="warning"
+        showIcon
+        className={initDept.current === '' ? styles.unSelect : styles.selected}
+      />
       <Card style={{ marginBottom: '30px' }}>
         <Form layout="inline">
           <Form.Item label="部门:" name="dept">
@@ -252,7 +269,6 @@ const TableList: React.FC = () => {
           </Form.Item>
         </Form>
       </Card>
-
       <Card style={{ marginBottom: '30px' }}>
         <div>
           <Space style={{ marginBottom: '30px' }}>

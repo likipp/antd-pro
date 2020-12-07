@@ -14,7 +14,6 @@ const LineDemo: React.FC = () => {
     // console.log(dept, "init Line")
     // console.log(kpi, "kpi")
     queryKPILine({ dept, kpi }).then((res) => {
-      console.log(dept, 'dept', kpi);
       setData(res.data);
     });
   };
@@ -112,6 +111,10 @@ const LineDemo: React.FC = () => {
       },
     ],
   };
+  if (data === null) {
+    console.log(11111);
+    return <span>null</span>;
+  }
 
   if (kpi === '') {
     return <Line {...allConfig} />;
