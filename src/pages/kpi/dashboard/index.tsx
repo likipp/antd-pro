@@ -17,9 +17,7 @@ const TableList: React.FC = () => {
   const initKPI = useRef('');
   const [loading, setLoading] = useState(true);
   const [fetching, setFetching] = useState(false);
-  // const [initParams, setParams] = useState<TableListParams[]>({ dept: '', group_kpi: null });
   const initParams = useRef<TableListParams>({ dept: '', kpi: '' });
-  // 323404962476326913
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '序号',
@@ -185,13 +183,11 @@ const TableList: React.FC = () => {
   const handleChangeDeptParams = (value: string) => {
     initDept.current = value;
     initParams.current = { dept: value, kpi: '' };
-    // setParams({ dept: initDept, kpi: '' });
   };
 
   // 通过ref设置KPI值
   const handleChangeKPIParams = (value: string) => {
     initKPI.current = value;
-    // setParams({ dept: initDept, kpi: initKPI });
   };
 
   // 当部门改变时, 重新获取Table的datasource
@@ -204,15 +200,6 @@ const TableList: React.FC = () => {
     });
   }, [initParams.current]);
 
-  // if (initDept.current !== '') {
-  //
-  // }
-  // return (
-  //   <div>
-  //
-  //     {select}
-  //   </div>
-  // )
   return (
     <div>
       <Alert
@@ -223,16 +210,17 @@ const TableList: React.FC = () => {
         className={initDept.current === '' ? styles.unSelect : styles.selected}
       />
       <Card style={{ marginBottom: '30px' }}>
-        <Form layout="inline">
+        <Form layout="inline" form={form}>
           <Form.Item label="部门:" name="dept">
             <Select
-              style={{ width: 240 }}
-              // value={}
               allowClear
+              style={{ width: 240 }}
+              value={initDept.current}
               placeholder="请选择部门"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               onDropdownVisibleChange={handleGetDept}
-              onSelect={handleChangeDeptParams}
+              // onSelect={handleChangeDeptParams}
+              onChange={handleChangeDeptParams}
             >
               {initQueryParams.map((d) =>
                 d.dept_id !== undefined && d.dept_id !== '' ? (
@@ -243,13 +231,14 @@ const TableList: React.FC = () => {
               )}
             </Select>
           </Form.Item>
-          <Form.Item label="KPI指标:">
+          <Form.Item label="KPI指标:" name="kpi">
             <Select
+              allowClear
               style={{ width: 240 }}
+              value={initKPI.current}
               placeholder="请选择KPI"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               disabled={initDept.current === ''}
-              allowClear
               onDropdownVisibleChange={handleGetKPI}
               onSelect={handleChangeKPIParams}
             >

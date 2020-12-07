@@ -67,6 +67,7 @@ const LineDemo: React.FC = () => {
 
   const oneConfig = {
     data,
+    height: 500,
     xField: 'date',
     yField: 'value',
     annotations: [
