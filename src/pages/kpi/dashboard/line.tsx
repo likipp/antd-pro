@@ -6,15 +6,17 @@ import DashContext from '@/pages/kpi/dashboard/dashContext';
 
 const LineDemo: React.FC = () => {
   const { dept, kpi } = useContext(DashContext);
-  // const {dept, kpi} = props
-  // const [initParams] = useState({ dept });
+  const [min, setMin] = useState(30);
+  const [max, setMax] = useState(60);
   const [data, setData] = useState([]);
 
   const asyncFetch = () => {
-    // console.log(dept, "init Line")
-    // console.log(kpi, "kpi")
     queryKPILine({ dept, kpi }).then((res) => {
       setData(res.data);
+      if (kpi !== '') {
+        setMin(res.data[0].l_limit);
+        setMax(res.data[0].u_limit);
+      }
     });
   };
 
@@ -70,20 +72,20 @@ const LineDemo: React.FC = () => {
     annotations: [
       {
         type: 'text',
-        position: ['min', 50],
-        content: '下限值',
+        position: ['min', min],
+        content: `下限值:${min}`,
         offsetY: -4,
         style: {
           textBaseline: 'bottom',
-          // fill: '#8c8c8c',
+          fill: '#F4664A',
           fontSize: 15,
           fontWeight: 'normal',
         },
       },
       {
         type: 'line',
-        start: ['min', 50],
-        end: ['max', 50],
+        start: ['min', min],
+        end: ['max', min],
         style: {
           stroke: '#F4664A',
           lineDash: [2, 2],
@@ -91,19 +93,20 @@ const LineDemo: React.FC = () => {
       },
       {
         type: 'text',
-        position: [0, 100],
-        content: '上限值',
+        position: [0, max],
+        content: `上限值:${max}`,
         offsetY: -4,
         style: {
           textBaseline: 'bottom',
-          // fontSize: 15,
-          // fontWeight: 'normal'
+          fontSize: 15,
+          fill: '#52c41a',
+          fontWeight: 'normal',
         },
       },
       {
         type: 'line',
-        start: ['min', 100],
-        end: ['max', 100],
+        start: ['min', max],
+        end: ['max', max],
         style: {
           stroke: '#52c41a',
           lineDash: [2, 2],
@@ -112,7 +115,6 @@ const LineDemo: React.FC = () => {
     ],
   };
   if (data === null) {
-    console.log(11111);
     return <span>null</span>;
   }
 
