@@ -198,7 +198,7 @@ const TableList: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     queryKPIData(initParams.current).then((res) => {
-      console.log(res, 'res');
+      // console.log(res, 'res111', initDept.current === '');
       setDataSource(res.data);
       setLoading(false);
     });
@@ -269,7 +269,10 @@ const TableList: React.FC = () => {
           </Form.Item>
         </Form>
       </Card>
-      <Card style={{ marginBottom: '30px' }}>
+      <Card
+        style={{ marginBottom: '30px' }}
+        className={initDept.current === '' ? styles.selected : styles.unSelect}
+      >
         <div>
           <Space style={{ marginBottom: '30px' }}>
             <Tag color="#d9d9d9">未输入</Tag>
@@ -289,7 +292,7 @@ const TableList: React.FC = () => {
           toolBarRender={false}
         />
       </Card>
-      <Card>
+      <Card className={initDept.current === '' ? styles.selected : styles.unSelect}>
         <DashContext.Provider value={{ dept: initDept.current, kpi: initKPI.current }}>
           <LineDemo />
         </DashContext.Provider>
