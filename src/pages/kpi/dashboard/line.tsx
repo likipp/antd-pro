@@ -16,13 +16,10 @@ const LineDemo: React.FC = () => {
   const asyncFetch = () => {
     queryKPILine({ dept, kpi }).then((res) => {
       setData(res.data);
-      // console.log(res.data)
       if (kpi !== '') {
         setMin(res.data[0].l_limit);
         setMax(res.data[0].u_limit);
-        console.log(res.data[0].type, res.data[0].unit);
         values.current = { type: res.data[0].type, unit: res.data[0].unit };
-        console.log(values.current.type, 'type');
       }
     });
   };
@@ -82,11 +79,11 @@ const LineDemo: React.FC = () => {
       // 数据点形状
       shape: 'circle',
       // 数据点样式
-      style: {
-        fill: 'white',
-        stroke: '#69c0ff',
-        lineWidth: 2,
-      },
+      // style: {
+      //   fill: 'white',
+      //   stroke: '#69c0ff',
+      //   lineWidth: 2,
+      // },
     },
     legend: {
       position: 'top-right',
@@ -96,17 +93,17 @@ const LineDemo: React.FC = () => {
         },
       },
     },
-    tooltip: { showMarkers: false },
-    lineStyle: function lineStyle(_ref2: any) {
-      const { type } = _ref2;
-      if (type === 'register') {
-        return {
-          lineDash: [4, 4],
-          opacity: 1,
-        };
-      }
-      return { opacity: 0.5 };
-    },
+    // tooltip: { showMarkers: false },
+    // lineStyle: function lineStyle(_ref2: any) {
+    //   const { type } = _ref2;
+    //   if (type === 'register') {
+    //     return {
+    //       lineDash: [4, 4],
+    //       opacity: 1,
+    //     };
+    //   }
+    //   return { opacity: 0.5 };
+    // },
   };
 
   const oneConfig = {

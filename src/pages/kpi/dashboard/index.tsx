@@ -4,9 +4,9 @@ import { Tag, Space, Card, Select, Form, Button, Spin, Alert } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 
 import { queryKPIData, queryKPIDept } from '@/pages/kpi/dashboard/service';
-import styles from './databoard.less';
 import LineDemo from '@/pages/kpi/dashboard/line';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
+import styles from './databoard.less';
 
 const TableList: React.FC = () => {
   const { Option } = Select;
@@ -156,6 +156,11 @@ const TableList: React.FC = () => {
 
   const onReset = () => {
     form.resetFields();
+    initDept.current = '';
+    initKPI.current = '';
+    // initParams.current = { dept: '', kpi: '' }
+    console.log(initDept.current === '', 'initDept.current');
+    console.log(initParams, 'initParams');
   };
 
   // 获取有KPI数据的部门
@@ -194,11 +199,10 @@ const TableList: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     queryKPIData(initParams.current).then((res) => {
-      // console.log(res, 'res111', initDept.current === '');
       setDataSource(res.data);
       setLoading(false);
     });
-  }, [initParams.current]);
+  }, [initParams.current.dept]);
 
   return (
     <div>
@@ -215,7 +219,7 @@ const TableList: React.FC = () => {
             <Select
               allowClear
               style={{ width: 240 }}
-              value={initDept.current}
+              // value={initDept.current}
               placeholder="请选择部门"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               onDropdownVisibleChange={handleGetDept}
@@ -240,7 +244,8 @@ const TableList: React.FC = () => {
               notFoundContent={fetching ? <Spin size="small" /> : null}
               disabled={initDept.current === ''}
               onDropdownVisibleChange={handleGetKPI}
-              onSelect={handleChangeKPIParams}
+              // onSelect={handleChangeKPIParams}
+              onChange={handleChangeKPIParams}
             >
               {initQueryParams.map((d) =>
                 d.kpi !== '' && d.kpi !== undefined ? (
