@@ -188,21 +188,32 @@ const TableList: React.FC = () => {
   const handleChangeDeptParams = (value: string) => {
     initDept.current = value;
     initParams.current = { dept: value, kpi: '' };
+    if (value === undefined) {
+      // console.log("clear")
+      initParams.current = { dept: '', kpi: '' };
+    }
   };
 
   // 通过ref设置KPI值
   const handleChangeKPIParams = (value: string) => {
     initKPI.current = value;
+    console.log(value, 'value', initKPI);
+    if (value === undefined) {
+      // console.log("clear")
+      initKPI.current = '';
+      initParams.current = { dept: initDept.current, kpi: '' };
+    }
   };
 
   // 当部门改变时, 重新获取Table的datasource
   useEffect(() => {
     setLoading(true);
+    console.log(initParams.current, 'initParams.current');
     queryKPIData(initParams.current).then((res) => {
       setDataSource(res.data);
       setLoading(false);
     });
-  }, [initParams.current.dept]);
+  }, [initParams.current]);
 
   return (
     <div>
