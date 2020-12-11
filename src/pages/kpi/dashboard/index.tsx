@@ -160,7 +160,6 @@ const TableList: React.FC = () => {
     initKPI.current = '';
     // initParams.current = { dept: '', kpi: '' }
     console.log(initDept.current === '', 'initDept.current');
-    console.log(initParams, 'initParams');
   };
 
   // 获取有KPI数据的部门
@@ -193,15 +192,28 @@ const TableList: React.FC = () => {
     }
   };
 
+  // 清除部门Select选中后的回调事件
+  const handleClearDeptParams = () => {
+    initDept.current = '';
+  };
+
   // 通过ref设置KPI值
   const handleChangeKPIParams = (value: string) => {
     initKPI.current = value;
-    console.log(value, 'value', initKPI);
-    if (value === undefined) {
-      initKPI.current = '';
-      console.log(value, 'value === undefined');
-      initParams.current = { dept: initDept.current, kpi: initKPI.current };
-    }
+    // if (value === undefined) {
+    //   initKPI.current = '';
+    //   console.log(value, 'value === undefined');
+    //   initParams.current = { dept: initDept.current, kpi: initKPI.current };
+    // }
+  };
+
+  // 清除KPI Select选中后的回调事件
+  const handleClearKPIParams = () => {
+    console.log('进入清除选项');
+    console.log(initKPI.current, '清除事件之前');
+    initKPI.current = '';
+    initParams.current = { dept: initDept.current, kpi: '' };
+    console.log(initKPI.current, '清除事件之后');
   };
 
   // 当部门或者KPI改变时, 重新获取Table的datasource
@@ -211,7 +223,7 @@ const TableList: React.FC = () => {
       setDataSource(res.data);
       setLoading(false);
     });
-  }, [initParams.current]);
+  }, [initParams.current.dept, initParams.current.kpi]);
 
   return (
     <div>
@@ -228,12 +240,12 @@ const TableList: React.FC = () => {
             <Select
               allowClear
               style={{ width: 240 }}
-              // value={initDept.current}
+              value={initDept.current}
               placeholder="请选择部门"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               onDropdownVisibleChange={handleGetDept}
               onSelect={handleChangeDeptParams}
-              // onChange={handleChangeDeptParams}
+              onChange={handleClearDeptParams}
             >
               {initQueryParams.map((d) =>
                 d.dept_id !== undefined && d.dept_id !== '' ? (
@@ -254,7 +266,7 @@ const TableList: React.FC = () => {
               disabled={initDept.current === ''}
               onDropdownVisibleChange={handleGetKPI}
               onSelect={handleChangeKPIParams}
-              onChange={handleChangeKPIParams}
+              onClear={handleClearKPIParams}
             >
               {initQueryParams.map((d) =>
                 d.kpi !== '' && d.kpi !== undefined ? (
