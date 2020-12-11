@@ -189,7 +189,6 @@ const TableList: React.FC = () => {
     initDept.current = value;
     initParams.current = { dept: value, kpi: '' };
     if (value === undefined) {
-      // console.log("clear")
       initParams.current = { dept: '', kpi: '' };
     }
   };
@@ -199,16 +198,15 @@ const TableList: React.FC = () => {
     initKPI.current = value;
     console.log(value, 'value', initKPI);
     if (value === undefined) {
-      // console.log("clear")
       initKPI.current = '';
-      initParams.current = { dept: initDept.current, kpi: '' };
+      console.log(value, 'value === undefined');
+      initParams.current = { dept: initDept.current, kpi: initKPI.current };
     }
   };
 
-  // 当部门改变时, 重新获取Table的datasource
+  // 当部门或者KPI改变时, 重新获取Table的datasource
   useEffect(() => {
     setLoading(true);
-    console.log(initParams.current, 'initParams.current');
     queryKPIData(initParams.current).then((res) => {
       setDataSource(res.data);
       setLoading(false);
@@ -234,8 +232,8 @@ const TableList: React.FC = () => {
               placeholder="请选择部门"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               onDropdownVisibleChange={handleGetDept}
-              // onSelect={handleChangeDeptParams}
-              onChange={handleChangeDeptParams}
+              onSelect={handleChangeDeptParams}
+              // onChange={handleChangeDeptParams}
             >
               {initQueryParams.map((d) =>
                 d.dept_id !== undefined && d.dept_id !== '' ? (
@@ -255,7 +253,7 @@ const TableList: React.FC = () => {
               notFoundContent={fetching ? <Spin size="small" /> : null}
               disabled={initDept.current === ''}
               onDropdownVisibleChange={handleGetKPI}
-              // onSelect={handleChangeKPIParams}
+              onSelect={handleChangeKPIParams}
               onChange={handleChangeKPIParams}
             >
               {initQueryParams.map((d) =>
