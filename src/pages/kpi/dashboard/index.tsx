@@ -17,7 +17,7 @@ const TableList: React.FC = () => {
   const initKPI = useRef('');
   const [loading, setLoading] = useState(true);
   const [fetching, setFetching] = useState(false);
-  const initParams = useRef<TableListParams>({ dept: '', kpi: '' });
+  const initParams = useRef<TableListParams>({ dept: initDept.current, kpi: initKPI.current });
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '序号',
@@ -158,8 +158,6 @@ const TableList: React.FC = () => {
     form.resetFields();
     initDept.current = '';
     initKPI.current = '';
-    // initParams.current = { dept: '', kpi: '' }
-    console.log(initDept.current === '', 'initDept.current');
   };
 
   // 获取有KPI数据的部门
@@ -187,33 +185,31 @@ const TableList: React.FC = () => {
   const handleChangeDeptParams = (value: string) => {
     initDept.current = value;
     initParams.current = { dept: value, kpi: '' };
-    if (value === undefined) {
-      initParams.current = { dept: '', kpi: '' };
-    }
+    // if (value === undefined) {
+    //   initParams.current = { dept: '', kpi: '' };
+    // }
   };
 
   // 清除部门Select选中后的回调事件
   const handleClearDeptParams = () => {
     initDept.current = '';
+    initParams.current = { dept: '', kpi: '' };
   };
 
   // 通过ref设置KPI值
   const handleChangeKPIParams = (value: string) => {
     initKPI.current = value;
-    // if (value === undefined) {
-    //   initKPI.current = '';
-    //   console.log(value, 'value === undefined');
-    //   initParams.current = { dept: initDept.current, kpi: initKPI.current };
-    // }
   };
 
   // 清除KPI Select选中后的回调事件
   const handleClearKPIParams = () => {
-    console.log('进入清除选项');
-    console.log(initKPI.current, '清除事件之前');
     initKPI.current = '';
     initParams.current = { dept: initDept.current, kpi: '' };
-    console.log(initKPI.current, '清除事件之后');
+    setLoading(true);
+    queryKPIData(initParams.current).then((res) => {
+      setDataSource(res.data);
+      setLoading(false);
+    });
   };
 
   // 当部门或者KPI改变时, 重新获取Table的datasource
@@ -225,6 +221,12 @@ const TableList: React.FC = () => {
     });
   }, [initParams.current.dept, initParams.current.kpi]);
 
+  // const measuredRef = useCallback(node => {
+  //   if (node !== null) {
+  //     console.log("test", node)
+  //   }
+  // }, [])
+
   return (
     <div>
       <Alert
@@ -234,6 +236,8 @@ const TableList: React.FC = () => {
         showIcon
         className={initDept.current === '' ? styles.unSelect : styles.selected}
       />
+      <span>{initDept.current === '' ? '是' : '否'}</span>
+      <span>{initDept.current}</span>
       <Card style={{ marginBottom: '30px' }}>
         <Form layout="inline" form={form}>
           <Form.Item label="部门:" name="dept">
@@ -245,7 +249,8 @@ const TableList: React.FC = () => {
               notFoundContent={fetching ? <Spin size="small" /> : null}
               onDropdownVisibleChange={handleGetDept}
               onSelect={handleChangeDeptParams}
-              onChange={handleClearDeptParams}
+              onClear={handleClearDeptParams}
+              // ref={measuredRef}
             >
               {initQueryParams.map((d) =>
                 d.dept_id !== undefined && d.dept_id !== '' ? (
