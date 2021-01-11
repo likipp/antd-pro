@@ -5,12 +5,12 @@ import { Layout, Button, Space, Row, Col, Avatar, Tag, Divider, message } from '
 import { CloseOutlined, ManOutlined, WomanOutlined } from '@ant-design/icons';
 
 import { UserDetailInfo } from '@/pages/base/user/data';
-import { setUserStatus } from '@/pages/base/user/service';
+import { setUserStatus, queryUserByID } from '@/pages/base/user/service';
 
 import style from './index.less';
 
 interface DisplayUserInfo {
-  Data: UserDetailInfo;
+  UUID: string;
   Status: string;
   DisplayStatus: Function;
   UserInfo: Function;
@@ -18,10 +18,25 @@ interface DisplayUserInfo {
 
 const { Header, Footer, Content } = Layout;
 
+// @ts-ignore
 const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
-  const { Data, Status, DisplayStatus, UserInfo } = info;
+  const { UUID, Status, DisplayStatus, UserInfo } = info;
+  const [useInfo, setUseInfo] = useState<UserDetailInfo>({
+    key: 0,
+    uuid: '',
+    username: '',
+    nickname: '',
+    deptID: '',
+    remark: '',
+    sex: '',
+    status: 0,
+    DeptName: '',
+    createdAt: 0,
+    updatedAt: 0,
+    roles: [],
+  });
   const [initUUID, setUUID] = useState('');
-  const [initUserStatus, setUserStatusState] = useState(Data.status);
+  const [initUserStatus, setUserStatusState] = useState(0);
   const DemoBox = (props: any) => {
     return (
       <Row>
@@ -37,22 +52,34 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
     );
   };
 
+  useEffect(() => {
+    queryUserByID(UUID).then((res) => {
+      setUseInfo((prevalue) => {
+        return { ...prevalue, ...res.result };
+      });
+    });
+  }, [UUID]);
+
   const handleCloseCard = () => {
     DisplayStatus('none');
   };
 
   const handleSetUserStatus = () => {
-    if (Data.status) {
-      setUserStatusState(0);
-    } else {
+    if (useInfo.status === 2) {
       setUserStatusState(1);
     }
-    setUUID(Data.uuid as string);
+
+    if (useInfo.status === 1) {
+      setUserStatusState(2);
+    }
+    setUUID(useInfo.uuid as string);
   };
 
-  // useEffect({}, [info.Data.status])
   useEffect(() => {
-    if (typeof initUserStatus === 'number') {
+    console.log(2354345345);
+  }, [initUserStatus]);
+  useEffect(() => {
+    if (initUUID !== '' && typeof initUserStatus === 'number') {
       setUserStatus({
         uuid: initUUID,
         status: initUserStatus,
@@ -63,6 +90,11 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
       UserInfo(initUserStatus);
     }
   }, [initUserStatus]);
+
+  if (useInfo === undefined) {
+    return;
+  }
+  // eslint-disable-next-line consistent-return
   return (
     <Layout className={style.DetailLayout} style={{ display: Status }}>
       <Header className={style.DetailHeader}>
@@ -77,42 +109,44 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
         <Row justify="space-around" align="middle">
           <Col span={4}>
             <Row>
-              <Avatar size={60} className={info.Data.sex ? style.Woman : style.Man}>
-                {Data.nickname.substring(1)}
+              <Avatar size={60} className={useInfo.sex ? style.Woman : style.Man}>
+                {useInfo.nickname.substring(1)}
               </Avatar>
             </Row>
           </Col>
           <Col span={16}>
-            <Col style={{ display: 'inline-block' }}>{Data.nickname}</Col>
+            <Col style={{ display: 'inline-block' }}>{useInfo.nickname}</Col>
             <span style={{ margin: '0px 30px 0px 10px' }}>
-              {Data.sex ? (
+              {useInfo.sex ? (
                 <WomanOutlined style={{ fontSize: '16px', color: 'red' }} />
               ) : (
                 <ManOutlined style={{ fontSize: '16px', color: '#08c' }} />
               )}
             </span>
-            <Tag color={info.Data.status ? 'blue' : 'red'}>{Data.status ? '启用' : '禁用'}</Tag>
+            <Tag color={useInfo.status === 1 ? 'blue' : 'red'}>
+              {useInfo.status === 1 ? '启用' : '禁用'}
+            </Tag>
             <Row>
               <span>帐号:</span>
-              <span style={{ marginLeft: '5px' }}>{Data.username}</span>
+              <span style={{ marginLeft: '5px' }}>{useInfo.username}</span>
             </Row>
           </Col>
         </Row>
         <DemoBox title="登录名" value="" />
-        <DemoBox title="创建日期" value={moment(Data.createdAt).format('YYYY-MM-DD hh:mm')} />
-        <DemoBox title="更新日期" value={moment(Data.updatedAt).format('YYYY-MM-DD hh:mm')} />
+        <DemoBox title="创建日期" value={moment(useInfo.createdAt).format('YYYY-MM-DD hh:mm')} />
+        <DemoBox title="更新日期" value={moment(useInfo.updatedAt).format('YYYY-MM-DD hh:mm')} />
         <DemoBox title="部门" value="信息部" />
         <DemoBox title="岗位" value="管理员" />
         <DemoBox title="上级领导" value={0} />
         <DemoBox title="下级" value={1} />
-        <DemoBox title="所属角色" value={Data.roles.length} />
+        <DemoBox title="所属角色" value={useInfo.roles.length} />
         <Divider style={{ margin: '10px 0px' }} type="horizontal" />
       </Content>
       <Footer className={style.DetailFooter} style={{ textAlign: 'center' }}>
         <Space size={5}>
           <Button size="middle">编辑</Button>
           <Button size="middle" onClick={handleSetUserStatus}>
-            {Data.status ? '禁用' : '启用'}
+            {useInfo.status === 1 ? '禁用' : '启用'}
           </Button>
           <Button size="middle" danger>
             删除
