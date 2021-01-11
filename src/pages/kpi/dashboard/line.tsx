@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Line } from '@ant-design/charts';
 
 import { queryKPILine } from '@/pages/kpi/dashboard/service';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
 
-import { LineTitle } from '@/pages/kpi/dashboard/data';
-
 const LineDemo: React.FC = () => {
   const { dept, kpi } = useContext(DashContext);
   const [min, setMin] = useState(30);
   const [max, setMax] = useState(60);
-  const values = useRef<LineTitle>({ type: '', unit: '' });
+  const [initValues, setValues] = useState({ type: '', unit: '' });
   const [data, setData] = useState([]);
 
   const asyncFetch = () => {
@@ -19,13 +17,17 @@ const LineDemo: React.FC = () => {
       if (kpi !== '') {
         setMin(res.data[0].l_limit);
         setMax(res.data[0].u_limit);
-        values.current = { type: res.data[0].type, unit: res.data[0].unit };
+        setValues(() => {
+          return { type: res.data[0].type, unit: res.data[0].unit };
+        });
       }
     });
   };
 
   useEffect(() => {
-    asyncFetch();
+    if (dept !== '' || kpi !== '') {
+      asyncFetch();
+    }
   }, [dept, kpi]);
 
   const allConfig = {
@@ -93,6 +95,29 @@ const LineDemo: React.FC = () => {
         },
       },
     },
+    // tooltip: {
+    //   showMarkers: false,
+    //   follow: false,
+    //   position: 'top',
+    //   customContent: () => null,
+    // },
+    // theme: {
+    //   geometries: {
+    //     point: {
+    //       circle: {
+    //         active: {
+    //           style: {
+    //             r: 4,
+    //             fillOpacity: 1,
+    //             stroke: '#000',
+    //             lineWidth: 1,
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // interactions: [{ type: 'marker-active' }, { type: 'brush' }],
     // tooltip: { showMarkers: false },
     // lineStyle: function lineStyle(_ref2: any) {
     //   const { type } = _ref2;
@@ -112,7 +137,7 @@ const LineDemo: React.FC = () => {
     yField: 'value',
     yAxis: {
       title: {
-        text: `${values.current.type}(${values.current.unit})`,
+        text: `${initValues.type}(${initValues.unit})`,
         style: {
           fontSize: 16,
         },
@@ -166,13 +191,12 @@ const LineDemo: React.FC = () => {
   if (data === null) {
     return <span>null</span>;
   }
-
   if (kpi === '') {
     // @ts-ignore
-    return <Line {...allConfig} />;
+    return <Line {...allConfig} style={{ height: '500px' }} />;
   }
   // @ts-ignore
-  return <Line {...oneConfig} />;
+  return <Line {...oneConfig} style={{ height: '500px' }} />;
 };
 
 export default LineDemo;
