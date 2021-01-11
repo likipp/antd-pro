@@ -2,7 +2,7 @@ import { request } from 'umi';
 import { TableListParams, UserStatus, UserInfo } from './data';
 
 export async function queryUser(params?: TableListParams) {
-  console.log(params, "这是一个params")
+  // console.log(params, "这是一个params")
   if (params?.filter !== undefined) {
     if (Object.keys(params.filter).length) {
       if (params.filter.status !== null) {
