@@ -24,7 +24,6 @@ import {TableListItem, TableListParams} from '@/pages/base/user/data';
 import {
   queryUser,
   getDeptTree,
-  queryUserByID,
   CreateUser,
   DeleteUser,
 } from '@/pages/base/user/service';
@@ -34,7 +33,7 @@ import UpdateForm from '@/pages/base/user/components/UpdateForm';
 import {TransferItem} from "antd/es/transfer";
 import UserDetailInfoCard from './components/UserDetailInfoCard';
 import { UserDetailInfo, UserInfo, RolesItem } from './data';
-import DeptList from "@/pages/base/department";
+// import DeptList from "@/pages/base/department";
 
 const { Option } = Select;
 
@@ -162,6 +161,8 @@ const TableList: React.FC = () => {
     {
       title: '姓名',
       dataIndex: 'nickname',
+      copyable: true,
+      ellipsis: true,
       formItemProps: {
         hasFeedback: true,
         rules: [
@@ -410,6 +411,7 @@ const TableList: React.FC = () => {
 
   // 通过子组件传递过来用户的状态， 卡片上的按钮及状态Tag实时变更
   const GetAndSetUserInfo = (status: number) => {
+    console.log(userInfo, "userInfo")
     setUserInfo((prevState) => {
       return { ...prevState, status };
     });
@@ -424,11 +426,12 @@ const TableList: React.FC = () => {
     (uuid: string) => {
       if (uuid) {
         SetUserInfoVisible('inline');
-        queryUserByID(uuid).then((res) => {
-          setUserInfo((prevState) => {
-            return { ...prevState, ...res.data };
-          });
-        });
+        // queryUserByID(uuid).then((res) => {
+        //   setUserInfo((prevState) => {
+        //     console.log(prevState, "鼠标移入", res)
+        //     return { ...prevState, ...res.result };
+        //   });
+        // });
       } else {
         SetUserInfoVisible('none');
       }
@@ -469,13 +472,10 @@ const TableList: React.FC = () => {
   // 页码发生变化时回调的方法
   const pageOnChange = (pageNumber: number, pageSize: number | undefined) => {
     setPageInfo({pageSize: pageSize as number, current: pageNumber as number})
-    console.log(initPageInfo, "pageOnChange")
-
   }
   // 页面条目数量变化时回调方法
   const pageSizeOnChange = (current: number, size: number) => {
     setPageInfo({pageSize: size, current})
-    console.log(initPageInfo, "pageSizeOnChange")
   }
 
   return (
@@ -540,7 +540,7 @@ const TableList: React.FC = () => {
             }}
           >
             <div style={{ width: '200px', borderRight: '1px solid #eee' }}>
-              <DeptList />
+              {/* <DeptList /> */}
             </div>
             <div
               style={{
@@ -550,7 +550,7 @@ const TableList: React.FC = () => {
               {dom}
             </div>
             <UserDetailInfoCard
-              Data={userInfo}
+              UUID={userID}
               Status={userInfoVisible}
               DisplayStatus={GetAndSetDisplayStatus}
               UserInfo={GetAndSetUserInfo}
