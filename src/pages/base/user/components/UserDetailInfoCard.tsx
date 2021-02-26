@@ -37,11 +37,11 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
   });
   const [initUUID, setUUID] = useState('');
   const [initUserStatus, setUserStatusState] = useState(0);
-  const DemoBox = (props: any) => {
+  const UserDetailRow = (props: any) => {
     return (
-      <Row>
-        <Col span={6} className={style.DetailRowKey}>
-          <span>{props.title}:</span>
+      <Row style={{ marginBottom: '10px' }}>
+        <Col span={6}>
+          <span className={style.DetailRowValueColor}>{props.title}:</span>
         </Col>
         <Col span={18}>
           <span className={props.value ? style.DetailRowValue : style.DetailRowValueColor}>
@@ -79,7 +79,8 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
     console.log(2354345345);
   }, [initUserStatus]);
   useEffect(() => {
-    if (initUUID !== '' && typeof initUserStatus === 'number') {
+    // if (initUUID !== '' && typeof initUserStatus === 'number') {
+    if (initUUID !== '') {
       setUserStatus({
         uuid: initUUID,
         status: initUserStatus,
@@ -110,36 +111,57 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
           <Col span={4}>
             <Row>
               <Avatar size={60} className={useInfo.sex ? style.Woman : style.Man}>
-                {useInfo.nickname.substring(1)}
+                <span style={{ fontSize: '20px', fontWeight: 600 }}>
+                  {useInfo.nickname.substring(1)}
+                </span>
               </Avatar>
             </Row>
           </Col>
-          <Col span={16}>
-            <Col style={{ display: 'inline-block' }}>{useInfo.nickname}</Col>
-            <span style={{ margin: '0px 30px 0px 10px' }}>
-              {useInfo.sex ? (
-                <WomanOutlined style={{ fontSize: '16px', color: 'red' }} />
-              ) : (
-                <ManOutlined style={{ fontSize: '16px', color: '#08c' }} />
-              )}
-            </span>
-            <Tag color={useInfo.status === 1 ? 'blue' : 'red'}>
-              {useInfo.status === 1 ? '启用' : '禁用'}
-            </Tag>
+          <Col span={18}>
+            <Col
+              style={{
+                display: 'inline-block',
+                fontSize: '20px',
+                fontWeight: 600,
+                verticalAlign: 'middle',
+                overflow: 'hidden',
+              }}
+              span={10}
+            >
+              {useInfo.nickname}
+            </Col>
+            <Col span={14} style={{ display: 'inline-block' }}>
+              <span style={{ margin: '0px 30px 0px 10px' }}>
+                {useInfo.sex ? (
+                  <WomanOutlined style={{ fontSize: '16px', color: 'red' }} />
+                ) : (
+                  <ManOutlined style={{ fontSize: '16px', color: '#08c' }} />
+                )}
+              </span>
+              <Tag color={useInfo.status === 1 ? 'blue' : 'red'}>
+                {useInfo.status === 1 ? '启用' : '禁用'}
+              </Tag>
+            </Col>
             <Row>
-              <span>帐号:</span>
+              <span style={{ color: '#787878' }}>帐号:</span>
               <span style={{ marginLeft: '5px' }}>{useInfo.username}</span>
             </Row>
           </Col>
         </Row>
-        <DemoBox title="登录名" value="" />
-        <DemoBox title="创建日期" value={moment(useInfo.createdAt).format('YYYY-MM-DD hh:mm')} />
-        <DemoBox title="更新日期" value={moment(useInfo.updatedAt).format('YYYY-MM-DD hh:mm')} />
-        <DemoBox title="部门" value="信息部" />
-        <DemoBox title="岗位" value="管理员" />
-        <DemoBox title="上级领导" value={0} />
-        <DemoBox title="下级" value={1} />
-        <DemoBox title="所属角色" value={useInfo.roles.length} />
+        <UserDetailRow title="登录名" value="" />
+        <UserDetailRow
+          title="创建日期"
+          value={moment(useInfo.createdAt).format('YYYY-MM-DD hh:mm')}
+        />
+        <UserDetailRow
+          title="更新日期"
+          value={moment(useInfo.updatedAt).format('YYYY-MM-DD hh:mm')}
+        />
+        <UserDetailRow title="部门" value="信息部" />
+        <UserDetailRow title="岗位" value="管理员" />
+        <UserDetailRow title="上级领导" value={0} />
+        <UserDetailRow title="下级" value={1} />
+        <UserDetailRow title="所属角色" value={useInfo.roles.length} />
         <Divider style={{ margin: '10px 0px' }} type="horizontal" />
       </Content>
       <Footer className={style.DetailFooter} style={{ textAlign: 'center' }}>
