@@ -37,6 +37,7 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
   });
   const [initUUID, setUUID] = useState('');
   const [initUserStatus, setUserStatusState] = useState(0);
+  // const [success, setSuccess] = useState(false)
   const UserDetailRow = (props: any) => {
     return (
       <Row style={{ marginBottom: '10px' }}>
@@ -54,8 +55,8 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
 
   useEffect(() => {
     queryUserByID(UUID).then((res) => {
-      setUseInfo((prevalue) => {
-        return { ...prevalue, ...res.result };
+      setUseInfo((preValue) => {
+        return { ...preValue, ...res.result };
       });
     });
   }, [UUID]);
@@ -64,6 +65,7 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
     DisplayStatus('none');
   };
 
+  // 根据父组件传递过来的状态，相应的变更用户状态
   const handleSetUserStatus = () => {
     if (useInfo.status === 2) {
       setUserStatusState(1);
@@ -73,34 +75,40 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
       setUserStatusState(2);
     }
     setUUID(useInfo.uuid as string);
-  };
-
-  useEffect(() => {
-    console.log(2354345345);
-  }, [initUserStatus]);
-  useEffect(() => {
-    // if (initUUID !== '' && typeof initUserStatus === 'number') {
     if (initUUID !== '') {
       setUserStatus({
         uuid: initUUID,
         status: initUserStatus,
       }).then((res) => {
         message.success(res.msg);
+        UserInfo(true);
       });
-      // DisplayStatus(Status)
-      UserInfo(initUserStatus);
+
     }
+  };
+
+  useEffect(() => {
+    // if (initUUID !== '' && typeof initUserStatus === 'number') {
+    // if (initUUID !== '') {
+    //   setUserStatus({
+    //     uuid: initUUID,
+    //     status: initUserStatus,
+    //   }).then((res) => {
+    //     message.success(res.msg);
+    //   });
+    //   // DisplayStatus(Status)
+    //   UserInfo(initUserStatus);
+    // }
   }, [initUserStatus]);
 
-  if (useInfo === undefined) {
-    return;
-  }
-  // eslint-disable-next-line consistent-return
+  // if (useInfo === undefined) {
+  //   return;
+  // }
   return (
     <Layout className={style.DetailLayout} style={{ display: Status }}>
       <Header className={style.DetailHeader}>
         <Row>
-          <Col span={8}>用户信息</Col>
+          <Col span={8}>用户详情</Col>
           <Col span={2} offset={14}>
             <CloseOutlined onClick={handleCloseCard} />
           </Col>
@@ -148,6 +156,7 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
             </Row>
           </Col>
         </Row>
+        <Divider style={{ margin: '10px 0px' }} type="horizontal" />
         <UserDetailRow title="登录名" value="" />
         <UserDetailRow
           title="创建日期"
@@ -162,7 +171,7 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
         <UserDetailRow title="上级领导" value={0} />
         <UserDetailRow title="下级" value={1} />
         <UserDetailRow title="所属角色" value={useInfo.roles.length} />
-        <Divider style={{ margin: '10px 0px' }} type="horizontal" />
+        {/* <Divider style={{ margin: '10px 0px' }} type="horizontal" /> */}
       </Content>
       <Footer className={style.DetailFooter} style={{ textAlign: 'center' }}>
         <Space size={5}>

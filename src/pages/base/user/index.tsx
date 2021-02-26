@@ -32,7 +32,7 @@ import CreateForm from '@/pages/base/user/components/CreateForm';
 import UpdateForm from '@/pages/base/user/components/UpdateForm';
 import {TransferItem} from "antd/es/transfer";
 import UserDetailInfoCard from './components/UserDetailInfoCard';
-import { UserDetailInfo, UserInfo, RolesItem } from './data';
+import { UserInfo, RolesItem } from './data';
 // import DeptList from "@/pages/base/department";
 
 const { Option } = Select;
@@ -55,13 +55,13 @@ const TableList: React.FC = () => {
   const [sourceData, setSourceData] = useState<TransferItem[]>();
   const [targetKeys, setTargetKeys] = useState<string[]>();
   const [targetData, setTargetData] = useState<RolesItem[]>([])
-  const [userInfo, setUserInfo] = useState<UserDetailInfo>({
-    roles: [],
-    uuid: '',
-    username: '',
-    nickname: '',
-    deptID: '',
-  });
+  // const [userInfo, setUserInfo] = useState<UserDetailInfo>({
+  //   roles: [],
+  //   uuid: '',
+  //   username: '',
+  //   nickname: '',
+  //   deptID: '',
+  // });
   const actionRef = useRef<ActionType>();
   const ref = useRef<FormInstance>();
   const [dataSource, setDataSource] = useState<TableListItem[]>([]);
@@ -410,15 +410,16 @@ const TableList: React.FC = () => {
   };
 
   // 通过子组件传递过来用户的状态， 卡片上的按钮及状态Tag实时变更
-  const GetAndSetUserInfo = (status: number) => {
-    console.log(userInfo, "userInfo")
-    setUserInfo((prevState) => {
-      return { ...prevState, status };
-    });
+  const GetAndSetUserInfo = (useInfo: boolean) => {
+    // setUserInfo((prevState) => {
+    //   return { ...prevState, useInfo };
+    // });
     // 判断actionRef.current != undefined的情况下，执行页面刷新
     // 当子组件传递过来用户的状态时， Table表单页面的状态实时刷新
-    if (actionRef.current) {
-      actionRef.current.reload();
+    if (useInfo) {
+      if (actionRef.current) {
+        actionRef.current.reload();
+      }
     }
   };
 
@@ -536,7 +537,7 @@ const TableList: React.FC = () => {
               display: 'flex',
               width: '100%',
               justifyContent: 'flex-end',
-              height: '560px',
+              height: '640px',
             }}
           >
             <div style={{ width: '200px', borderRight: '1px solid #eee' }}>
