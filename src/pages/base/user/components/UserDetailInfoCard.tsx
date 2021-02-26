@@ -5,7 +5,7 @@ import { Layout, Button, Space, Row, Col, Avatar, Tag, Divider, message } from '
 import { CloseOutlined, ManOutlined, WomanOutlined } from '@ant-design/icons';
 
 import { UserDetailInfo } from '@/pages/base/user/data';
-import { setUserStatus, queryUserByID } from '@/pages/base/user/service';
+import { setUserStatus, queryUserByID, DeleteUser } from '@/pages/base/user/service';
 
 import style from './index.less';
 
@@ -86,6 +86,15 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
 
     }
   };
+
+  const handleDeleteUser = () => {
+    console.log(useInfo.uuid, "userInfo")
+    if (useInfo.uuid != null) {
+      DeleteUser(useInfo.uuid).then(r => {
+        console.log(r)
+      })
+    }
+  }
 
   useEffect(() => {
     // if (initUUID !== '' && typeof initUserStatus === 'number') {
@@ -179,7 +188,7 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
           <Button size="middle" onClick={handleSetUserStatus}>
             {useInfo.status === 1 ? '禁用' : '启用'}
           </Button>
-          <Button size="middle" danger>
+          <Button size="middle" danger onClick={handleDeleteUser}>
             删除
           </Button>
         </Space>

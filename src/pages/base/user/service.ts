@@ -50,6 +50,7 @@ export async function CreateUser(params: UserInfo) {
 }
 
 export async function DeleteUser(params: string) {
+  console.log(params, "string")
   return request(`/api/v1/base/users/${params}`, {
     method: 'DELETE',
   });
