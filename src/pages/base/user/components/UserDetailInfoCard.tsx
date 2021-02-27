@@ -81,6 +81,7 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
         status: initUserStatus,
       }).then((res) => {
         message.success(res.msg);
+        DisplayStatus('none');
         UserInfo(true);
       });
 
@@ -88,10 +89,11 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
   };
 
   const handleDeleteUser = () => {
-    console.log(useInfo.uuid, "userInfo")
     if (useInfo.uuid != null) {
-      DeleteUser(useInfo.uuid).then(r => {
-        console.log(r)
+      DeleteUser(useInfo.uuid).then(res => {
+        message.success(res.msg);
+        DisplayStatus('none');
+        UserInfo(true);
       })
     }
   }
