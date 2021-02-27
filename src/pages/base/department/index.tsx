@@ -54,9 +54,9 @@ const DeptList: React.FC<{}> = () => {
         placeholder="请输入要搜索的部门"
         onSearch={(value) => {
           SearchDept(value);
-          console.log(value);
         }}
         enterButton
+        style={{marginBottom: '10px'}}
       />
       <Tree showIcon treeData={treeData} expandedKeys={[parentNode]} />
     </div>
