@@ -6,7 +6,7 @@ import { DepTreeData } from '@/pages/base/department/data';
 import { queryDeptTree } from '@/pages/base/department/service';
 
 const { Search } = Input;
-const DeptList: React.FC<{}> = () => {
+const DeptList: React.FC = () => {
   const [treeData, setTreeData] = useState<DepTreeData[]>([]);
   // 用于初始化后默认展开第一层级树, 配合Tree expandedKeys使用
   const [parentNode, setParentNode] = useState('');
@@ -42,10 +42,20 @@ const DeptList: React.FC<{}> = () => {
 
   useEffect(() => {
     queryDeptTree().then((res) => {
+      console.log(res, "depTree")
       SetIcon(res.depTree);
       setTreeData(res.depTree);
     });
   }, [loading]);
+
+  // const handleExpand = () => {
+  //   console.log(66666)
+  // }
+
+  const handleSelect = (selectedKeys: React.Key[], info: any) => {
+    console.log('selected', selectedKeys, info);
+    console.log(parentNode)
+  }
 
   return (
     // expandedKeys={[parentNode]}
@@ -58,7 +68,13 @@ const DeptList: React.FC<{}> = () => {
         enterButton
         style={{marginBottom: '10px'}}
       />
-      <Tree showIcon treeData={treeData} expandedKeys={[parentNode]} />
+      <Tree showIcon treeData={treeData}
+            // expandedKeys={[parentNode]}
+        style={{height: '600px'}}
+        // defaultExpandAll
+        onSelect={handleSelect}
+        // onExpand={handleExpand}
+      />
     </div>
   );
 };
