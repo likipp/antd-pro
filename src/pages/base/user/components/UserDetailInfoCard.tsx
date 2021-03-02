@@ -67,12 +67,10 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
 
   // 根据父组件传递过来的状态，相应的变更用户状态
   const handleSetUserStatus = () => {
-    if (useInfo.status === 2) {
+    if (useInfo.status) {
+      setUserStatusState(0);
+    } else {
       setUserStatusState(1);
-    }
-
-    if (useInfo.status === 1) {
-      setUserStatusState(2);
     }
     setUUID(useInfo.uuid as string);
     if (initUUID !== '') {

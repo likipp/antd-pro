@@ -184,8 +184,8 @@ const TableList: React.FC = () => {
       dataIndex: 'status',
       filters: true,
       valueEnum: {
+        0: { text: '禁用', status: 'Error' },
         1: { text: '启用', status: 'Success' },
-        2: { text: '禁用', status: 'Error' },
       },
       formItemProps: {
         hasFeedback: true,
