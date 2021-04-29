@@ -1,33 +1,53 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Line } from '@ant-design/charts';
 
 import { queryKPILine } from '@/pages/kpi/dashboard/service';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
 
-const LineDemo: React.FC = () => {
+const LineChart: React.FC = () => {
   const { dept, kpi } = useContext(DashContext);
-  const [min, setMin] = useState(30);
-  const [max, setMax] = useState(60);
+  // const [min, setMin] = useState(0);
+  // const [max, setMax] = useState(0);
+  const min = useRef(0);
+  const max = useRef(0);
   const [initValues, setValues] = useState({ type: '', unit: '' });
   const [data, setData] = useState([]);
+  const [lineMin, setLinMin] = useState(0);
+  const [lineMax, setLinMax] = useState(0);
+
+  // const [, setF] = useState(0);
 
   const asyncFetch = () => {
     queryKPILine({ dept, kpi }).then((res) => {
       setData(res.data);
-      if (kpi !== '') {
-        setMin(res.data[0].l_limit);
-        setMax(res.data[0].u_limit);
-        setValues(() => {
-          return { type: res.data[0].type, unit: res.data[0].unit };
-        });
+      if (kpi === '') {
+        return;
       }
+      const arr: number[] = [];
+      res.data.forEach((item: any) => {
+        arr.push(item.value);
+      });
+      let temMax;
+      let temMin;
+      if (arr.length > 1) {
+        temMax = Math.max(...arr);
+        temMin = Math.min(...arr);
+      } else {
+        max.current = res.data[0].u_limit;
+        min.current = res.data[0].l_limit;
+        temMax = max.current;
+        temMin = min.current;
+      }
+      setLinMax(temMax);
+      setLinMin(temMin);
+      setValues(() => {
+        return { type: res.data[0].type, unit: res.data[0].unit };
+      });
     });
   };
 
   useEffect(() => {
-    if (dept !== '' || kpi !== '') {
-      asyncFetch();
-    }
+    asyncFetch();
   }, [dept, kpi]);
 
   const allConfig = {
@@ -41,7 +61,7 @@ const LineDemo: React.FC = () => {
           fill: '#aaa',
           fontSize: 12,
         },
-        rotate: Math.PI / 6,
+        // rotate: Math.PI / 6,
       },
     },
     yAxis: {
@@ -142,12 +162,15 @@ const LineDemo: React.FC = () => {
           fontSize: 16,
         },
       },
+      // 设置Y轴max值, 高于最大值
+      max: lineMax * 1.2,
+      min: lineMin * 0.5,
     },
     annotations: [
       {
         type: 'text',
-        position: ['min', min],
-        content: `下限值:${min}`,
+        position: ['min', min.current],
+        content: `下限值:${min.current}`,
         offsetY: -4,
         style: {
           textBaseline: 'bottom',
@@ -158,8 +181,8 @@ const LineDemo: React.FC = () => {
       },
       {
         type: 'line',
-        start: ['min', min],
-        end: ['max', min],
+        start: ['min', min.current],
+        end: ['max', min.current],
         style: {
           stroke: '#F4664A',
           lineDash: [2, 2],
@@ -167,8 +190,8 @@ const LineDemo: React.FC = () => {
       },
       {
         type: 'text',
-        position: [0, max],
-        content: `上限值:${max}`,
+        position: [0, max.current],
+        content: `上限值:${max.current}`,
         offsetY: -4,
         style: {
           textBaseline: 'bottom',
@@ -179,8 +202,8 @@ const LineDemo: React.FC = () => {
       },
       {
         type: 'line',
-        start: ['min', max],
-        end: ['max', max],
+        start: ['min', max.current],
+        end: ['max', max.current],
         style: {
           stroke: '#52c41a',
           lineDash: [2, 2],
@@ -189,14 +212,14 @@ const LineDemo: React.FC = () => {
     ],
   };
   if (data === null) {
-    return <span>null</span>;
+    return <span>暂无数据</span>;
   }
-  if (kpi === '') {
+  if (kpi !== '') {
     // @ts-ignore
-    return <Line {...allConfig} style={{ height: '500px' }} />;
+    return <Line {...oneConfig} style={{ height: '500px' }} />;
   }
   // @ts-ignore
-  return <Line {...oneConfig} style={{ height: '500px' }} />;
+  return <Line {...allConfig} style={{ height: '500px' }} />;
 };
 
-export default LineDemo;
+export default LineChart;

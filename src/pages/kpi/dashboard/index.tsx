@@ -1,9 +1,9 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import { QueryParams } from '@/pages/kpi/dashboard/data';
 import { Card, Select, Form, Button, Spin } from 'antd';
 
 import { queryKPIDept } from '@/pages/kpi/dashboard/service';
-import LineDemo from '@/pages/kpi/dashboard/line';
+import LineChart from '@/pages/kpi/dashboard/line';
 import KPITable from '@/pages/kpi/dashboard/table';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
 import styles from './databoard.less';
@@ -78,10 +78,11 @@ const TableList: React.FC = () => {
   const handleGetKPI = () => {
     const initParams = { dept: state.initDept, kpi: state.initKPI };
     queryKPIDept(initParams).then((res) => {
-      if (res.result.length > 0) {
-        setQueryParams(res.result);
-        setFetching(true);
+      if (res.result.length <= 0) {
+        return;
       }
+      setQueryParams(res.result);
+      setFetching(true);
     });
   };
 
@@ -92,6 +93,9 @@ const TableList: React.FC = () => {
     dispatch({ type: 'setKPI' });
   };
 
+  useEffect(() => {
+    console.log('主页面刷新');
+  }, [state.initKPI, state.initDept]);
   return (
     <div>
       <Card style={{ marginBottom: '30px' }}>
@@ -104,7 +108,7 @@ const TableList: React.FC = () => {
               placeholder="请选择部门"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               onDropdownVisibleChange={handleGetDept}
-              onSelect={handleChangeDeptParams}
+              onChange={handleChangeDeptParams}
               onClear={handleReset}
             >
               {initQueryParams.map((d) =>
@@ -157,7 +161,7 @@ const TableList: React.FC = () => {
           <KPITable />
         </Card>
         <Card className={state.initDept === '' ? styles.selected : styles.unSelect}>
-          <LineDemo />
+          <LineChart />
         </Card>
       </DashContext.Provider>
     </div>
