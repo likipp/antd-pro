@@ -31,9 +31,9 @@ import { queryRole } from '@/pages/base/role/service'
 import CreateForm from '@/pages/base/user/components/CreateForm';
 import UpdateForm from '@/pages/base/user/components/UpdateForm';
 import {TransferItem} from "antd/es/transfer";
+import DeptList from "@/pages/base/department";
 import UserDetailInfoCard from './components/UserDetailInfoCard';
 import { UserInfo, RolesItem } from './data';
-// import DeptList from "@/pages/base/department";
 
 const { Option } = Select;
 
@@ -184,8 +184,8 @@ const TableList: React.FC = () => {
       dataIndex: 'status',
       filters: true,
       valueEnum: {
+        0: { text: '禁用', status: 'Error' },
         1: { text: '启用', status: 'Success' },
-        2: { text: '禁用', status: 'Error' },
       },
       formItemProps: {
         hasFeedback: true,
@@ -540,8 +540,8 @@ const TableList: React.FC = () => {
               height: '640px',
             }}
           >
-            <div style={{ width: '200px', borderRight: '1px solid #eee' }}>
-              {/* <DeptList /> */}
+            <div style={{ width: '200px', height: '650px', borderRight: '1px solid #eee' }}>
+               <DeptList />
             </div>
             <div
               style={{

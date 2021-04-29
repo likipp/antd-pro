@@ -81,12 +81,12 @@ const TableList: React.FC<{}> = () => {
     {
       title: '规则名称',
       dataIndex: 'name',
-      rules: [
-        {
-          required: true,
-          message: '规则名称为必填项',
-        },
-      ],
+      // rules: [
+      //   {
+      //     required: true,
+      //     message: '规则名称为必填项',
+      //   },
+      // ],
     },
     {
       title: '描述',
@@ -181,7 +181,7 @@ const TableList: React.FC<{}> = () => {
             onClick={async () => {
               await handleRemove(selectedRowsState);
               setSelectedRows([]);
-              actionRef.current?.reloadAndRest();
+              // actionRef.current?.reloadAndRest();
             }}
           >
             批量删除
