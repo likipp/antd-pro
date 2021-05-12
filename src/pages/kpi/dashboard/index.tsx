@@ -1,9 +1,10 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { QueryParams } from '@/pages/kpi/dashboard/data';
+import type { QueryParams } from '@/pages/kpi/dashboard/data';
 import { Card, Select, Form, Button, Spin } from 'antd';
 
 import { queryKPIDept } from '@/pages/kpi/dashboard/service';
-import LineChart from '@/pages/kpi/dashboard/line';
+import OneLineChart from '@/pages/kpi/dashboard/oneLine';
+import AllLineChart from '@/pages/kpi/dashboard/allLine';
 import KPITable from '@/pages/kpi/dashboard/table';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
 import styles from './databoard.less';
@@ -15,8 +16,8 @@ const TableList: React.FC = () => {
   const [form] = Form.useForm();
   // Table组件的数据来源
   const [initQueryParams, setQueryParams] = useState<QueryParams[]>([]);
-  const [initDept, setDept] = useState('');
-  const [initKPI, setKPI] = useState('');
+  // const [initDept, setDept] = useState('');
+  // const [initKPI, setKPI] = useState('');
   const [fetching, setFetching] = useState(false);
 
   const initialState = { initDept: '', initKPI: '' };
@@ -28,13 +29,13 @@ const TableList: React.FC = () => {
       case 'reset':
         return { initDept: '', initKPI: '' };
       case 'setKPI':
-        return { initDept, initKPI };
+        return { initDept: preState.initDept, initKPI: action.payload };
       case 'setDept':
-        return { initDept, initKPI };
+        return { initDept: action.payload, initKPI: '' };
       case 'clearKPI':
-        return { initDept, initKPI: '' };
+        return { initDept: '', initKPI: '' };
       default:
-        throw new Error();
+        throw new Error('未知的操作类型, 请联系管理员');
     }
   }
 
@@ -49,29 +50,17 @@ const TableList: React.FC = () => {
   };
 
   const handleChangeDeptParams = (value: string) => {
-    setDept(() => {
-      return value;
-    });
-    dispatch({ type: 'setDept' });
+    dispatch({ type: 'setDept', payload: value });
   };
 
   // 点击清除按钮后的回调方法
   const handleClearKPIParams = () => {
     dispatch({ type: 'clearKPI' });
-    setKPI(() => {
-      return '';
-    });
   };
 
   const handleReset = () => {
     dispatch({ type: 'reset' });
     form.resetFields();
-    setDept(() => {
-      return '';
-    });
-    setKPI(() => {
-      return '';
-    });
   };
 
   // 在部门选择之后, 获取相关的KPI数据
@@ -87,15 +76,10 @@ const TableList: React.FC = () => {
   };
 
   const handleChangeKPIParams = (value: string) => {
-    setKPI(() => {
-      return value;
-    });
-    dispatch({ type: 'setKPI' });
+    dispatch({ type: 'setKPI', payload: value });
   };
 
-  useEffect(() => {
-    console.log('主页面刷新');
-  }, [state.initKPI, state.initDept]);
+  useEffect(() => {}, [state.initKPI, state.initDept]);
   return (
     <div>
       <Card style={{ marginBottom: '30px' }}>
@@ -161,7 +145,7 @@ const TableList: React.FC = () => {
           <KPITable />
         </Card>
         <Card className={state.initDept === '' ? styles.selected : styles.unSelect}>
-          <LineChart />
+          <div>{state.initKPI === '' ? <AllLineChart /> : <OneLineChart />}</div>
         </Card>
       </DashContext.Provider>
     </div>
