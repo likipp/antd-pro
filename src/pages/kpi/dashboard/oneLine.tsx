@@ -3,6 +3,8 @@ import { Line } from '@ant-design/charts';
 
 import { queryKPILine } from '@/pages/kpi/dashboard/service';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
+import lineReducer from '@/reducers/lineReducer';
+import { CompareWithArray } from '@/utils/compare';
 
 const OneLineChart: React.FC = () => {
   const { dept, kpi } = useContext(DashContext);
@@ -13,27 +15,18 @@ const OneLineChart: React.FC = () => {
   const [lineMax, setLinMax] = useState(0);
 
   const initValues = { type: '', unit: '' };
-  const [values, dispatch] = useReducer(reducer, initValues);
-  function reducer(preState: any, action: any) {
-    switch (action.type) {
-      case 'change':
-        return { type: action.payload.type, unit: action.payload.unit };
-      case 'clear':
-        return { type: '', unit: '' };
-      default:
-        throw new Error('未知的操作类型, 请联系管理员');
-    }
-  }
+  const [values, dispatch] = useReducer(lineReducer, initValues);
 
   useMemo(() => {
     const asyncFetch = () => {
       queryKPILine({ dept, kpi }).then((res) => {
         setData(res.data);
-        // 定义一个空数组存储实际KPI数据
-        const arr: number[] = [];
-        res.data.forEach((item: any) => {
-          arr.push(item.value);
-        });
+        const result = CompareWithArray(res.data);
+        // 判断数据长度是否小于等于1, 如果是, 则需要对线性的Y轴起点与终点值, 上下限值线性值设置
+        if (result.tLen <= 1) {
+          result.tMax = res.data[0].u_limit;
+          result.tMin = res.data[0].l_limit;
+        }
         setMax(() => {
           return res.data[0].u_limit;
         });
@@ -43,10 +36,10 @@ const OneLineChart: React.FC = () => {
 
         // 设置线性中的最大值与最小值
         setLinMax(() => {
-          return Math.max(...arr);
+          return result.tMax;
         });
         setLinMin(() => {
-          return Math.min(...arr);
+          return result.tMin;
         });
         dispatch({ type: 'change', payload: res.data[0] });
       });
@@ -68,6 +61,11 @@ const OneLineChart: React.FC = () => {
       // 设置Y轴max值, 高于最大值
       max: lineMax * 1.2,
       min: lineMin * 0.5,
+    },
+    point: {
+      size: 5,
+      // 数据点形状
+      shape: 'hexagon',
     },
     annotations: [
       {

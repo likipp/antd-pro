@@ -7,6 +7,7 @@ import OneLineChart from '@/pages/kpi/dashboard/oneLine';
 import AllLineChart from '@/pages/kpi/dashboard/allLine';
 import KPITable from '@/pages/kpi/dashboard/table';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
+import kpiReducer from '@/reducers/kpiReducer';
 import styles from './databoard.less';
 
 const TableList: React.FC = () => {
@@ -16,28 +17,9 @@ const TableList: React.FC = () => {
   const [form] = Form.useForm();
   // Table组件的数据来源
   const [initQueryParams, setQueryParams] = useState<QueryParams[]>([]);
-  // const [initDept, setDept] = useState('');
-  // const [initKPI, setKPI] = useState('');
   const [fetching, setFetching] = useState(false);
-
   const initialState = { initDept: '', initKPI: '' };
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  // 定义一个reducer供useReducer使用
-  function reducer(preState: any, action: any) {
-    switch (action.type) {
-      case 'reset':
-        return { initDept: '', initKPI: '' };
-      case 'setKPI':
-        return { initDept: preState.initDept, initKPI: action.payload };
-      case 'setDept':
-        return { initDept: action.payload, initKPI: '' };
-      case 'clearKPI':
-        return { initDept: '', initKPI: '' };
-      default:
-        throw new Error('未知的操作类型, 请联系管理员');
-    }
-  }
+  const [state, dispatch] = useReducer(kpiReducer, initialState);
 
   // 获取有KPI数据的部门
   const handleGetDept = () => {
@@ -49,13 +31,19 @@ const TableList: React.FC = () => {
     });
   };
 
+  // 点击清除按钮后的回调方法
+  const handleClearKPIParams = () => {
+    dispatch({ type: 'clearKPI' });
+  };
+
   const handleChangeDeptParams = (value: string) => {
     dispatch({ type: 'setDept', payload: value });
   };
 
-  // 点击清除按钮后的回调方法
-  const handleClearKPIParams = () => {
-    dispatch({ type: 'clearKPI' });
+  const handleSelectDept = (value: string) => {
+    if (state.initDept !== value && state.initDept !== '') {
+      form.setFieldsValue({ kpi: '' });
+    }
   };
 
   const handleReset = () => {
@@ -94,6 +82,7 @@ const TableList: React.FC = () => {
               onDropdownVisibleChange={handleGetDept}
               onChange={handleChangeDeptParams}
               onClear={handleReset}
+              onSelect={handleSelectDept}
             >
               {initQueryParams.map((d) =>
                 d.dept_id !== undefined && d.dept_id !== '' ? (
@@ -111,7 +100,7 @@ const TableList: React.FC = () => {
               value={state.initKPI}
               placeholder="请选择KPI"
               notFoundContent={fetching ? <Spin size="small" /> : null}
-              disabled={state.initDept === ''}
+              disabled={state.initDept === '' || state.initDept === undefined}
               onDropdownVisibleChange={handleGetKPI}
               onSelect={handleChangeKPIParams}
               onClear={handleClearKPIParams}
@@ -140,11 +129,21 @@ const TableList: React.FC = () => {
       <DashContext.Provider value={{ dept: state.initDept, kpi: state.initKPI }}>
         <Card
           style={{ marginBottom: '30px' }}
-          className={state.initDept === '' ? styles.selected : styles.unSelect}
+          className={
+            state.initDept === '' || state.initDept === undefined
+              ? styles.selected
+              : styles.unSelect
+          }
         >
           <KPITable />
         </Card>
-        <Card className={state.initDept === '' ? styles.selected : styles.unSelect}>
+        <Card
+          className={
+            state.initDept === '' || state.initDept === undefined
+              ? styles.selected
+              : styles.unSelect
+          }
+        >
           <div>{state.initKPI === '' ? <AllLineChart /> : <OneLineChart />}</div>
         </Card>
       </DashContext.Provider>
