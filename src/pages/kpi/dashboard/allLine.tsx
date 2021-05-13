@@ -25,6 +25,7 @@ const AllLineChart: React.FC = () => {
     const asyncFetch = () => {
       queryKPILine({ dept, kpi: '' }).then((res) => {
         setData(res.data);
+        console.log(res.data, 'line');
       });
     };
     asyncFetch();

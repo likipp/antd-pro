@@ -151,6 +151,7 @@ const KPITable: React.FC = () => {
     if (dept !== '' || kpi !== '') {
       setLoading(true);
       queryKPIData({ dept, kpi }).then((res) => {
+        console.log(res.data, 'KPI数据');
         setDataSource(res.data);
         setLoading(false);
       });
