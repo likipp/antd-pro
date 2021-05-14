@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useReducer } from 'react';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { Tag, Space } from 'antd';
 
 import { queryKPIData } from '@/pages/kpi/dashboard/service';
 import { TableListItem } from '@/pages/kpi/dashboard/data';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
+import tableReducer from '@/reducers/tableReducer';
 
 const KPITable: React.FC = () => {
   const { dept, kpi } = useContext(DashContext);
@@ -40,119 +41,73 @@ const KPITable: React.FC = () => {
       dataIndex: 'uLimit',
     },
   ];
-  const [initColumns] = useState(() => {
+  const initMonth = { columns };
+  const [values, dispatch] = useReducer(tableReducer, initMonth);
+
+  const getMonths = (datas: any) => {
     let a: any;
-    for (let i = 1; i <= 12; i += 1) {
-      if (i < 10) {
-        a = {
-          key: `2020/0${i}`,
-          title: `2020/0${i}`,
-          align: 'center',
-          dataIndex: `2020/0${i}`,
-          onCell: (record: any) => {
-            if (
-              record[`2020/0${i}`] !== undefined &&
-              record[`2020/0${i}`] !== null &&
-              record[`2020/0${i}`] !== '-'
-            ) {
-              if (
-                parseInt(record[`2020/0${i}`] as string, 10) < parseInt(record.lLimit as string, 10)
-              ) {
-                return {
-                  style: {
-                    backgroundColor: '#f5222d',
-                  },
-                };
-              }
-              if (
-                parseInt(record[`2020/0${i}`] as string, 10) > parseInt(record.tValue as string, 10)
-              ) {
-                return {
-                  style: {
-                    backgroundColor: '#52c41a',
-                  },
-                };
-              }
+    for (let i = 1; i < datas.length; i += 1) {
+      const month = datas[i];
+      a = {
+        key: month,
+        title: month,
+        align: 'center',
+        dataIndex: month,
+        onCell: (record: any) => {
+          if (record[month] !== undefined && record[month] !== null && record[month] !== '-') {
+            if (record[month] === 'N/A') {
               return {
                 style: {
-                  backgroundColor: '#faad14',
+                  backgroundColor: '#d9d9d9',
+                },
+              };
+            }
+            if (parseInt(record[month] as string, 10) < parseInt(record.lLimit as string, 10)) {
+              return {
+                style: {
+                  backgroundColor: '#f5222d',
+                },
+              };
+            }
+            if (parseInt(record[month] as string, 10) > parseInt(record.tValue as string, 10)) {
+              return {
+                style: {
+                  backgroundColor: '#52c41a',
                 },
               };
             }
             return {
               style: {
-                backgroundColor: '#d9d9d9',
+                backgroundColor: '#faad14',
               },
             };
-          },
-          render: (value: any) => {
-            if (value !== undefined && value !== null && value !== '-') {
-              return <span>{value}</span>;
-            }
-            return <span>空</span>;
-          },
-        };
-        columns.push(a);
-      } else {
-        a = {
-          title: `2020/${i}`,
-          align: 'center',
-          dataIndex: `2020/${i}`,
-          onCell: (record: any) => {
-            if (
-              record[`2020/${i}`] !== undefined &&
-              record[`2020/${i}`] !== null &&
-              record[`2020/${i}`] !== '-'
-            ) {
-              if (
-                parseInt(record[`2020/${i}`] as string, 10) < parseInt(record.lLimit as string, 10)
-              ) {
-                return {
-                  style: {
-                    backgroundColor: '#f5222d',
-                  },
-                };
-              }
-              if (
-                parseInt(record[`2020/${i}`] as string, 10) > parseInt(record.tValue as string, 10)
-              ) {
-                return {
-                  style: {
-                    backgroundColor: '#52c41a',
-                  },
-                };
-              }
-              return {
-                style: {
-                  backgroundColor: '#faad14',
-                },
-              };
-            }
-            return {
-              style: {
-                backgroundColor: '#d9d9d9',
-              },
-            };
-          },
-          render: (value: any) => {
-            if (value !== undefined && value !== null && value !== '-') {
-              return <span>{value}</span>;
-            }
-            return <span>空</span>;
-          },
-        };
-        columns.push(a);
-      }
+          }
+          return {
+            style: {
+              backgroundColor: '#d9d9d9',
+            },
+          };
+        },
+        render: (value: any) => {
+          if (value !== undefined && value !== null && value !== '-' && value !== 'N/A') {
+            return <span>{value}</span>;
+          }
+          return <span>{value}</span>;
+        },
+      };
+      columns.push(a);
     }
     return columns;
-  });
+  };
 
   useEffect(() => {
     if (dept !== '' || kpi !== '') {
       setLoading(true);
       queryKPIData({ dept, kpi }).then((res) => {
-        console.log(res.data, 'KPI数据');
         setDataSource(res.data);
+        let months = new Array();
+        months = Object.keys(res.data[0]).slice(0, 12);
+        dispatch({ type: 'change', payload: getMonths(months) });
         setLoading(false);
       });
     }
@@ -171,7 +126,7 @@ const KPITable: React.FC = () => {
       <ProTable<TableListItem>
         rowKey="kpi"
         bordered
-        columns={initColumns}
+        columns={values.columns}
         dataSource={dataSource}
         loading={loading}
         search={false}
