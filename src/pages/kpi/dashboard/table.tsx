@@ -105,7 +105,7 @@ const KPITable: React.FC = () => {
       setLoading(true);
       queryKPIData({ dept, kpi }).then((res) => {
         setDataSource(res.data);
-        let months = new Array();
+        let months = [];
         months = Object.keys(res.data[0]).slice(0, 12);
         dispatch({ type: 'change', payload: getMonths(months) });
         setLoading(false);
