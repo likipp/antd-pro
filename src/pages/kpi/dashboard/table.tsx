@@ -130,7 +130,10 @@ const KPITable: React.FC = () => {
         dataSource={dataSource}
         loading={loading}
         search={false}
-        pagination={false}
+        pagination={{
+          showSizeChanger: true,
+          hideOnSinglePage: true,
+        }}
         toolBarRender={false}
       />
     </div>
