@@ -27,7 +27,6 @@ const OneLineChart: React.FC = () => {
           result.tMax = res.data[0].u_limit;
           result.tMin = res.data[0].l_limit;
         }
-        console.log(res.data);
         setMax(() => {
           return res.data[0].u_limit;
         });
@@ -37,12 +36,19 @@ const OneLineChart: React.FC = () => {
 
         // 设置线性中的最大值与最小值
         setLinMax(() => {
-          return result.tMax;
+          let value = result.tMax;
+          if (value === 0) {
+            value = 2;
+          }
+          return value;
         });
         setLinMin(() => {
-          return result.tMin;
+          let value = result.tMin;
+          if (value === 0) {
+            value = -1;
+          }
+          return value;
         });
-        console.log(max, lineMin);
         dispatch({ type: 'change', payload: res.data[0] });
       });
     };
