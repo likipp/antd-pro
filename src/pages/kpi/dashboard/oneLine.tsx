@@ -16,7 +16,6 @@ const OneLineChart: React.FC = () => {
 
   const initValues = { type: '', unit: '' };
   const [values, dispatch] = useReducer(lineReducer, initValues);
-
   useMemo(() => {
     const asyncFetch = () => {
       queryKPILine({ dept, kpi }).then((res) => {
@@ -36,10 +35,18 @@ const OneLineChart: React.FC = () => {
 
         // 设置线性中的最大值与最小值
         setLinMax(() => {
-          return result.tMax;
+          let value = result.tMax;
+          if (value === 0) {
+            value = 2;
+          }
+          return value;
         });
         setLinMin(() => {
-          return result.tMin;
+          let value = result.tMin;
+          if (value === 0) {
+            value = -1;
+          }
+          return value;
         });
         dispatch({ type: 'change', payload: res.data[0] });
       });
@@ -59,7 +66,7 @@ const OneLineChart: React.FC = () => {
         },
       },
       // 设置Y轴max值, 高于最大值
-      max: lineMax * 1.2,
+      max: lineMax * 2.0,
       min: lineMin * 0.5,
     },
     point: {

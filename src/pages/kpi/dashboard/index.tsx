@@ -8,7 +8,7 @@ import AllLineChart from '@/pages/kpi/dashboard/allLine';
 import KPITable from '@/pages/kpi/dashboard/table';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
 import kpiReducer from '@/reducers/kpiReducer';
-import styles from './databoard.less';
+// import styles from './databoard.less';
 
 const TableList: React.FC = () => {
   // 定义antd Select组件
@@ -20,6 +20,8 @@ const TableList: React.FC = () => {
   const [fetching, setFetching] = useState(false);
   const initialState = { initDept: '', initKPI: '' };
   const [state, dispatch] = useReducer(kpiReducer, initialState);
+
+  const [initStatus, setStatus] = useState('none');
 
   // 获取有KPI数据的部门
   const handleGetDept = () => {
@@ -36,18 +38,28 @@ const TableList: React.FC = () => {
     dispatch({ type: 'clearKPI' });
   };
 
-  const handleChangeDeptParams = (value: string) => {
-    dispatch({ type: 'setDept', payload: value });
-  };
+  // const handleChangeDeptParams = (value: string) => {
+  //   dispatch({ type: 'setDept', payload: value });
+  //   setStatus(() => {
+  //     return 'block'
+  //   })
+  // };
 
   const handleSelectDept = (value: string) => {
-    if (state.initDept !== value && state.initDept !== '') {
-      form.setFieldsValue({ kpi: '' });
-    }
+    // if (state.initDept !== value && state.initDept !== '') {
+    //   form.setFieldsValue({ kpi: '' });
+    // }
+    dispatch({ type: 'setDept', payload: value });
+    setStatus(() => {
+      return 'block';
+    });
   };
 
   const handleReset = () => {
     dispatch({ type: 'reset' });
+    setStatus(() => {
+      return 'none';
+    });
     form.resetFields();
   };
 
@@ -80,7 +92,7 @@ const TableList: React.FC = () => {
               placeholder="请选择部门"
               notFoundContent={fetching ? <Spin size="small" /> : null}
               onDropdownVisibleChange={handleGetDept}
-              onChange={handleChangeDeptParams}
+              // onChange={handleChangeDeptParams}
               onClear={handleReset}
               onSelect={handleSelectDept}
             >
@@ -127,23 +139,20 @@ const TableList: React.FC = () => {
         </Form>
       </Card>
       <DashContext.Provider value={{ dept: state.initDept, kpi: state.initKPI }}>
-        <Card
-          style={{ marginBottom: '30px' }}
-          className={
-            state.initDept === '' || state.initDept === undefined
-              ? styles.selected
-              : styles.unSelect
-          }
-        >
+        <Card style={{ marginBottom: '20px', display: initStatus }}>
           <KPITable />
         </Card>
-        <Card
-          className={
-            state.initDept === '' || state.initDept === undefined
-              ? styles.selected
-              : styles.unSelect
-          }
-        >
+        <div style={{ display: initStatus }}>
+          <div style={{ margin: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+            <Button style={{ border: '1px solid #ff4d4f', backgroundColor: '#fff' }}>上一年</Button>
+            <Button
+              style={{ marginLeft: '10px', border: '1px solid #ff4d4f', backgroundColor: '#fff' }}
+            >
+              下一年
+            </Button>
+          </div>
+        </div>
+        <Card style={{ marginTop: '20px', display: initStatus }}>
           <div>{state.initKPI === '' ? <AllLineChart /> : <OneLineChart />}</div>
         </Card>
       </DashContext.Provider>

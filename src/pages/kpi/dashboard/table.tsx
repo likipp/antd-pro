@@ -46,7 +46,7 @@ const KPITable: React.FC = () => {
 
   const getMonths = (datas: any) => {
     let a: any;
-    for (let i = 1; i < datas.length; i += 1) {
+    for (let i = 0; i < datas.length; i += 1) {
       const month = datas[i];
       a = {
         key: month,
@@ -130,11 +130,8 @@ const KPITable: React.FC = () => {
         dataSource={dataSource}
         loading={loading}
         search={false}
-        pagination={{
-          showSizeChanger: true,
-          hideOnSinglePage: true,
-        }}
         toolBarRender={false}
+        pagination={false}
       />
     </div>
   );

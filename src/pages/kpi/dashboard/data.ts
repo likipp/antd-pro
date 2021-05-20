@@ -28,3 +28,13 @@ export interface LineTitle {
   type: string;
   unit: string;
 }
+
+export interface LineValues {
+  date: string;
+  l_limit: number;
+  t_limit: number;
+  type: string;
+  u_limit: number;
+  unit: string;
+  value: number;
+}
