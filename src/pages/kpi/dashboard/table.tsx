@@ -130,8 +130,8 @@ const KPITable: React.FC = () => {
         dataSource={dataSource}
         loading={loading}
         search={false}
-        pagination={false}
         toolBarRender={false}
+        pagination={false}
       />
     </div>
   );

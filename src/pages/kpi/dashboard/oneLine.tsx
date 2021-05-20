@@ -27,6 +27,7 @@ const OneLineChart: React.FC = () => {
           result.tMax = res.data[0].u_limit;
           result.tMin = res.data[0].l_limit;
         }
+        console.log(res.data);
         setMax(() => {
           return res.data[0].u_limit;
         });
@@ -41,6 +42,7 @@ const OneLineChart: React.FC = () => {
         setLinMin(() => {
           return result.tMin;
         });
+        console.log(max, lineMin);
         dispatch({ type: 'change', payload: res.data[0] });
       });
     };
