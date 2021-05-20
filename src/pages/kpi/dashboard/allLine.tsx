@@ -3,28 +3,39 @@ import { Line } from '@ant-design/charts';
 
 import { queryKPILine } from '@/pages/kpi/dashboard/service';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
+import {CompareWithArray} from "@/utils/compare";
+// import {LineValues} from "@/pages/kpi/dashboard/data";
+// import useLine from "@/pages/kpi/dashboard/useLine";
 
 const AllLineChart: React.FC = () => {
   const { dept } = useContext(DashContext);
-  // const min = useRef(0);
-  // const max = useRef(0);
-  // const [initValues, setValues] = useState({ type: '', unit: '' });
   const [data, setData] = useState([]);
-
-  // const asyncFetch = () => {
-  //   queryKPILine({ dept, kpi:'' }).then((res) => {
-  //     setData(res.data);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   asyncFetch();
-  // }, [dept]);
+  const [lineMin, setLinMin] = useState(0);
+  const [lineMax, setLinMax] = useState(0);
+  // const [iniLine, setIniLine] = useLine([])
 
   useMemo(() => {
     const asyncFetch = () => {
       queryKPILine({ dept, kpi: '' }).then((res) => {
         setData(res.data);
+        if (res.data != null) {
+          const result = CompareWithArray(res.data);
+          setLinMax(() => {
+            let value = result.tMax;
+            if (value === 0) {
+              value = 2;
+            }
+            return value;
+          });
+          setLinMin(() => {
+            let value = result.tMin;
+            if (value === 0) {
+              value = -1;
+            }
+            return value;
+          });
+        }
+
       });
     };
     asyncFetch();
@@ -66,6 +77,8 @@ const AllLineChart: React.FC = () => {
         },
         alternateColor: 'rgba(0,0,0,0.05)',
       },
+      max: lineMax * 2.0,
+      min: lineMin * 0.5,
     },
     label: {
       layout: [{ type: 'hide-overlap' }], // 隐藏重叠label
