@@ -16,9 +16,6 @@ const AllLineChart: React.FC = () => {
         setData(() => {
           return res.data;
         });
-        // eslint-disable-next-line no-empty
-        if (res.data != null) {
-        }
       });
     };
     asyncFetch();

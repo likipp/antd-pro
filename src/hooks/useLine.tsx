@@ -9,11 +9,9 @@ export default function useLine(values: LineValues[]) {
 
   if (values != null) {
     result = CompareWithArray(values);
-    console.log(values, 'values');
   }
 
   useMemo(() => {
-    console.log(typeof result, 'result222');
     // if (!result.hasOwnProperty("tMax")) {
     //   return
     // }
