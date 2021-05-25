@@ -3,39 +3,22 @@ import { Line } from '@ant-design/charts';
 
 import { queryKPILine } from '@/pages/kpi/dashboard/service';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
-import {CompareWithArray} from "@/utils/compare";
-// import {LineValues} from "@/pages/kpi/dashboard/data";
-// import useLine from "@/pages/kpi/dashboard/useLine";
+import useLine from '@/hooks/useLine';
 
 const AllLineChart: React.FC = () => {
   const { dept } = useContext(DashContext);
   const [data, setData] = useState([]);
-  const [lineMin, setLinMin] = useState(0);
-  const [lineMax, setLinMax] = useState(0);
-  // const [iniLine, setIniLine] = useLine([])
+  const [lineMin, lineMax] = useLine(data);
 
   useMemo(() => {
     const asyncFetch = () => {
       queryKPILine({ dept, kpi: '' }).then((res) => {
-        setData(res.data);
+        setData(() => {
+          return res.data;
+        });
+        // eslint-disable-next-line no-empty
         if (res.data != null) {
-          const result = CompareWithArray(res.data);
-          setLinMax(() => {
-            let value = result.tMax;
-            if (value === 0) {
-              value = 2;
-            }
-            return value;
-          });
-          setLinMin(() => {
-            let value = result.tMin;
-            if (value === 0) {
-              value = -1;
-            }
-            return value;
-          });
         }
-
       });
     };
     asyncFetch();

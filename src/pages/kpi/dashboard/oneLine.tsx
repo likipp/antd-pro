@@ -5,14 +5,16 @@ import { queryKPILine } from '@/pages/kpi/dashboard/service';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
 import lineReducer from '@/reducers/lineReducer';
 import { CompareWithArray } from '@/utils/compare';
+import useLine from '@/hooks/useLine';
 
 const OneLineChart: React.FC = () => {
   const { dept, kpi } = useContext(DashContext);
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(0);
   const [data, setData] = useState([]);
-  const [lineMin, setLinMin] = useState(0);
-  const [lineMax, setLinMax] = useState(0);
+  // const [lineMin, setLinMin] = useState(0);
+  // const [lineMax, setLinMax] = useState(0);
+  const [lineMin, lineMax] = useLine(data);
 
   const initValues = { type: '', unit: '' };
   const [values, dispatch] = useReducer(lineReducer, initValues);
@@ -32,22 +34,21 @@ const OneLineChart: React.FC = () => {
         setMin(() => {
           return res.data[0].l_limit;
         });
-
         // 设置线性中的最大值与最小值
-        setLinMax(() => {
-          let value = result.tMax;
-          if (value === 0) {
-            value = 2;
-          }
-          return value;
-        });
-        setLinMin(() => {
-          let value = result.tMin;
-          if (value === 0) {
-            value = -1;
-          }
-          return value;
-        });
+        // setLinMax(() => {
+        //   let value = result.tMax;
+        //   if (value === 0) {
+        //     value = 2;
+        //   }
+        //   return value;
+        // });
+        // setLinMin(() => {
+        //   let value = result.tMin;
+        //   if (value === 0) {
+        //     value = -1;
+        //   }
+        //   return value;
+        // });
         dispatch({ type: 'change', payload: res.data[0] });
       });
     };
