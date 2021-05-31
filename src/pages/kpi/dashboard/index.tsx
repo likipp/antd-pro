@@ -8,7 +8,7 @@ import AllLineChart from '@/pages/kpi/dashboard/allLine';
 import KPITable from '@/pages/kpi/dashboard/table';
 import DashContext from '@/pages/kpi/dashboard/dashContext';
 import kpiReducer from '@/reducers/kpiReducer';
-// import styles from './databoard.less';
+import styles from './databoard.less';
 
 const TableList: React.FC = () => {
   // 定义antd Select组件
@@ -139,20 +139,17 @@ const TableList: React.FC = () => {
         </Form>
       </Card>
       <DashContext.Provider value={{ dept: state.initDept, kpi: state.initKPI }}>
-        <Card style={{ marginBottom: '20px', display: initStatus }}>
+        <Card style={{ marginBottom: '30px', display: initStatus }}>
           <KPITable />
         </Card>
         <div style={{ display: initStatus }}>
-          <div style={{ margin: '10px', display: 'flex', justifyContent: 'flex-end' }}>
-            <Button style={{ border: '1px solid #ff4d4f', backgroundColor: '#fff' }}>上一年</Button>
-            <Button
-              style={{ marginLeft: '10px', border: '1px solid #ff4d4f', backgroundColor: '#fff' }}
-            >
-              下一年
+          <div className={styles.years}>
+            <Button className={styles.prev}>上一年</Button>
+            <Button className={styles.next}>下一年
             </Button>
           </div>
         </div>
-        <Card style={{ marginTop: '20px', display: initStatus }}>
+        <Card style={{ marginTop: '30px', display: initStatus }}>
           <div>{state.initKPI === '' ? <AllLineChart /> : <OneLineChart />}</div>
         </Card>
       </DashContext.Provider>

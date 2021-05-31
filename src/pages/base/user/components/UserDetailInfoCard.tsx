@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer, useMemo } from 'react';
 import moment from 'moment/moment';
 
 import { Layout, Button, Space, Row, Col, Avatar, Tag, Divider, message } from 'antd';
@@ -8,6 +8,7 @@ import { UserDetailInfo } from '@/pages/base/user/data';
 import { setUserStatus, queryUserByID, DeleteUser } from '@/pages/base/user/service';
 
 import style from './index.less';
+import userDetailReducer from "@/reducers/userDetailReducer";
 
 interface DisplayUserInfo {
   UUID: string;
@@ -35,6 +36,21 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
     updatedAt: 0,
     roles: [],
   });
+  const initialInfo  = {
+      key: 0,
+      uuid: '',
+      username: '',
+      nickname: '',
+      deptID: '',
+      remark: '',
+      sex: '',
+      status: 0,
+      DeptName: '',
+      createdAt: 0,
+      updatedAt: 0,
+      roles: []
+  }
+  const [userInfos, dispatch] = useReducer(userDetailReducer, initialInfo);
   const [initUUID, setUUID] = useState('');
   const [initUserStatus, setUserStatusState] = useState(0);
   // const [success, setSuccess] = useState(false)
@@ -53,11 +69,12 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
     );
   };
 
-  useEffect(() => {
+  useMemo(() => {
     queryUserByID(UUID).then((res) => {
       setUseInfo((preValue) => {
         return { ...preValue, ...res.result };
       });
+      dispatch({type: 'change', payload: res.result})
     });
   }, [UUID]);
 
@@ -97,22 +114,8 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
   }
 
   useEffect(() => {
-    // if (initUUID !== '' && typeof initUserStatus === 'number') {
-    // if (initUUID !== '') {
-    //   setUserStatus({
-    //     uuid: initUUID,
-    //     status: initUserStatus,
-    //   }).then((res) => {
-    //     message.success(res.msg);
-    //   });
-    //   // DisplayStatus(Status)
-    //   UserInfo(initUserStatus);
-    // }
   }, [initUserStatus]);
 
-  // if (useInfo === undefined) {
-  //   return;
-  // }
   return (
     <Layout className={style.DetailLayout} style={{ display: Status }}>
       <Header className={style.DetailHeader}>
@@ -129,7 +132,7 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
             <Row>
               <Avatar size={60} className={useInfo.sex ? style.Woman : style.Man}>
                 <span style={{ fontSize: '20px', fontWeight: 600 }}>
-                  {useInfo.nickname.substring(1)}
+                  {userInfos.nickname.substring(1)}
                 </span>
               </Avatar>
             </Row>
@@ -145,23 +148,23 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
               }}
               span={10}
             >
-              {useInfo.nickname}
+              {userInfos.nickname}
             </Col>
             <Col span={14} style={{ display: 'inline-block' }}>
               <span style={{ margin: '0px 30px 0px 10px' }}>
-                {useInfo.sex ? (
+                {userInfos.sex ? (
                   <WomanOutlined style={{ fontSize: '16px', color: 'red' }} />
                 ) : (
                   <ManOutlined style={{ fontSize: '16px', color: '#08c' }} />
                 )}
               </span>
-              <Tag color={useInfo.status === 1 ? 'blue' : 'red'}>
+              <Tag color={userInfos.status === 1 ? 'blue' : 'red'}>
                 {useInfo.status === 1 ? '启用' : '禁用'}
               </Tag>
             </Col>
             <Row>
               <span style={{ color: '#787878' }}>帐号:</span>
-              <span style={{ marginLeft: '5px' }}>{useInfo.username}</span>
+              <span style={{ marginLeft: '5px' }}>{userInfos.username}</span>
             </Row>
           </Col>
         </Row>
@@ -169,11 +172,11 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
         <UserDetailRow title="登录名" value="" />
         <UserDetailRow
           title="创建日期"
-          value={moment(useInfo.createdAt).format('YYYY-MM-DD hh:mm')}
+          value={moment(userInfos.createdAt).format('YYYY-MM-DD hh:mm')}
         />
         <UserDetailRow
           title="更新日期"
-          value={moment(useInfo.updatedAt).format('YYYY-MM-DD hh:mm')}
+          value={moment(userInfos.updatedAt).format('YYYY-MM-DD hh:mm')}
         />
         <UserDetailRow title="部门" value="信息部" />
         <UserDetailRow title="岗位" value="管理员" />
