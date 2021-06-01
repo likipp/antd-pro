@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {useCallback, useEffect, useRef, useState, useMemo} from 'react';
 import { EditOutlined, DeleteOutlined, FileTextOutlined, DownOutlined } from '@ant-design/icons';
 import {
   Transfer,
@@ -68,6 +68,8 @@ const TableList: React.FC = () => {
   const [initPageInfo, setPageInfo] = useState<TableListParams>({pageSize: 5, current: 1})
   // const [initStatus, setStatus] = useState(undefined)
   // const [transferSource, setTransferSource] = useState([]);
+
+
 
   const menu = (
     <Menu>
@@ -437,7 +439,7 @@ const TableList: React.FC = () => {
         SetUserInfoVisible('none');
       }
     },
-    [userID],
+    [],
   );
 
   // 设置loading条件，获取用户列表，
@@ -448,11 +450,11 @@ const TableList: React.FC = () => {
       // console.log(dataSource)
       setLoading(false);
     });
-  }, []);
+  }, [initPageInfo]);
 
-  useEffect(() => {
+  useMemo(() => {
     MouseUp(userID);
-  }, [MouseUp]);
+  }, [MouseUp, userID]);
 
   // 删除用户
   const handleDeleteUser = async () => {

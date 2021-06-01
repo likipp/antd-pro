@@ -12,7 +12,7 @@ const reducer = (preState:  {
   DeptName: string,
   createdAt: number,
   updatedAt: number,
-  roles: Array<any>
+  roles: any[]
 }, action: any) => {
   switch (action.type) {
     case 'change':
@@ -32,20 +32,7 @@ const reducer = (preState:  {
           roles: []
         }
       }
-      return {
-        key: 0,
-        uuid: action.payload.uuid,
-        username: action.payload.username,
-        nickname: action.payload.nickname,
-        deptID: action.payload.deptID,
-        remark: action.payload.remark,
-        sex: action.payload.sex,
-        status: action.payload.status,
-        DeptName: action.payload.deptName,
-        createdAt: action.payload.createdAt,
-        updatedAt: action.payload.updatedAt,
-        roles: action.payload.roles,
-      };
+      return action.payload;
     default:
       throw new Error('未知的操作类型, 请联系管理员');
   }

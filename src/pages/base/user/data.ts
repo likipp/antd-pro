@@ -12,7 +12,7 @@ export interface TableListItem {
   sex: string;
   status: number;
   DeptName: string;
-  roles: Array<any>;
+  roles: any[];
 }
 
 export interface UserInfo {
@@ -22,7 +22,7 @@ export interface UserInfo {
   remark?: string;
   sex?: string;
   status?: number;
-  roles?: Array<any>;
+  roles?: any[];
 }
 
 export interface UserDetailInfo {
@@ -37,7 +37,7 @@ export interface UserDetailInfo {
   DeptName?: string;
   createdAt?: number;
   updatedAt?: number;
-  roles: Array<any>;
+  roles: any[];
 }
 
 export interface TableListData {

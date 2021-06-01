@@ -4,7 +4,7 @@ import moment from 'moment/moment';
 import { Layout, Button, Space, Row, Col, Avatar, Tag, Divider, message } from 'antd';
 import { CloseOutlined, ManOutlined, WomanOutlined } from '@ant-design/icons';
 
-import { UserDetailInfo } from '@/pages/base/user/data';
+// import { UserDetailInfo } from '@/pages/base/user/data';
 import { setUserStatus, queryUserByID, DeleteUser } from '@/pages/base/user/service';
 
 import style from './index.less';
@@ -22,21 +22,7 @@ const { Header, Footer, Content } = Layout;
 // @ts-ignore
 const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
   const { UUID, Status, DisplayStatus, UserInfo } = info;
-  const [useInfo, setUseInfo] = useState<UserDetailInfo>({
-    key: 0,
-    uuid: '',
-    username: '',
-    nickname: '',
-    deptID: '',
-    remark: '',
-    sex: '',
-    status: 0,
-    DeptName: '',
-    createdAt: 0,
-    updatedAt: 0,
-    roles: [],
-  });
-  const initialInfo  = {
+  const initialInfo = {
       key: 0,
       uuid: '',
       username: '',
@@ -71,9 +57,7 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
 
   useMemo(() => {
     queryUserByID(UUID).then((res) => {
-      setUseInfo((preValue) => {
-        return { ...preValue, ...res.result };
-      });
+      console.log(res, "用户数据")
       dispatch({type: 'change', payload: res.result})
     });
   }, [UUID]);
@@ -84,12 +68,12 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
 
   // 根据父组件传递过来的状态，相应的变更用户状态
   const handleSetUserStatus = () => {
-    if (useInfo.status) {
+    if (userInfos.status) {
       setUserStatusState(0);
     } else {
       setUserStatusState(1);
     }
-    setUUID(useInfo.uuid as string);
+    setUUID(userInfos.uuid as string);
     if (initUUID !== '') {
       setUserStatus({
         uuid: initUUID,
@@ -104,8 +88,8 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
   };
 
   const handleDeleteUser = () => {
-    if (useInfo.uuid != null) {
-      DeleteUser(useInfo.uuid).then(res => {
+    if (userInfos.uuid != null) {
+      DeleteUser(userInfos.uuid).then(res => {
         message.success(res.msg);
         DisplayStatus('none');
         UserInfo(true);
@@ -119,18 +103,16 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
   return (
     <Layout className={style.DetailLayout} style={{ display: Status }}>
       <Header className={style.DetailHeader}>
-        <Row>
-          <Col span={8}>用户详情</Col>
-          <Col span={2} offset={14}>
-            <CloseOutlined onClick={handleCloseCard} />
-          </Col>
-        </Row>
+        <p style={{display: "inline-block"}}>用户详情</p>
+        <div style={{display: "inline-block", float: "right", marginLeft: "3px"}}>
+          <CloseOutlined onClick={handleCloseCard} />
+        </div>
       </Header>
       <Content className={style.DetailContent}>
         <Row justify="space-around" align="middle">
           <Col span={4}>
             <Row>
-              <Avatar size={60} className={useInfo.sex ? style.Woman : style.Man}>
+              <Avatar size={60} className={userInfos.sex ? style.Woman : style.Man}>
                 <span style={{ fontSize: '20px', fontWeight: 600 }}>
                   {userInfos.nickname.substring(1)}
                 </span>
@@ -159,7 +141,7 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
                 )}
               </span>
               <Tag color={userInfos.status === 1 ? 'blue' : 'red'}>
-                {useInfo.status === 1 ? '启用' : '禁用'}
+                {userInfos.status === 1 ? '启用' : '禁用'}
               </Tag>
             </Col>
             <Row>
@@ -182,14 +164,14 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
         <UserDetailRow title="岗位" value="管理员" />
         <UserDetailRow title="上级领导" value={0} />
         <UserDetailRow title="下级" value={1} />
-        <UserDetailRow title="所属角色" value={useInfo.roles.length} />
+        <UserDetailRow title="所属角色" value={userInfos.roles.length} />
         {/* <Divider style={{ margin: '10px 0px' }} type="horizontal" /> */}
       </Content>
       <Footer className={style.DetailFooter} style={{ textAlign: 'center' }}>
         <Space size={5}>
           <Button size="middle">编辑</Button>
           <Button size="middle" onClick={handleSetUserStatus}>
-            {useInfo.status === 1 ? '禁用' : '启用'}
+            {userInfos.status === 1 ? '禁用' : '启用'}
           </Button>
           <Button size="middle" danger onClick={handleDeleteUser}>
             删除
