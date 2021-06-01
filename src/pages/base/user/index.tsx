@@ -139,10 +139,10 @@ const TableList: React.FC = () => {
           },
         ],
         labelCol: {
-          xs: { span: 4 },
+          xs: { span: 4, offset: 2 },
         },
         wrapperCol: {
-          xs: { span: 20 },
+          xs: { span: 20, offset: 2 },
         },
       },
     },
@@ -160,10 +160,10 @@ const TableList: React.FC = () => {
           },
         ],
         labelCol: {
-          xs: { span: 4 },
+          xs: { span: 4, offset: 2 },
         },
         wrapperCol: {
-          xs: { span: 20 },
+          xs: { span: 20, offset: 2 },
         },
       },
     },
@@ -178,10 +178,10 @@ const TableList: React.FC = () => {
       formItemProps: {
         hasFeedback: true,
         labelCol: {
-          xs: { span: 4 },
+          xs: { span: 4, offset: 2 },
         },
         wrapperCol: {
-          xs: { span: 20 },
+          xs: { span: 20, offset: 2 },
         },
       },
       renderFormItem: (_, { type, defaultRender }) => {
@@ -203,10 +203,10 @@ const TableList: React.FC = () => {
       formItemProps: {
         hasFeedback: true,
         labelCol: {
-          xs: { span: 4 },
+          xs: { span: 4, offset: 2 },
         },
         wrapperCol: {
-          xs: { span: 20 },
+          xs: { span: 20, offset: 2 },
         },
       },
       renderFormItem: (_, { type, defaultRender }) => {
@@ -231,10 +231,10 @@ const TableList: React.FC = () => {
       dataIndex: 'deptID',
       formItemProps: {
         labelCol: {
-          xs: { span: 4 },
+          xs: { span: 4, offset: 2 },
         },
         wrapperCol: {
-          xs: { span: 20 },
+          xs: { span: 20, offset: 2 },
         },
         hasFeedback: true,
         rules: [
@@ -287,10 +287,10 @@ const TableList: React.FC = () => {
       hideInTable: true,
       formItemProps: {
         labelCol: {
-          xs: { span: 4 },
+          xs: { span: 4, offset: 2 },
         },
         wrapperCol: {
-          xs: { span: 20 },
+          xs: { span: 20, offset: 2 },
         },
       },
       renderFormItem: (_, { type, defaultRender }) => {
@@ -313,10 +313,10 @@ const TableList: React.FC = () => {
       hideInTable: true,
       formItemProps: {
         labelCol: {
-          xs: { span: 4 },
+          xs: { span: 4, offset: 2 },
         },
         wrapperCol: {
-          xs: { span: 20 },
+          xs: { span: 20, offset: 2 },
         },
       },
       renderFormItem: (_, { type, defaultRender }) => {
@@ -500,7 +500,6 @@ const TableList: React.FC = () => {
             >
               {dom}
             </div>
-
             {
               userID !== '' ?
                 <UserDetailInfoCard
@@ -511,7 +510,6 @@ const TableList: React.FC = () => {
                 />
                 : <div/>
             }
-
           </div>
         )}
         toolBarRender={() => [

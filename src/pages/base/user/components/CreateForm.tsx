@@ -10,6 +10,7 @@ const CreateForm: React.FC<CreateFormProps> = (props) => {
   const { modalVisible, onCancel } = props;
   return (
     <Modal
+      centered
       destroyOnClose
       title="新增用户"
       width={700}
