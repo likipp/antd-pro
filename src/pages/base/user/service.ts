@@ -32,7 +32,7 @@ export async function getDeptTree(params?: any) {
   });
 }
 
-export async function setUserStatus(params: UserStatus) {
+export async function updateUserStatus(params: UserStatus) {
   return request(`/api/v1/base/users/${params.uuid}/${params.status}`, { method: 'patch' });
 }
 

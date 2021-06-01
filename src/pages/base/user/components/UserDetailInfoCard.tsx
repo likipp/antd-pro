@@ -1,14 +1,12 @@
-import React, { useEffect, useState, useReducer, useMemo } from 'react';
+import React, { useReducer, useMemo } from 'react';
 import moment from 'moment/moment';
 
 import { Layout, Button, Space, Row, Col, Avatar, Tag, Divider, message } from 'antd';
 import { CloseOutlined, ManOutlined, WomanOutlined } from '@ant-design/icons';
 
-// import { UserDetailInfo } from '@/pages/base/user/data';
-import { setUserStatus, queryUserByID, DeleteUser } from '@/pages/base/user/service';
-
-import style from './index.less';
+import { queryUserByID, DeleteUser, updateUserStatus} from '@/pages/base/user/service';
 import userDetailReducer from "@/reducers/userDetailReducer";
+import style from './index.less';
 
 interface DisplayUserInfo {
   UUID: string;
@@ -37,9 +35,6 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
       roles: []
   }
   const [userInfos, dispatch] = useReducer(userDetailReducer, initialInfo);
-  const [initUUID, setUUID] = useState('');
-  const [initUserStatus, setUserStatusState] = useState(0);
-  // const [success, setSuccess] = useState(false)
   const UserDetailRow = (props: any) => {
     return (
       <Row style={{ marginBottom: '10px' }}>
@@ -57,7 +52,6 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
 
   useMemo(() => {
     queryUserByID(UUID).then((res) => {
-      console.log(res, "用户数据")
       dispatch({type: 'change', payload: res.result})
     });
   }, [UUID]);
@@ -68,37 +62,32 @@ const UserDetailInfoCard: React.FC<DisplayUserInfo> = (info) => {
 
   // 根据父组件传递过来的状态，相应的变更用户状态
   const handleSetUserStatus = () => {
-    if (userInfos.status) {
-      setUserStatusState(0);
+    let status: number
+    if (userInfos.status === 0) {
+      status = 1
     } else {
-      setUserStatusState(1);
+      status = 0
     }
-    setUUID(userInfos.uuid as string);
-    if (initUUID !== '') {
-      setUserStatus({
-        uuid: initUUID,
-        status: initUserStatus,
-      }).then((res) => {
-        message.success(res.msg);
-        DisplayStatus('none');
-        UserInfo(true);
-      });
-
-    }
+    updateUserStatus({
+      uuid: userInfos.uuid,
+      status,
+    }).then((res) => {
+      message.success(res.msg);
+      DisplayStatus('none');
+      UserInfo(true);
+    });
   };
 
   const handleDeleteUser = () => {
-    if (userInfos.uuid != null) {
-      DeleteUser(userInfos.uuid).then(res => {
-        message.success(res.msg);
-        DisplayStatus('none');
-        UserInfo(true);
-      })
-    }
+    DeleteUser(userInfos.uuid).then(res => {
+      message.success(res.msg);
+      DisplayStatus('none');
+      UserInfo(true);
+    })
   }
 
-  useEffect(() => {
-  }, [initUserStatus]);
+  // useEffect(() => {
+  // }, [initUserStatus]);
 
   return (
     <Layout className={style.DetailLayout} style={{ display: Status }}>

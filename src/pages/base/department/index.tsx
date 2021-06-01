@@ -36,13 +36,11 @@ const DeptList: React.FC = () => {
   };
 
   const SearchDept = (data: string) => {
-    console.log(data, 'data');
     setLoading(true);
   };
 
   useEffect(() => {
     queryDeptTree().then((res) => {
-      console.log(res, "depTree")
       SetIcon(res.depTree);
       setTreeData(res.depTree);
     });

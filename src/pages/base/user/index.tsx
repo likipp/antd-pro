@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState, useMemo} from 'react';
+import React, {useEffect, useRef, useState, useMemo} from 'react';
 import { EditOutlined, DeleteOutlined, FileTextOutlined, DownOutlined } from '@ant-design/icons';
 import {
   Transfer,
@@ -12,7 +12,7 @@ import {
   Space,
   Select,
   Input,
-  message,
+  message
 } from 'antd';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -55,19 +55,10 @@ const TableList: React.FC = () => {
   const [sourceData, setSourceData] = useState<TransferItem[]>();
   const [targetKeys, setTargetKeys] = useState<string[]>();
   const [targetData, setTargetData] = useState<RolesItem[]>([])
-  // const [userInfo, setUserInfo] = useState<UserDetailInfo>({
-  //   roles: [],
-  //   uuid: '',
-  //   username: '',
-  //   nickname: '',
-  //   deptID: '',
-  // });
   const actionRef = useRef<ActionType>();
   const ref = useRef<FormInstance>();
   const [dataSource, setDataSource] = useState<TableListItem[]>([]);
   const [initPageInfo, setPageInfo] = useState<TableListParams>({pageSize: 5, current: 1})
-  // const [initStatus, setStatus] = useState(undefined)
-  // const [transferSource, setTransferSource] = useState([]);
 
 
 
@@ -100,10 +91,6 @@ const TableList: React.FC = () => {
     });
   };
 
-  // const handleSelectStatus = (value: number) => {
-  //   console.log(value, '选中值');
-  // };
-
   useEffect(() => {
     const newTargetKeys: string[] =[];
     const newMockData: TransferItem[] = [];
@@ -122,7 +109,6 @@ const TableList: React.FC = () => {
   }, []);
 
   const handleChange = (newTargetKeys: string[]) => {
-    // console.log(newTargetKeys, direction, moveKeys, newTargetKeys.length);
     const newTarData: any[] = []
     for (let i = 0; i < newTargetKeys.length; i += 1) {
       const tarData = {
@@ -197,18 +183,9 @@ const TableList: React.FC = () => {
         wrapperCol: {
           xs: { span: 20 },
         },
-        // initialValues: 1,
       },
       renderFormItem: (_, { type, defaultRender }) => {
-        // console.log('item:', _);
-        // console.log('config:', { type, defaultRender, ...rest });
-        // console.log('form:', form);
         if (type === 'form') {
-          // if (ref.current !== undefined) {
-          //   ref.current.setFieldsValue({
-          //     status: 1,
-          //   });
-          // }
           return (
             <Select defaultValue={1}>
               <Option value={0}>禁用</Option>
@@ -234,11 +211,6 @@ const TableList: React.FC = () => {
       },
       renderFormItem: (_, { type, defaultRender }) => {
         if (type === 'form') {
-          // if (ref.current !== undefined) {
-          //   ref.current.setFieldsValue({
-          //     sex: 0,
-          //   });
-          // }
           return (
             <Radio.Group defaultValue={0}>
               <Radio value={0}>男</Radio>
@@ -413,48 +385,35 @@ const TableList: React.FC = () => {
 
   // 通过子组件传递过来用户的状态， 卡片上的按钮及状态Tag实时变更
   const GetAndSetUserInfo = (useInfo: boolean) => {
-    // setUserInfo((prevState) => {
-    //   return { ...prevState, useInfo };
-    // });
     // 判断actionRef.current != undefined的情况下，执行页面刷新
     // 当子组件传递过来用户的状态时， Table表单页面的状态实时刷新
     if (useInfo) {
       if (actionRef.current) {
+        // 需要重置userID值，否则不能再次点击当前选中行
+        SetUserID("")
         actionRef.current.reload();
       }
     }
   };
-
-  const MouseUp = useCallback(
-    (uuid: string) => {
-      if (uuid) {
-        SetUserInfoVisible('inline');
-        // queryUserByID(uuid).then((res) => {
-        //   setUserInfo((prevState) => {
-        //     console.log(prevState, "鼠标移入", res)
-        //     return { ...prevState, ...res.result };
-        //   });
-        // });
-      } else {
-        SetUserInfoVisible('none');
-      }
-    },
-    [],
-  );
 
   // 设置loading条件，获取用户列表，
   useEffect(() => {
     setLoading(true);
     queryUser(initPageInfo).then((res) => {
       setDataSource(res.data);
-      // console.log(dataSource)
       setLoading(false);
     });
   }, [initPageInfo]);
 
   useMemo(() => {
-    MouseUp(userID);
-  }, [MouseUp, userID]);
+    let status: string
+    if (userID) {
+      status = 'inline'
+    } else {
+      status = 'none'
+    }
+    SetUserInfoVisible(status);
+  }, [userID]);
 
   // 删除用户
   const handleDeleteUser = async () => {
@@ -506,17 +465,6 @@ const TableList: React.FC = () => {
           );
         }}
         options={{
-          // reload: () => {
-          //   setLoading(true);
-          //   // setTimeout(() => {
-          //   //   console.log("刷新了")
-          //   //   setLoading(false);
-          //   // }, 1000)
-          //   queryUser().then((res) => {
-          //     setDataSource(res.data);
-          //     setLoading(false);
-          //   });
-          // },
           fullScreen: false,
           setting: false,
         }}
@@ -552,12 +500,18 @@ const TableList: React.FC = () => {
             >
               {dom}
             </div>
-            <UserDetailInfoCard
-              UUID={userID}
-              Status={userInfoVisible}
-              DisplayStatus={GetAndSetDisplayStatus}
-              UserInfo={GetAndSetUserInfo}
-            />
+
+            {
+              userID !== '' ?
+                <UserDetailInfoCard
+                  UUID={userID}
+                  Status={userInfoVisible}
+                  DisplayStatus={GetAndSetDisplayStatus}
+                  UserInfo={GetAndSetUserInfo}
+                />
+                : <div/>
+            }
+
           </div>
         )}
         toolBarRender={() => [
