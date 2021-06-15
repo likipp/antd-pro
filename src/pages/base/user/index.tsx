@@ -34,6 +34,7 @@ import {TransferItem} from "antd/es/transfer";
 import DeptList from "@/pages/base/department";
 import UserDetailInfoCard from './components/UserDetailInfoCard';
 import { UserInfo, RolesItem } from './data';
+import CTreeSelect from "@/components/CTreeSelect";
 
 const { Option } = Select;
 
@@ -442,6 +443,10 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer style={{ minHeight: '645px' }}>
+      {/*<CTreeSelect />*/}
+      <div>
+        <CTreeSelect></CTreeSelect>
+      </div>
       <ProTable<TableListItem>
         className="userTable"
         id="userTable"
