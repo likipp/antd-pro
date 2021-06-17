@@ -577,6 +577,11 @@ const TableList: React.FC = () => {
               }
             })
           }}
+          onReset={ ()=> {
+            handleModalVisible(false)
+            setSelectDept(undefined)
+            setTargetKeys([])
+          }}
           form={{
             layout: 'vertical',
           }}
