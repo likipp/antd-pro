@@ -64,6 +64,18 @@ export interface Page {
   current: number;
 }
 
+export interface DepTree {
+  title: string;
+  status: string;
+  parent_id?: string;
+  leader?: number;
+  key?: string;
+  en_users_count?: number;
+  dis_users_count?: number;
+  deptPath?: string;
+  children?: DepTree[]
+}
+
 export interface DeptTreeItem {
   title: string;
   value: string;

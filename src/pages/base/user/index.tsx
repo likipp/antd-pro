@@ -33,10 +33,10 @@ import CreateForm from '@/pages/base/user/components/CreateForm';
 import UpdateForm from '@/pages/base/user/components/UpdateForm';
 import type {TransferItem} from "antd/es/transfer";
 import DeptList from "@/pages/base/department";
+import {DeptTreeItem} from "@/pages/base/user/data";
+import CTreeSelect from "@/components/CTreeSelect";
 import UserDetailInfoCard from './components/UserDetailInfoCard';
 import type { UserInfo, RolesItem } from './data';
-import CTreeSelect from "@/components/CTreeSelect";
-import {DeptTreeItem} from "@/pages/base/user/data";
 
 const { Option } = Select;
 
@@ -47,7 +47,7 @@ const TableList: React.FC = () => {
   const [updateModalUserVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
   const [selectDept, setSelectDept] = useState(undefined);
-  const [treeData, setTreeData] = useState<DeptTreeItem[]>([]);
+  const [treeData, setTreeData] = useState([{}]);
   const [userInfoVisible, SetUserInfoVisible] = useState('none');
   const [userID, SetUserID] = useState('');
   const [selectedRowsState, setSelectedRows] = useState<string[]>([]);
@@ -88,12 +88,20 @@ const TableList: React.FC = () => {
       }
       tempValue.push(tempItem)
     });
-
-
     return tempValue
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  //
+  // }, []);
+
+  const treeCallBack =  useCallback(() => {
+    getDeptTree().then((res) => {
+      const result = ReplaceDept(res.depTree);
+      setTreeData(() => {
+        return result
+      });
+    });
     const newTargetKeys: string[] =[];
     const newMockData: TransferItem[] = [];
     queryRole().then((res) => {
@@ -108,15 +116,6 @@ const TableList: React.FC = () => {
     })
     setTargetKeys(newTargetKeys);
     setSourceData(newMockData);
-  }, []);
-
-  const cCallBack =  useCallback(() => {
-    getDeptTree().then((res) => {
-      const result = ReplaceDept(res.depTree);
-      setTreeData(() => {
-        return result
-      });
-    });
   }, [createModalVisible])
 
   const handleChange = (newTargetKeys: string[]) => {
@@ -131,11 +130,11 @@ const TableList: React.FC = () => {
     setTargetKeys(newTargetKeys);
   };
 
+  // 当组织树中选择了角色, 将选中的值赋值给form表单
   const handleSelect = ((value: any) => {
     ref.current!.setFieldsValue({
       deptID: value
     })
-    console.log( "ref")
   })
 
   const columns: ProColumns<TableListItem>[] = [
@@ -297,6 +296,10 @@ const TableList: React.FC = () => {
       renderFormItem: (_, { type, defaultRender }) => {
         if (type === 'form') {
           return <Transfer
+            listStyle={{
+              width: 250,
+              height: 250,
+            }}
             dataSource={sourceData}
             targetKeys={targetKeys}
             onChange={handleChange}
@@ -362,7 +365,7 @@ const TableList: React.FC = () => {
   // 设置用户卡片的动态显示隐藏
   const GetAndSetDisplayStatus = (status: string) => {
     SetUserInfoVisible(status);
-    cCallBack()
+    treeCallBack()
   };
 
   // 通过子组件传递过来用户的状态， 卡片上的按钮及状态Tag实时变更
@@ -395,7 +398,7 @@ const TableList: React.FC = () => {
       status = 'none'
     }
     SetUserInfoVisible(status);
-    cCallBack()
+    treeCallBack()
   }, [userID]);
 
   // 删除用户
@@ -554,6 +557,7 @@ const TableList: React.FC = () => {
       <CreateForm modalVisible={createModalVisible} onCancel={() => {
         handleModalVisible(false)
         setSelectDept(undefined)
+        setTargetKeys([])
       }}>
         <ProTable<TableListItem, TableListItem>
           rowKey="uuid"

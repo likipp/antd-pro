@@ -7,19 +7,19 @@ interface CreateFormProps {
 }
 
 const CreateForm: React.FC<CreateFormProps> = (props) => {
-  const { modalVisible, onCancel } = props;
+  const { modalVisible, onCancel } = props
   return (
-    <Modal
-      centered
-      destroyOnClose
-      title="新增用户"
-      width={700}
-      visible={modalVisible}
-      onCancel={() => onCancel()}
-      footer={null}
-    >
-      {props.children}
-    </Modal>
+      <Modal
+        centered
+        destroyOnClose
+        title="新增用户"
+        width={700}
+        visible={modalVisible}
+        onCancel={() => onCancel()}
+        footer={null}
+      >
+        {props.children}
+      </Modal>
   );
 };
 
