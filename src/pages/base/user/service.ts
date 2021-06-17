@@ -38,7 +38,7 @@ export async function updateUserStatus(params: UserStatus) {
 
 // url路径不能以/为结尾, 否则前端提示307 Status Code:307 Temporary Redirect
 export async function CreateUser(params: UserInfo) {
-  return request('/api/v1/base/user', {
+  return request('/api/v1/base/users', {
     method: 'POST',
     // 看Fetch官网资料里需要怎么转化下。
     body: JSON.stringify(params),
@@ -50,7 +50,6 @@ export async function CreateUser(params: UserInfo) {
 }
 
 export async function DeleteUser(params: string) {
-  console.log(params, "string")
   return request(`/api/v1/base/users/${params}`, {
     method: 'DELETE',
   });

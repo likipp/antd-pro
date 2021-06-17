@@ -7,26 +7,20 @@ const CTreeSelect: React.FC = () => {
   const [treeData, setTreeData] = useState(undefined)
   //
   const onLoadData = (treeNode: any) => getDeptTree().then((res: any) => {
-    // tempDep[0].title = res.depTree[0].deptName
     console.log(treeNode)
     setTreeData(() => {
       return res.depTree
     });
   });
 
-    // new Promise<void>(resolve => {
-    //   console.log("测试", treeNode)
-    //   // const { id } = treeNode.props;
-    //   setTimeout(() => {
-    //     resolve();
-    //   }, 300);
-    // });
-
   const onChange = (value: string) => {
     setValue(value)
   };
 
-  const dropdownVisibleChange = () => {
+  const dropdownVisibleChange = (open: boolean) => {
+    if (!open) {
+      return
+    }
     getDeptTree().then((res: any) => {
       setTreeData(() => {
         return res.depTree
@@ -39,7 +33,7 @@ const CTreeSelect: React.FC = () => {
       style={{ width: '100%' }}
       value={initValue}
       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-      placeholder="Please select"
+      placeholder="请选择一个所属部门"
       onChange={onChange}
       loadData={onLoadData}
       onDropdownVisibleChange={dropdownVisibleChange}

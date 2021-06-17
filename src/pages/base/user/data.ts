@@ -63,3 +63,16 @@ export interface Page {
   pageSize: number;
   current: number;
 }
+
+export interface DeptTreeItem {
+  title: string;
+  value: string;
+  leader?: number;
+  parent_id?: string;
+  sort?: number;
+  key?: string;
+  dis_users_count?: number;
+  en_users_count?: number;
+  deptPath?: string;
+  children?: DeptTreeItem
+}
