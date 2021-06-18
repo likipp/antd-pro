@@ -28,13 +28,11 @@ import {
   CreateUser,
   DeleteUser,
 } from '@/pages/base/user/service';
-import { queryRole } from '@/pages/base/role/service'
 import CreateForm from '@/pages/base/user/components/CreateForm';
 import UpdateForm from '@/pages/base/user/components/UpdateForm';
 import type {TransferItem} from "antd/es/transfer";
 import DeptList from "@/pages/base/department";
-import type {DeptTreeItem} from "@/pages/base/user/data";
-import CTreeSelect from "@/components/CTreeSelect";
+import {DeptTreeItem} from "@/pages/base/user/data";
 import UserDetailInfoCard from './components/UserDetailInfoCard';
 import type { UserInfo, RolesItem } from './data';
 
@@ -104,7 +102,7 @@ const TableList: React.FC = () => {
     });
     const newTargetKeys: string[] =[];
     const newMockData: TransferItem[] = [];
-    queryRole().then((res) => {
+    queryUser().then((res) => {
       for (let i = 0; i < res.data.length; i += 1) {
         const data: TransferItem = {
           key: res.data[i].ID,
@@ -347,7 +345,7 @@ const TableList: React.FC = () => {
             编辑
           </Button>
           <Divider type="vertical" />
-          <Dropdown.Button overlay={menu} size={"small"}
+          <Dropdown.Button overlay={menu} size="small"
            style={{marginLeft: "7px"}}
            onClick={() => {
             setStepFormValues(record);
@@ -425,9 +423,6 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer style={{ minHeight: '645px' }}>
-      <div>
-        <CTreeSelect/>
-      </div>
       <ProTable<TableListItem>
         className="userTable"
         id="userTable"
