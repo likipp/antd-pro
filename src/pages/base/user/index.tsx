@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState, useMemo, useCallback} from 'react';
-import { EditOutlined, DeleteOutlined, FileTextOutlined, DownOutlined } from '@ant-design/icons';
+import React, {useRef, useState, useMemo, useCallback} from 'react';
+import { DeleteOutlined, FileTextOutlined } from '@ant-design/icons';
 import {
   Transfer,
   Button,
@@ -33,7 +33,7 @@ import CreateForm from '@/pages/base/user/components/CreateForm';
 import UpdateForm from '@/pages/base/user/components/UpdateForm';
 import type {TransferItem} from "antd/es/transfer";
 import DeptList from "@/pages/base/department";
-import {DeptTreeItem} from "@/pages/base/user/data";
+import type {DeptTreeItem} from "@/pages/base/user/data";
 import CTreeSelect from "@/components/CTreeSelect";
 import UserDetailInfoCard from './components/UserDetailInfoCard';
 import type { UserInfo, RolesItem } from './data';
@@ -41,7 +41,7 @@ import type { UserInfo, RolesItem } from './data';
 const { Option } = Select;
 
 const TableList: React.FC = () => {
-  const [loading, setLoading] = useState(true);
+  const [,setLoading] = useState(true);
   // const [transferLoading, setTransferLoading] = useState(true);
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalUserVisible, handleUpdateModalVisible] = useState<boolean>(false);
@@ -58,7 +58,7 @@ const TableList: React.FC = () => {
   const [targetData, setTargetData] = useState<RolesItem[]>([])
   const actionRef = useRef<ActionType>();
   const ref = useRef<FormInstance>();
-  const [dataSource, setDataSource] = useState<TableListItem[]>([]);
+  const [,setDataSource] = useState<TableListItem[]>([]);
   const [initPageInfo, setPageInfo] = useState<TableListParams>({pageSize: 5, current: 1})
 
   const menu = (
@@ -82,7 +82,7 @@ const TableList: React.FC = () => {
     value.forEach((item: any) => {
       const tempItem = item
       tempItem.value = item.key
-      tempItem.key = item.title
+      // tempItem.key = item.title
       if (tempItem.children) {
         ReplaceDept(item.children);
       }
@@ -337,9 +337,8 @@ const TableList: React.FC = () => {
       render: (_, record) => (
         <>
           <Button
-            type="primary"
+            type="link"
             size="small"
-            icon={<EditOutlined />}
             onClick={() => {
               handleUpdateModalVisible(true);
               setStepFormValues(record);
@@ -348,15 +347,13 @@ const TableList: React.FC = () => {
             编辑
           </Button>
           <Divider type="vertical" />
-          <Dropdown overlay={menu}>
-            <Button
-              onClick={() => {
-                setStepFormValues(record);
-              }}
-            >
-              更多 <DownOutlined />
-            </Button>
-          </Dropdown>
+          <Dropdown.Button overlay={menu} size={"small"}
+           style={{marginLeft: "7px"}}
+           onClick={() => {
+            setStepFormValues(record);
+          }}>
+            更多
+          </Dropdown.Button>
         </>
       ),
     },
@@ -382,13 +379,13 @@ const TableList: React.FC = () => {
   };
 
   // 设置loading条件，获取用户列表，
-  useEffect(() => {
-    setLoading(true);
-    queryUser(initPageInfo).then((res) => {
-      setDataSource(res.data);
-      setLoading(false);
-    });
-  }, [initPageInfo]);
+  // useEffect(() => {
+  //   setLoading(true);
+  //   queryUser(initPageInfo).then((res) => {
+  //     setDataSource(res.data);
+  //     setLoading(false);
+  //   });
+  // }, [initPageInfo]);
 
   useMemo(() => {
     let status: string
@@ -399,7 +396,7 @@ const TableList: React.FC = () => {
     }
     SetUserInfoVisible(status);
     treeCallBack()
-  }, [userID]);
+  }, [treeCallBack, userID]);
 
   // 删除用户
   const handleDeleteUser = async () => {
@@ -436,10 +433,10 @@ const TableList: React.FC = () => {
         id="userTable"
         headerTitle="用户列表"
         rowKey="uuid"
-        loading={loading}
+        // loading={loading}
         columns={columns}
         actionRef={actionRef}
-        dataSource={dataSource}
+        // dataSource={dataSource}
         search={{
           labelWidth: 120,
         }}
@@ -532,7 +529,14 @@ const TableList: React.FC = () => {
         // 使用request时， actionRef.current.reload()可以生效
         // request={(params, sorter, filter) => queryUser()}
         // 使用dataSource时， actionRef.current.reload()不能生效， 需要手动重新获取列表
-        request={(params, sorter, filter) => queryUser({ ...initPageInfo, sorter, filter })}
+        // request={(params, sorter, filter) => queryUser({ ...initPageInfo, sorter, filter })}
+        request={async (
+          params,
+          sorter,
+          filter,
+        ) => {
+          return Promise.resolve(queryUser({ ...initPageInfo, sorter, filter })).then((res) => res)
+        }}
         // dataSource={dataSource}
         onRow={(record) => {
           return {
@@ -540,7 +544,6 @@ const TableList: React.FC = () => {
             onClick: () => {
               SetUserID(record.uuid);
             },
-            // onMouseLeave: () => {SetUserID(0)}
           };
         }}
         pagination={{
@@ -569,7 +572,7 @@ const TableList: React.FC = () => {
             const temValue: UserInfo = value
             temValue.roles = targetData
             CreateUser(temValue).then((res) => {
-              if (res.code === 0) {
+              if (res.code === 200) {
                 message.success(res.msg)
                 handleModalVisible(false)
               } else {
@@ -578,7 +581,6 @@ const TableList: React.FC = () => {
             })
           }}
           onReset={ ()=> {
-            handleModalVisible(false)
             setSelectDept(undefined)
             setTargetKeys([])
           }}
