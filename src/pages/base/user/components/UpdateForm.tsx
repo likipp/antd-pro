@@ -27,7 +27,7 @@ const formLayout = {
 
 
 const UpdateForm: React.FC<UpdateFormProps> = (props) => {
-  const [formValues, setFormVals] = useState<FormValueType>({
+  const [formValues] = useState<FormValueType>({
     username: props.values.username,
     nickname: props.values.nickname
   });
@@ -35,7 +35,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
   const {
     onCancel: handleUpdateModalVisible,
     updateModalVisible,
-    values,
+    // values,
   } = props;
   // const renderFooter = () => {
   //   return (
