@@ -1,22 +1,22 @@
-import React, {useState} from 'react';
-import ProTable, {ProColumns} from '@ant-design/pro-table'
+import React, { useState } from 'react';
+import ProTable, { ProColumns, TableDropdown } from '@ant-design/pro-table';
 
-import {TableListItem} from "@/pages/base/role/data";
+import { RoleTabsItem, TableListItem } from '@/pages/base/role/data';
 // import Columns from "@/pages/base/role/columns"
-import {queryRole} from "@/pages/base/role/service";
-import {TableListParams} from "@/pages/base/user/data";
-import {PageContainer} from "@ant-design/pro-layout";
-import UpdateForm from "@/pages/base/role/UpdateForm";
-
+import { queryRole } from '@/pages/base/role/service';
+import { TableListParams } from '@/pages/base/user/data';
+import { PageContainer } from '@ant-design/pro-layout';
+import UpdateForm from '@/pages/base/role/UpdateForm';
 
 const RolesList: React.FC = () => {
-  const [initPageInfo] = useState<TableListParams>({pageSize: 5, current: 1})
-  const [modal, setModal] = useState(false)
+  const [initPageInfo] = useState<TableListParams>({ pageSize: 5, current: 1 });
+  const [modal, setModal] = useState(false);
+  const [iniItem, setItem] = useState<RoleTabsItem>();
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '序号',
-      dataIndex: 'roleId',
-      valueType: 'indexBorder'
+      dataIndex: 'id',
+      valueType: 'indexBorder',
     },
     {
       title: '角色名称',
@@ -30,31 +30,73 @@ const RolesList: React.FC = () => {
       title: '成员',
       dataIndex: 'members',
       render: (_, record) => {
-        return <a
-          // onMouseOver={}
+        return (
+          <a
+            // onMouseOver={}
+            onClick={() => {
+              setModal(true);
+              // setItem(() => {
+              //   return "members"
+              // })
+            }}
+          >
+            {record.members}
+          </a>
+        );
+      },
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      render: (text, record, _, action) => [
+        <a
+          key="editable"
           onClick={() => {
-            setModal(true)}
-          }>
-          {record.Users.length}</a>
-      }
-    }
-  ]
+            // action?.startEditable?.(record.id);
+            setModal(true);
+            setItem(() => {
+              return { activeKey: 'base', roleName: record.roleName, id: record.id };
+            });
+          }}
+        >
+          编辑
+        </a>,
+        <a target="_blank" rel="noopener noreferrer" key="view">
+          查看
+        </a>,
+        <TableDropdown
+          key="actionGroup"
+          onSelect={() => action?.reload()}
+          menus={[
+            { key: 'copy', name: '复制' },
+            { key: 'delete', name: '删除' },
+          ]}
+        />,
+      ],
+    },
+  ];
 
   return (
     <PageContainer>
       <ProTable<TableListItem>
         columns={columns}
-        request={async (
-          params,
-          sorter,
-          filter,
-        ) => {
-          return Promise.resolve(queryRole({ ...initPageInfo, sorter, filter })).then((res) => res)
+        request={async (params, sorter, filter) => {
+          return Promise.resolve(queryRole({ ...initPageInfo, sorter, filter })).then((res) => res);
         }}
       />
-      <UpdateForm updateModalVisible={modal} onCancel={() => {setModal(false)}}></UpdateForm>
+      {iniItem?.activeKey !== undefined ? (
+        <UpdateForm
+          updateModalVisible={modal}
+          roleTabs={iniItem}
+          onCancel={() => {
+            setModal(false);
+          }}
+        />
+      ) : (
+        <div />
+      )}
     </PageContainer>
-  )
-}
+  );
+};
 
-export default RolesList
+export default RolesList;
