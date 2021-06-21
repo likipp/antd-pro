@@ -50,6 +50,8 @@ export interface TableListParams {
   nickname?: string;
   pageSize?: number;
   current?: number;
+  id?: number;
+  members?: boolean;
   filter?: { [key: string]: any[] };
   sorter?: { [key: string]: any };
 }
@@ -73,7 +75,7 @@ export interface DepTree {
   en_users_count?: number;
   dis_users_count?: number;
   deptPath?: string;
-  children?: DepTree[]
+  children?: DepTree[];
 }
 
 export interface DeptTreeItem {
@@ -86,5 +88,5 @@ export interface DeptTreeItem {
   dis_users_count?: number;
   en_users_count?: number;
   deptPath?: string;
-  children?: DeptTreeItem
+  children?: DeptTreeItem;
 }

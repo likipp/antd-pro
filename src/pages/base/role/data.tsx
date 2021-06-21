@@ -13,3 +13,8 @@ export interface RoleTabsItem {
   roleName?: string;
   id?: number;
 }
+
+export interface UserTabsTableListItem {
+  id: number;
+  nickname: string;
+}

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import ProTable, { ProColumns, TableDropdown } from '@ant-design/pro-table';
+import type { ProColumns } from '@ant-design/pro-table';
+import ProTable, { TableDropdown } from '@ant-design/pro-table';
 
-import { RoleTabsItem, TableListItem } from '@/pages/base/role/data';
+import type { RoleTabsItem, TableListItem } from '@/pages/base/role/data';
+import type { TableListParams } from '@/pages/base/user/data';
 // import Columns from "@/pages/base/role/columns"
 import { queryRole } from '@/pages/base/role/service';
-import { TableListParams } from '@/pages/base/user/data';
+
 import { PageContainer } from '@ant-design/pro-layout';
 import UpdateForm from '@/pages/base/role/UpdateForm';
 
@@ -35,9 +37,9 @@ const RolesList: React.FC = () => {
             // onMouseOver={}
             onClick={() => {
               setModal(true);
-              // setItem(() => {
-              //   return "members"
-              // })
+              setItem(() => {
+                return { activeKey: 'members' };
+              });
             }}
           >
             {record.members}
