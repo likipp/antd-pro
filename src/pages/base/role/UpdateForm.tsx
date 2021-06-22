@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { ModalForm } from '@ant-design/pro-form';
 import { Tabs, Form, Input, Modal } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import type { RoleTabsItem, UserTabsTableListItem } from '@/pages/base/role/data';
 import type { ProColumns } from '@ant-design/pro-table';
+import type { TabsTableListParams } from '@/pages/base/role/data';
 import { queryRoleTabs } from '@/pages/base/role/service';
-import type { TableListParams } from '@/pages/base/user/data';
+
 // import style from '@/pages/base/role/style.less'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -19,10 +20,10 @@ const { TabPane } = Tabs;
 
 const UpdateForm: React.FC<updateFormProps> = (props) => {
   const { onCancel: handleUpdateModalVisible, updateModalVisible, roleTabs } = props;
-  const [initPageInfo, setPageInfo] = useState<TableListParams>({
+  const [initPageInfo, setPageInfo] = useState<TabsTableListParams>({
     pageSize: 5,
     current: 1,
-    members: true,
+    members: false,
     id: 1,
   });
   const layout = {
@@ -59,6 +60,19 @@ const UpdateForm: React.FC<updateFormProps> = (props) => {
   const pageSizeOnChange = (current: number, size: number) => {
     setPageInfo({ pageSize: size, current, members: true, id: 1 });
   };
+
+  useEffect(() => {
+    let mem: boolean = false;
+    if (roleTabs.activeKey) {
+      mem = true;
+    }
+    setPageInfo({
+      pageSize: 5,
+      current: 1,
+      members: mem,
+      id: 1,
+    });
+  }, [roleTabs]);
 
   return (
     // <ModalForm

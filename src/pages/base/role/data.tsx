@@ -18,3 +18,12 @@ export interface UserTabsTableListItem {
   id: number;
   nickname: string;
 }
+
+export interface TabsTableListParams {
+  pageSize: number;
+  current: number;
+  id: number;
+  members?: boolean;
+  filter?: { [key: string]: any[] };
+  sorter?: { [key: string]: any };
+}
