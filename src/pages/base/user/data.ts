@@ -90,3 +90,8 @@ export interface DeptTreeItem {
   deptPath?: string;
   children?: DeptTreeItem;
 }
+
+export interface LoginParamsType {
+  username: string;
+  password: string;
+}

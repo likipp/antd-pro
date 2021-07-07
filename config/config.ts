@@ -66,7 +66,7 @@ export default defineConfig({
     },
     {
       path: '/base',
-      name: 'base',
+      name: '系统设置',
       icon: 'setting',
       routes: [
         {

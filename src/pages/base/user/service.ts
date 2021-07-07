@@ -1,5 +1,5 @@
 import { request } from 'umi';
-import { TableListParams, UserStatus, UserInfo } from './data';
+import {TableListParams, UserStatus, UserInfo, LoginParamsType} from './data';
 
 export async function queryUser(params?: TableListParams) {
   // console.log(params, "这是一个params")
@@ -53,4 +53,15 @@ export async function DeleteUser(params: string) {
   return request(`/api/v1/base/users/${params}`, {
     method: 'DELETE',
   });
+}
+
+export async function UserLogin(params: LoginParamsType) {
+  return request<API.LoginStateType>('/api/v1/base/login', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function getMenus() {
+  return request(`/api/v1/base/menus`)
 }

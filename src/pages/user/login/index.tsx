@@ -4,10 +4,12 @@ import React, { useState } from 'react';
 import { Link, SelectLang, history, useModel } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import logo from '@/assets/logo.svg';
-import { LoginParamsType, fakeAccountLogin } from '@/services/login';
+// import { LoginParamsType } from '@/services/login';
 import Footer from '@/components/Footer';
 import LoginFrom from './components/Login';
 import styles from './style.less';
+import {UserLogin} from "@/pages/base/user/service";
+import {LoginParamsType} from "@/pages/base/user/data";
 
 const { Tab, Username, Password, Mobile, Captcha, Submit } = LoginFrom;
 
@@ -58,14 +60,15 @@ const Login: React.FC<{}> = () => {
     setSubmitting(true);
     try {
       // 登录
-      const msg = await fakeAccountLogin({ ...values, type });
-      console.log(msg, 'msg1111');
+      const msg = await UserLogin({ ...values });
       if (msg.code === 200) {
         message.success('登录成功！');
         replaceGoto();
-        setTimeout(() => {
-          refresh();
-        }, 0);
+        localStorage.setItem('token', msg.result.token)
+        // access = 'admin'
+        // setTimeout(() => {
+        //   refresh();
+        // }, 0);
         return;
       }
       // 如果失败去设置用户错误信息

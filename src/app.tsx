@@ -1,45 +1,74 @@
-import React from 'react';
-import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { notification } from 'antd';
-import { history, RequestConfig } from 'umi';
-import RightContent from '@/components/RightContent';
-import Footer from '@/components/Footer';
-import { ResponseError } from 'umi-request';
-import { queryCurrent } from './services/user';
-import defaultSettings from '../config/defaultSettings';
+// import React from 'react';
+import {Settings as LayoutSettings} from '@ant-design/pro-layout';
+import {notification} from 'antd';
+import {history, RequestConfig} from 'umi';
+// import RightContent from '@/components/RightContent';
+// import Footer from '@/components/Footer';
+import {ResponseError} from 'umi-request';
+import {queryCurrent} from './services/user';
+// import defaultSettings from '../config/defaultSettings';
+import {RunTimeLayoutConfig} from "@@/plugin-layout/layoutExports";
+import {getMenus} from "@/pages/base/user/service";
+
+const loginPath = '/user/login';
 
 export async function getInitialState(): Promise<{
+  settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
-  settings?: LayoutSettings;
+  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
-  // 如果是登录页面，不执行
-  if (history.location.pathname !== '/user/login') {
+  const fetchUserInfo = async () => {
     try {
-      const currentUser = await queryCurrent();
-      return {
-        currentUser,
-        settings: defaultSettings,
-      };
+      return await queryCurrent();
     } catch (error) {
-      history.push('/user/login');
+      history.push(loginPath);
     }
+    return undefined;
+  };
+  // 如果是登录页面，不执行
+  if (history.location.pathname !== loginPath) {
+    const currentUser = await fetchUserInfo();
+    return {
+      fetchUserInfo,
+      currentUser,
+      settings: {},
+    };
   }
   return {
-    settings: defaultSettings,
+    fetchUserInfo,
+    settings: {},
   };
 }
 
-export const layout = ({
-  initialState,
-}: {
-  initialState: { settings?: LayoutSettings };
-}): BasicLayoutProps => {
+// export const layout = ({
+//   initialState,
+// }: {
+//   initialState: { settings?: LayoutSettings };
+// }): BasicLayoutProps => {
+//   return {
+//     rightContentRender: () => <RightContent />,
+//     disableContentMargin: false,
+//     footerRender: () => <Footer />,
+//     menuHeaderRender: undefined,
+//     ...initialState?.settings,
+//   };
+// };
+
+export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
-    rightContentRender: () => <RightContent />,
-    disableContentMargin: false,
-    footerRender: () => <Footer />,
-    menuHeaderRender: undefined,
-    ...initialState?.settings,
+    menu: {
+      // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request
+      params: {
+        UUID: initialState?.currentUser?.UUID,
+      },
+      request: async (params, defaultMenuData) => {
+        console.log(initialState, "初始数据")
+        // initialState.currentUser 中包含了所有用户信息
+        const menuData = await getMenus();
+        console.log(menuData, "菜单数据")
+        return menuData;
+      },
+    },
   };
 };
 
