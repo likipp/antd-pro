@@ -58,6 +58,8 @@ export async function getInitialState(): Promise<{
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     menu: {
+      // 取消菜单多国语言报错
+      locale: false,
       // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request
       params: {
         UUID: initialState?.currentUser?.UUID,
