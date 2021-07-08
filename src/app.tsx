@@ -12,6 +12,29 @@ import { getMenus } from '@/pages/base/user/service';
 import fixMenuItemIcon from '@/utils/fixMenuItemIcon';
 
 const loginPath = '/user/login';
+const routes = [
+  {
+    path: '/welcome',
+    name: '欢迎',
+    icon: 'smile',
+    component: './Welcome',
+  },
+  {
+    path: '/kpi',
+    name: '视图页面',
+    icon: 'setting',
+    routes: [
+      {
+        path: '/kpi/dashboard',
+        name: 'KPI视图',
+        component: './kpi/dashboard',
+      },
+    ],
+  },
+  {
+    component: './404',
+  },
+]
 
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
@@ -46,7 +69,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     menuItemRender: (menuItemProps, defaultDom) => {
       if (
         menuItemProps.isUrl ||
-        !menuItemProps.path
+        !menuItemProps.path ||
+        location.pathname === menuItemProps.path
       ) {
         return defaultDom;
       }
@@ -69,7 +93,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       request: async () => {
         // initialState.currentUser 中包含了所有用户信息
         const menuData = await getMenus().then((res) => {
-          return res.result;
+          const result = [...routes, ...res.result]
+          return result;
         });
         fixMenuItemIcon(menuData);
         return menuData;
@@ -122,8 +147,6 @@ const errorHandler = (error: ResponseError) => {
 };
 
 const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
-  // const token = l
-  // const authHeader = { 'x-token': localStorage.getItem('token') };
   const authHeader = { Authorization: 'Bearer ' + localStorage.getItem('token') };
   return {
     url: `${url}`,

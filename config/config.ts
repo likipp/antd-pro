@@ -37,17 +37,17 @@ export default defineConfig({
   },
   // umi routes: https://umijs.org/docs/routing
   routes: [
-    {
-      path: '/user',
-      layout: false,
-      routes: [
-        {
-          name: 'login',
-          path: '/user/login',
-          component: './user/login',
-        },
-      ],
-    },
+    // {
+    //   path: '/user',
+    //   layout: false,
+    //   routes: [
+    //     {
+    //       name: 'login',
+    //       path: '/user/login',
+    //       component: './user/login',
+    //     },
+    //   ],
+    // },
 
     {
       path: '/welcome',
@@ -55,43 +55,43 @@ export default defineConfig({
       icon: 'smile',
       component: './Welcome',
     },
-    {
-      path: '/admin',
-      name: 'admin',
-      icon: 'crown',
-      access: 'canAdmin',
-      component: './Admin',
-      routes: [
-        {
-          path: '/admin/sub-page',
-          name: 'sub-page',
-          icon: 'smile',
-          component: './Welcome',
-        },
-      ],
-    },
-    {
-      path: '/base',
-      name: '系统设置',
-      icon: 'setting',
-      routes: [
-        {
-          path: '/base/user',
-          name: 'userManager',
-          component: './base/user',
-        },
-        {
-          path: '/base/department',
-          name: 'deptManager',
-          component: './base/department',
-        },
-        {
-          path: '/base/role',
-          name: 'roleManager',
-          component: './base/role',
-        },
-      ],
-    },
+    // {
+    //   path: '/admin',
+    //   name: 'admin',
+    //   icon: 'crown',
+    //   access: 'canAdmin',
+    //   component: './Admin',
+    //   routes: [
+    //     {
+    //       path: '/admin/sub-page',
+    //       name: 'sub-page',
+    //       icon: 'smile',
+    //       component: './Welcome',
+    //     },
+    //   ],
+    // },
+    // {
+    //   path: '/base',
+    //   name: '系统设置',
+    //   icon: 'setting',
+    //   routes: [
+    //     {
+    //       path: '/base/user',
+    //       name: 'userManager',
+    //       component: './base/user',
+    //     },
+    //     {
+    //       path: '/base/department',
+    //       name: 'deptManager',
+    //       component: './base/department',
+    //     },
+    //     {
+    //       path: '/base/role',
+    //       name: 'roleManager',
+    //       component: './base/role',
+    //     },
+    //   ],
+    // },
     {
       path: '/kpi',
       name: 'dashboard',
@@ -104,16 +104,16 @@ export default defineConfig({
         },
       ],
     },
-    {
-      name: 'list.table-list',
-      icon: 'table',
-      path: '/list',
-      component: './ListTableList',
-    },
-    {
-      path: '/',
-      redirect: '/welcome',
-    },
+    // {
+    //   name: 'list.table-list',
+    //   icon: 'table',
+    //   path: '/list',
+    //   component: './ListTableList',
+    // },
+    // {
+    //   path: '/',
+    //   redirect: '/welcome',
+    // },
     {
       component: './404',
     },
