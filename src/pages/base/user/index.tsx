@@ -530,6 +530,7 @@ const TableList: React.FC = () => {
           sorter,
           filter,
         ) => {
+          // @ts-ignore
           return Promise.resolve(queryUser({ ...initPageInfo, sorter, filter })).then((res) => res)
         }}
         // dataSource={dataSource}

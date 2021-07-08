@@ -6,11 +6,17 @@ import proxy from './proxy';
 const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
+  // 只需要 dev，这么配
+  mfsu: {},
+  // 如果需要针对生产环境生效，这么配
+  // mfsu: { production: { output: '.mfsu-production' } },
   hash: true,
   antd: {},
   dva: {
     hmr: true,
   },
+  // Can't read property 'ModuleFederationPlugin' of undefined.
+  webpack5: {},
   layout: {
     name: 'Ant Design Pro',
     locale: true,
@@ -123,5 +129,5 @@ export default defineConfig({
   proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
     basePath: '/',
-  },
+  }
 });

@@ -1,7 +1,7 @@
 import { AlipayCircleOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from '@ant-design/icons';
 import { Alert, Checkbox, message } from 'antd';
 import React, { useState } from 'react';
-import { Link, SelectLang, history, useModel } from 'umi';
+import { Link, SelectLang, history } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import logo from '@/assets/logo.svg';
 // import { LoginParamsType } from '@/services/login';
@@ -49,10 +49,11 @@ const replaceGoto = () => {
 };
 
 const Login: React.FC<{}> = () => {
+  // @ts-ignore
   const [userLoginState, setUserLoginState] = useState<API.LoginStateType>({});
   const [submitting, setSubmitting] = useState(false);
 
-  const { refresh } = useModel('@@initialState');
+  // const { refresh } = useModel('@@initialState');
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState<string>('account');
 

@@ -1,4 +1,4 @@
-// import React from 'react';
+import React from 'react';
 import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import { history, RequestConfig, Link } from 'umi';
@@ -10,7 +10,6 @@ import { queryCurrent } from './services/user';
 import { RunTimeLayoutConfig } from '@@/plugin-layout/layoutExports';
 import { getMenus } from '@/pages/base/user/service';
 import fixMenuItemIcon from '@/utils/fixMenuItemIcon';
-import React from 'react';
 
 const loginPath = '/user/login';
 
@@ -42,34 +41,17 @@ export async function getInitialState(): Promise<{
   };
 }
 
-// export const layout = ({
-//   initialState,
-// }: {
-//   initialState: { settings?: LayoutSettings };
-// }): BasicLayoutProps => {
-//   return {
-//     rightContentRender: () => <RightContent />,
-//     disableContentMargin: false,
-//     footerRender: () => <Footer />,
-//     menuHeaderRender: undefined,
-//     ...initialState?.settings,
-//   };
-// };
-
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     menuItemRender: (menuItemProps, defaultDom) => {
-      console.log(menuItemProps, defaultDom);
       if (
         menuItemProps.isUrl ||
-        !menuItemProps.path ||
-        // eslint-disable-next-line no-restricted-globals
-        location.pathname === menuItemProps.path
+        !menuItemProps.path
       ) {
         return defaultDom;
       }
       return (
-        <Link to={menuItemProps.uuid}>
+        <Link to={menuItemProps.path}>
           {menuItemProps.pro_layout_parentKeys &&
             menuItemProps.pro_layout_parentKeys.length > 0 &&
             menuItemProps.icon}
@@ -141,7 +123,8 @@ const errorHandler = (error: ResponseError) => {
 
 const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
   // const token = l
-  const authHeader = { 'x-token': localStorage.getItem('token') };
+  // const authHeader = { 'x-token': localStorage.getItem('token') };
+  const authHeader = { Authorization: 'Bearer ' + localStorage.getItem('token') };
   return {
     url: `${url}`,
     options: { ...options, interceptors: true, headers: authHeader },
