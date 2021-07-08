@@ -1,7 +1,7 @@
 // import React from 'react';
 import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { notification } from 'antd';
-import { history, RequestConfig } from 'umi';
+import { history, RequestConfig, Link } from 'umi';
 // import RightContent from '@/components/RightContent';
 // import Footer from '@/components/Footer';
 import { RequestOptionsInit, ResponseError } from 'umi-request';
@@ -10,6 +10,7 @@ import { queryCurrent } from './services/user';
 import { RunTimeLayoutConfig } from '@@/plugin-layout/layoutExports';
 import { getMenus } from '@/pages/base/user/service';
 import fixMenuItemIcon from '@/utils/fixMenuItemIcon';
+import React from 'react';
 
 const loginPath = '/user/login';
 
@@ -57,6 +58,25 @@ export async function getInitialState(): Promise<{
 
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
+    menuItemRender: (menuItemProps, defaultDom) => {
+      console.log(menuItemProps, defaultDom);
+      if (
+        menuItemProps.isUrl ||
+        !menuItemProps.path ||
+        // eslint-disable-next-line no-restricted-globals
+        location.pathname === menuItemProps.path
+      ) {
+        return defaultDom;
+      }
+      return (
+        <Link to={menuItemProps.uuid}>
+          {menuItemProps.pro_layout_parentKeys &&
+            menuItemProps.pro_layout_parentKeys.length > 0 &&
+            menuItemProps.icon}
+          {defaultDom}
+        </Link>
+      );
+    },
     menu: {
       // 取消菜单多国语言报错
       locale: false,
