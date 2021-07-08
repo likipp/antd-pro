@@ -1,14 +1,15 @@
 // import React from 'react';
-import {Settings as LayoutSettings} from '@ant-design/pro-layout';
-import {notification} from 'antd';
-import {history, RequestConfig} from 'umi';
+import { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { notification } from 'antd';
+import { history, RequestConfig } from 'umi';
 // import RightContent from '@/components/RightContent';
 // import Footer from '@/components/Footer';
-import {ResponseError} from 'umi-request';
-import {queryCurrent} from './services/user';
+import { RequestOptionsInit, ResponseError } from 'umi-request';
+import { queryCurrent } from './services/user';
 // import defaultSettings from '../config/defaultSettings';
-import {RunTimeLayoutConfig} from "@@/plugin-layout/layoutExports";
-import {getMenus} from "@/pages/base/user/service";
+import { RunTimeLayoutConfig } from '@@/plugin-layout/layoutExports';
+import { getMenus } from '@/pages/base/user/service';
+import fixMenuItemIcon from '@/utils/fixMenuItemIcon';
 
 const loginPath = '/user/login';
 
@@ -61,11 +62,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       params: {
         UUID: initialState?.currentUser?.UUID,
       },
-      request: async (params, defaultMenuData) => {
-        console.log(initialState, "初始数据")
+      request: async () => {
         // initialState.currentUser 中包含了所有用户信息
-        const menuData = await getMenus();
-        console.log(menuData, "菜单数据")
+        const menuData = await getMenus().then((res) => {
+          return res.result;
+        });
+        fixMenuItemIcon(menuData);
         return menuData;
       },
     },
@@ -115,6 +117,16 @@ const errorHandler = (error: ResponseError) => {
   throw error;
 };
 
+const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
+  // const token = l
+  const authHeader = { 'x-token': localStorage.getItem('token') };
+  return {
+    url: `${url}`,
+    options: { ...options, interceptors: true, headers: authHeader },
+  };
+};
+
 export const request: RequestConfig = {
   errorHandler,
+  requestInterceptors: [authHeaderInterceptor],
 };
