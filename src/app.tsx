@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import { history, RequestConfig, Link } from 'umi';
@@ -21,7 +21,7 @@ const routes = [
   },
   {
     path: '/kpi',
-    name: '视图页面',
+    name: '仪表盘',
     icon: 'setting',
     routes: [
       {
@@ -66,23 +66,23 @@ export async function getInitialState(): Promise<{
 
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
-    menuItemRender: (menuItemProps, defaultDom) => {
-      if (
-        menuItemProps.isUrl ||
-        !menuItemProps.path ||
-        location.pathname === menuItemProps.path
-      ) {
-        return defaultDom;
-      }
-      return (
-        <Link to={menuItemProps.path}>
-          {menuItemProps.pro_layout_parentKeys &&
-            menuItemProps.pro_layout_parentKeys.length > 0 &&
-            menuItemProps.icon}
-          {defaultDom}
-        </Link>
-      );
-    },
+    // menuItemRender: (menuItemProps, defaultDom) => {
+    //   if (
+    //     menuItemProps.isUrl ||
+    //     !menuItemProps.path ||
+    //     location.pathname === menuItemProps.path
+    //   ) {
+    //     return defaultDom;
+    //   }
+    //   return (
+    //     <Link to={menuItemProps.path}>
+    //       {menuItemProps.pro_layout_parentKeys &&
+    //         menuItemProps.pro_layout_parentKeys.length > 0 &&
+    //         menuItemProps.icon}
+    //       {defaultDom}
+    //     </Link>
+    //   );
+    // },
     menu: {
       // 取消菜单多国语言报错
       locale: false,
@@ -147,7 +147,7 @@ const errorHandler = (error: ResponseError) => {
 };
 
 const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
-  const authHeader = { Authorization: 'Bearer ' + localStorage.getItem('token') };
+  const authHeader = { Authorization: `Bearer ${  localStorage.getItem('token')}` };
   return {
     url: `${url}`,
     options: { ...options, interceptors: true, headers: authHeader },
