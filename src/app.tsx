@@ -97,6 +97,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
           return result;
         });
         fixMenuItemIcon(menuData);
+        console.log(menuData, "菜单")
         return menuData;
       },
     },
