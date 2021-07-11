@@ -1,18 +1,30 @@
 // import React from 'react';
-import { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { notification } from 'antd';
-import { history, RequestConfig, Link } from 'umi';
+import type { RequestConfig } from 'umi';
+import { history, Link } from 'umi';
 // import RightContent from '@/components/RightContent';
 // import Footer from '@/components/Footer';
-import { RequestOptionsInit, ResponseError } from 'umi-request';
+import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import { queryCurrent } from './services/user';
 // import defaultSettings from '../config/defaultSettings';
-import { RunTimeLayoutConfig } from '@@/plugin-layout/layoutExports';
+import type { RunTimeLayoutConfig } from '@@/plugin-layout/layoutExports';
 import { getMenus } from '@/pages/base/user/service';
-import fixMenuItemIcon from '@/utils/fixMenuItemIcon';
+import fixMenuStruct from '@/utils/fixMenuStruct';
 
 const loginPath = '/user/login';
 const routes = [
+  {
+    path: '/user',
+    layout: false,
+    routes: [
+      {
+        name: 'login',
+        path: '/user/login',
+        component: './user/login',
+      },
+    ],
+  },
   {
     path: '/welcome',
     name: '欢迎',
@@ -20,6 +32,7 @@ const routes = [
     component: './Welcome',
   },
   {
+    parent_id: '362166697114730497',
     path: '/kpi',
     name: '仪表盘',
     icon: 'setting',
@@ -27,14 +40,14 @@ const routes = [
       {
         path: '/kpi/dashboard',
         name: 'KPI视图',
-        component: './kpi/dashboard',
+        component: '@/pages/kpi/dashboard',
       },
     ],
   },
-  {
-    component: './404',
-  },
-]
+  // {
+  //   component: './404',
+  // },
+];
 
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
@@ -43,7 +56,9 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      return await queryCurrent();
+      const res = await queryCurrent();
+      res.access = 'admin';
+      return res;
     } catch (error) {
       history.push(loginPath);
     }
@@ -66,23 +81,24 @@ export async function getInitialState(): Promise<{
 
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
-    // menuItemRender: (menuItemProps, defaultDom) => {
-    //   if (
-    //     menuItemProps.isUrl ||
-    //     !menuItemProps.path ||
-    //     location.pathname === menuItemProps.path
-    //   ) {
-    //     return defaultDom;
-    //   }
-    //   return (
-    //     <Link to={menuItemProps.path}>
-    //       {menuItemProps.pro_layout_parentKeys &&
-    //         menuItemProps.pro_layout_parentKeys.length > 0 &&
-    //         menuItemProps.icon}
-    //       {defaultDom}
-    //     </Link>
-    //   );
-    // },
+    // subMenuItemRender: (_, dom) => <div>pre {dom}</div>,
+    menuItemRender: (menuItemProps, defaultDom) => {
+      if (
+        menuItemProps.isUrl ||
+        !menuItemProps.path
+        // || location.pathname === menuItemProps.path
+      ) {
+        return defaultDom;
+      }
+      return (
+        <Link to={menuItemProps.path}>
+          {menuItemProps.pro_layout_parentKeys &&
+            menuItemProps.pro_layout_parentKeys.length > 0 &&
+            menuItemProps.icon}
+          {defaultDom}
+        </Link>
+      );
+    },
     menu: {
       // 取消菜单多国语言报错
       locale: false,
@@ -93,10 +109,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       request: async () => {
         // initialState.currentUser 中包含了所有用户信息
         const menuData = await getMenus().then((res) => {
-          const result = [...routes, ...res.result]
-          return result;
+          return [...routes, ...res.result];
         });
-        fixMenuItemIcon(menuData);
+        fixMenuStruct(menuData);
+        console.log(menuData, '菜单');
         return menuData;
       },
     },
@@ -147,7 +163,7 @@ const errorHandler = (error: ResponseError) => {
 };
 
 const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
-  const authHeader = { Authorization: `Bearer ${  localStorage.getItem('token')}` };
+  const authHeader = { Authorization: `Bearer ${localStorage.getItem('token')}` };
   return {
     url: `${url}`,
     options: { ...options, interceptors: true, headers: authHeader },
