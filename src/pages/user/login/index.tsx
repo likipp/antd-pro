@@ -8,8 +8,8 @@ import logo from '@/assets/logo.svg';
 import Footer from '@/components/Footer';
 import LoginFrom from './components/Login';
 import styles from './style.less';
-import {UserLogin} from "@/pages/base/user/service";
-import {LoginParamsType} from "@/pages/base/user/data";
+import { UserLogin } from '@/pages/base/user/service';
+import { LoginParamsType } from '@/pages/base/user/data';
 
 const { Tab, Username, Password, Mobile, Captcha, Submit } = LoginFrom;
 
@@ -62,14 +62,11 @@ const Login: React.FC<{}> = () => {
     try {
       // 登录
       const msg = await UserLogin({ ...values });
-      if (msg.code === 200) {
+      console.log(msg, '登录消息');
+      if (msg.success) {
         message.success('登录成功！');
         replaceGoto();
-        localStorage.setItem('token', msg.result.token)
-        // access = 'admin'
-        // setTimeout(() => {
-        //   refresh();
-        // }, 0);
+        localStorage.setItem('token', msg.result.token);
         return;
       }
       // 如果失败去设置用户错误信息
