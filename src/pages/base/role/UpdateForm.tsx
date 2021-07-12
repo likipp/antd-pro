@@ -28,7 +28,7 @@ const UpdateForm: React.FC<updateFormProps> = (props) => {
   });
   const layout = {
     labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    wrapperCol: { span: 10 },
   };
   const [form] = Form.useForm();
   const callback = (key: any) => {

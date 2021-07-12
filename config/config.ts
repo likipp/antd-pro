@@ -19,7 +19,7 @@ export default defineConfig({
   webpack5: {},
   layout: {
     name: 'Ant Design Pro',
-    locale: true,
+    locale: false,
     siderWidth: 208,
   },
   locale: {
@@ -37,17 +37,17 @@ export default defineConfig({
   },
   // umi routes: https://umijs.org/docs/routing
   routes: [
-    // {
-    //   path: '/user',
-    //   layout: false,
-    //   routes: [
-    //     {
-    //       name: 'login',
-    //       path: '/user/login',
-    //       component: './user/login',
-    //     },
-    //   ],
-    // },
+    {
+      path: '/user',
+      layout: false,
+      routes: [
+        {
+          name: 'login',
+          path: '/user/login',
+          component: './user/login',
+        },
+      ],
+    },
 
     {
       path: '/welcome',
@@ -74,49 +74,60 @@ export default defineConfig({
     //   path: '/base',
     //   name: '系统设置',
     //   icon: 'setting',
+    //   // component: '',
     //   routes: [
     //     {
     //       path: '/base/user',
     //       name: 'userManager',
-    //       component: './base/user',
+    //       component: '@/pages/base/user',
+    //       // routes: [],
+    //       parent_id: "362166697114730497",
+    //       parent_path: "",
+    //       sequence: 0,
+    //       show_status: 1,
+    //       status: 0,
+    //       uuid: "362186518489464833",
+    //       icon: "smile"
     //     },
     //     {
     //       path: '/base/department',
     //       name: 'deptManager',
-    //       component: './base/department',
+    //       component: '@/pages/base/department',
     //     },
     //     {
     //       path: '/base/role',
     //       name: 'roleManager',
-    //       component: './base/role',
+    //       component: '@/pages/base/role',
     //     },
     //   ],
     // },
-    {
-      path: '/kpi',
-      name: 'dashboard',
-      icon: 'setting',
-      routes: [
-        {
-          path: '/kpi/dashboard',
-          name: 'kpiDashboard',
-          component: './kpi/dashboard',
-        },
-      ],
-    },
+    // {
+    //   parent_id: '362166697114730497',
+    //   path: '/kpi',
+    //   name: '仪表盘',
+    //   icon: 'setting',
+    //   routes: [
+    //     {
+    //
+    //       path: '/kpi/dashboard',
+    //       name: 'KPI视图',
+    //       component: '@/pages/kpi/dashboard',
+    //     },
+    //   ],
+    // },
     // {
     //   name: 'list.table-list',
     //   icon: 'table',
     //   path: '/list',
     //   component: './ListTableList',
     // },
-    // {
-    //   path: '/',
-    //   redirect: '/welcome',
-    // },
     {
-      component: './404',
+      path: '/',
+      redirect: '/welcome',
     },
+    // {
+    //   component: './404',
+    // },
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
@@ -129,5 +140,5 @@ export default defineConfig({
   proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
     basePath: '/',
-  }
+  },
 });
