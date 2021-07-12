@@ -22,6 +22,7 @@ export default defineConfig({
     locale: false,
     siderWidth: 208,
   },
+  // layout: false,
   locale: {
     // default zh-CN
     default: 'zh-CN',
@@ -36,99 +37,99 @@ export default defineConfig({
     ie: 11,
   },
   // umi routes: https://umijs.org/docs/routing
-  routes: [
-    {
-      path: '/user',
-      layout: false,
-      routes: [
-        {
-          name: 'login',
-          path: '/user/login',
-          component: './user/login',
-        },
-      ],
-    },
-
-    {
-      path: '/welcome',
-      name: 'welcome',
-      icon: 'smile',
-      component: './Welcome',
-    },
-    // {
-    //   path: '/admin',
-    //   name: 'admin',
-    //   icon: 'crown',
-    //   access: 'canAdmin',
-    //   component: './Admin',
-    //   routes: [
-    //     {
-    //       path: '/admin/sub-page',
-    //       name: 'sub-page',
-    //       icon: 'smile',
-    //       component: './Welcome',
-    //     },
-    //   ],
-    // },
-    // {
-    //   path: '/base',
-    //   name: '系统设置',
-    //   icon: 'setting',
-    //   // component: '',
-    //   routes: [
-    //     {
-    //       path: '/base/user',
-    //       name: 'userManager',
-    //       component: '@/pages/base/user',
-    //       // routes: [],
-    //       parent_id: "362166697114730497",
-    //       parent_path: "",
-    //       sequence: 0,
-    //       show_status: 1,
-    //       status: 0,
-    //       uuid: "362186518489464833",
-    //       icon: "smile"
-    //     },
-    //     {
-    //       path: '/base/department',
-    //       name: 'deptManager',
-    //       component: '@/pages/base/department',
-    //     },
-    //     {
-    //       path: '/base/role',
-    //       name: 'roleManager',
-    //       component: '@/pages/base/role',
-    //     },
-    //   ],
-    // },
-    // {
-    //   parent_id: '362166697114730497',
-    //   path: '/kpi',
-    //   name: '仪表盘',
-    //   icon: 'setting',
-    //   routes: [
-    //     {
-    //
-    //       path: '/kpi/dashboard',
-    //       name: 'KPI视图',
-    //       component: '@/pages/kpi/dashboard',
-    //     },
-    //   ],
-    // },
-    // {
-    //   name: 'list.table-list',
-    //   icon: 'table',
-    //   path: '/list',
-    //   component: './ListTableList',
-    // },
-    {
-      path: '/',
-      redirect: '/welcome',
-    },
-    // {
-    //   component: './404',
-    // },
-  ],
+  // routes: [
+  //   {
+  //     path: '/user',
+  //     layout: false,
+  //     routes: [
+  //       {
+  //         name: 'login',
+  //         path: '/user/login',
+  //         component: './user/login',
+  //       },
+  //     ],
+  //   },
+  //
+  //   {
+  //     path: '/welcome',
+  //     name: 'welcome',
+  //     icon: 'smile',
+  //     component: './Welcome',
+  //   },
+  //   {
+  //     path: '/admin',
+  //     name: 'admin',
+  //     icon: 'crown',
+  //     access: 'canAdmin',
+  //     component: './Admin',
+  //     routes: [
+  //       {
+  //         path: '/admin/sub-page',
+  //         name: 'sub-page',
+  //         icon: 'smile',
+  //         component: './Welcome',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     path: '/base',
+  //     name: '系统设置',
+  //     icon: 'setting',
+  //     // component: '',
+  //     routes: [
+  //       {
+  //         path: '/base/user',
+  //         name: 'userManager',
+  //         component: '@/pages/base/user',
+  //         // routes: [],
+  //         parent_id: "362166697114730497",
+  //         parent_path: "",
+  //         sequence: 0,
+  //         show_status: 1,
+  //         status: 0,
+  //         uuid: "362186518489464833",
+  //         icon: "smile"
+  //       },
+  //       {
+  //         path: '/base/department',
+  //         name: 'deptManager',
+  //         component: '@/pages/base/department',
+  //       },
+  //       {
+  //         path: '/base/role',
+  //         name: 'roleManager',
+  //         component: '@/pages/base/role',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     parent_id: '362166697114730497',
+  //     path: '/kpi',
+  //     name: '仪表盘',
+  //     icon: 'setting',
+  //     routes: [
+  //       {
+  //
+  //         path: '/kpi/dashboard',
+  //         name: 'KPI视图',
+  //         component: '@/pages/kpi/dashboard',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     name: 'list.table-list',
+  //     icon: 'table',
+  //     path: '/list',
+  //     component: './ListTableList',
+  //   },
+  //   {
+  //     path: '/',
+  //     redirect: '/welcome',
+  //   },
+  //   {
+  //     component: './404',
+  //   },
+  // ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
     // ...darkTheme,
