@@ -5,7 +5,6 @@ import * as allIcons from '@ant-design/icons';
 // FIX从接口获取菜单时icon为string类型
 const fixMenuStruct = (menus: MenuDataItem[], iconType = 'Outlined'): MenuDataItem[] => {
   menus.forEach((item) => {
-    console.log(item)
     if (item.parent_id === "") {
       // eslint-disable-next-line no-param-reassign
       delete item.component

@@ -1,17 +1,18 @@
 declare namespace API {
   export interface CurrentUser {
+    data?: any;
     avatar?: string;
-    name?: string;
+    nickname?: string;
     title?: string;
-    group?: string;
-    signature?: string;
-    tags?: {
-      key: string;
-      label: string;
-    }[];
-    UUID?: string;
+    // group?: string;
+    // signature?: string;
+    // tags?: {
+    //   key: string;
+    //   label: string;
+    // }[];
+    uuid?: string;
     access?: 'user' | 'guest' | 'admin';
-    unreadCount?: number;
+    // unreadCount?: number;
   }
 
   export interface LoginStateType {
@@ -19,7 +20,7 @@ declare namespace API {
     status?: 'ok' | 'error';
     type?: string;
     code: number;
-    result: any;
+    data: any;
   }
 
   export interface NoticeIconData {

@@ -62,15 +62,14 @@ const Login: React.FC<{}> = () => {
     try {
       // 登录
       const msg = await UserLogin({ ...values });
-      console.log(msg, '登录消息');
       if (msg.success) {
         message.success('登录成功！');
         replaceGoto();
-        localStorage.setItem('token', msg.result.token);
+        localStorage.setItem('token', msg.data.token);
         return;
       }
       // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
+      // setUserLoginState(msg);
     } catch (error) {
       message.error('登录失败，请重试！');
     }

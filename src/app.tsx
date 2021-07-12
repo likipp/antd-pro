@@ -1,6 +1,6 @@
 // import React from 'react';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { notification } from 'antd';
+import { notification, message } from 'antd';
 import type { RequestConfig } from 'umi';
 import { history, Link } from 'umi';
 // import RightContent from '@/components/RightContent';
@@ -11,6 +11,7 @@ import { queryCurrent } from './services/user';
 import type { RunTimeLayoutConfig } from '@@/plugin-layout/layoutExports';
 import { getMenus } from '@/pages/base/user/service';
 import fixMenuStruct from '@/utils/fixMenuStruct';
+// import defaultRoutes from 'config/defaultRoutes';
 
 const loginPath = '/user/login';
 const routes = [
@@ -51,14 +52,14 @@ const routes = [
 ];
 
 export async function getInitialState(): Promise<{
+  name?: string
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
-      const res = await queryCurrent();
-      res.access = 'admin';
+      const res = await queryCurrent()
       return res;
     } catch (error) {
       history.push(loginPath);
@@ -68,7 +69,9 @@ export async function getInitialState(): Promise<{
   // 如果是登录页面，不执行
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
+    const name = currentUser?.data.nickname
     return {
+      name,
       fetchUserInfo,
       currentUser,
       settings: {},
@@ -83,7 +86,7 @@ export async function getInitialState(): Promise<{
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     // subMenuItemRender: (_, dom) => <div>pre {dom}</div>,
-    onMenuHeaderClick: () => {history.push('/')},
+    // onMenuHeaderClick: () => {history.push('/')},
     menuItemRender: (menuItemProps, defaultDom) => {
       if (
         menuItemProps.isUrl ||
@@ -106,19 +109,40 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       locale: false,
       // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request
       params: {
-        UUID: initialState?.currentUser?.UUID,
+        UUID: initialState?.currentUser?.data.uuid,
       },
       // params: initialState,
       request: async () => {
         // initialState.currentUser 中包含了所有用户信息
         const menuData = await getMenus().then((res) => {
-          return [...routes, ...res.result];
+          return [...routes, ...res.data];
         });
         fixMenuStruct(menuData);
-        // console.log(menuData, '菜单');
         return menuData;
       },
     },
+    menuHeaderRenderer: undefined,
+    ...initialState?.settings,
+    // rightContentRender: () => <RightContent />,
+    disableContentMargin: false,
+    // 页面水印
+    // waterMarkProps: {
+    //   content: initialState?.currentUser?.data.nickname,
+    // },
+    // footerRender: () => <Footer />,
+    // onPageChange: () => {
+    //   const { location } = history;
+    //   // 如果没有登录，重定向到 login
+    //   if (!initialState?.currentUser && location.pathname !== loginPath) {
+    //     history.push(loginPath);
+    //   }
+    // },
+    logout: () => {
+      localStorage.removeItem("token")
+      location.reload()
+      message.success("退出登录成功,即将跳转到登录页")
+      history.push(loginPath)
+    }
   };
 };
 
