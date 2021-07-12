@@ -32,21 +32,22 @@ const routes = [
     component: './Welcome',
   },
   {
-    parent_id: '362166697114730497',
+    uuid: '362166697114730497',
     path: '/kpi',
     name: '仪表盘',
     icon: 'setting',
     routes: [
       {
+        parent_id: '362166697114730497',
         path: '/kpi/dashboard',
         name: 'KPI视图',
         component: '@/pages/kpi/dashboard',
       },
     ],
   },
-  // {
-  //   component: './404',
-  // },
+  {
+    component: './404',
+  },
 ];
 
 export async function getInitialState(): Promise<{
@@ -82,6 +83,7 @@ export async function getInitialState(): Promise<{
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     // subMenuItemRender: (_, dom) => <div>pre {dom}</div>,
+    onMenuHeaderClick: () => {history.push('/')},
     menuItemRender: (menuItemProps, defaultDom) => {
       if (
         menuItemProps.isUrl ||
@@ -106,13 +108,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       params: {
         UUID: initialState?.currentUser?.UUID,
       },
+      // params: initialState,
       request: async () => {
         // initialState.currentUser 中包含了所有用户信息
         const menuData = await getMenus().then((res) => {
           return [...routes, ...res.result];
         });
         fixMenuStruct(menuData);
-        console.log(menuData, '菜单');
+        // console.log(menuData, '菜单');
         return menuData;
       },
     },
