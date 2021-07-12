@@ -32,13 +32,15 @@ import CreateForm from '@/pages/base/user/components/CreateForm';
 import UpdateForm from '@/pages/base/user/components/UpdateForm';
 import type {TransferItem} from "antd/es/transfer";
 import DeptList from "@/pages/base/department";
-import {DeptTreeItem} from "@/pages/base/user/data";
+import type {DeptTreeItem} from "@/pages/base/user/data";
 import UserDetailInfoCard from './components/UserDetailInfoCard';
 import type { UserInfo, RolesItem } from './data';
+import {useAccess, Access} from "umi";
 
 const { Option } = Select;
 
 const TableList: React.FC = () => {
+  const access = useAccess()
   const [,setLoading] = useState(true);
   // const [transferLoading, setTransferLoading] = useState(true);
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
@@ -135,6 +137,8 @@ const TableList: React.FC = () => {
     })
   })
 
+  // @ts-ignore
+  // @ts-ignore
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '序号',
@@ -334,24 +338,27 @@ const TableList: React.FC = () => {
       valueType: 'option',
       render: (_, record) => (
         <>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              handleUpdateModalVisible(true);
-              setStepFormValues(record);
-            }}
-          >
-            编辑
-          </Button>
-          <Divider type="vertical" />
-          <Dropdown.Button overlay={menu} size="small"
-           style={{marginLeft: "7px"}}
-           onClick={() => {
-            setStepFormValues(record);
-          }}>
-            更多
-          </Dropdown.Button>
+          <Access accessible={access.canAdmin} fallback={null}>
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                handleUpdateModalVisible(true);
+                setStepFormValues(record);
+              }}
+            >
+              编辑
+            </Button>
+            <Divider type="vertical" />
+            <Dropdown.Button overlay={menu} size="small"
+                             style={{marginLeft: "7px"}}
+                             onClick={() => {
+                               setStepFormValues(record);
+                             }}>
+              更多
+            </Dropdown.Button>
+          </Access>
+
         </>
       ),
     },
