@@ -1,6 +1,6 @@
 declare namespace API {
   export interface CurrentUser {
-    data?: any;
+    // data?: any;
     avatar?: string;
     nickname?: string;
     title?: string;
@@ -10,6 +10,7 @@ declare namespace API {
     //   key: string;
     //   label: string;
     // }[];
+    name?: string
     uuid?: string;
     access?: 'user' | 'guest' | 'admin';
     // unreadCount?: number;

@@ -11,55 +11,22 @@ import { queryCurrent } from './services/user';
 import type { RunTimeLayoutConfig } from '@@/plugin-layout/layoutExports';
 import { getMenus } from '@/pages/base/user/service';
 import fixMenuStruct from '@/utils/fixMenuStruct';
-// import defaultRoutes from 'config/defaultRoutes';
+// @ts-ignore
+import routes from '/config/defaultRoutes'
 
 const loginPath = '/user/login';
-const routes = [
-  {
-    path: '/user',
-    layout: false,
-    routes: [
-      {
-        name: 'login',
-        path: '/user/login',
-        component: './user/login',
-      },
-    ],
-  },
-  {
-    path: '/welcome',
-    name: '欢迎',
-    icon: 'smile',
-    component: './Welcome',
-  },
-  {
-    uuid: '362166697114730497',
-    path: '/kpi',
-    name: '仪表盘',
-    icon: 'setting',
-    routes: [
-      {
-        parent_id: '362166697114730497',
-        path: '/kpi/dashboard',
-        name: 'KPI视图',
-        component: '@/pages/kpi/dashboard',
-      },
-    ],
-  },
-  {
-    component: './404',
-  },
-];
 
 export async function getInitialState(): Promise<{
-  name?: string
+  name?: string,
+  avatar?: string,
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
+
   const fetchUserInfo = async () => {
     try {
-      const res = await queryCurrent()
+      const res = await queryCurrent().then((res) => {return res.data});
       return res;
     } catch (error) {
       history.push(loginPath);
@@ -69,9 +36,11 @@ export async function getInitialState(): Promise<{
   // 如果是登录页面，不执行
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
-    const name = currentUser?.data.nickname
+    const name = currentUser?.nickname
+    const avatar = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimage.biaobaiju.com%2Fuploads%2F20180918%2F13%2F1537250307-HetVZUNjfl.jpeg&refer=http%3A%2F%2Fimage.biaobaiju.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1628773629&t=fd4a02aa421a363d37dcdd3f907d1042'
     return {
       name,
+      avatar,
       fetchUserInfo,
       currentUser,
       settings: {},
@@ -109,7 +78,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       locale: false,
       // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request
       params: {
-        UUID: initialState?.currentUser?.data.uuid,
+        UUID: initialState?.currentUser?.uuid,
       },
       // params: initialState,
       request: async () => {
@@ -139,9 +108,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     // },
     logout: () => {
       localStorage.removeItem("token")
-      location.reload()
       message.success("退出登录成功,即将跳转到登录页")
-      history.push(loginPath)
+      history.push('/')
     }
   };
 };
