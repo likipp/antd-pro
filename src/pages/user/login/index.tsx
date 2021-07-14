@@ -9,7 +9,7 @@ import Footer from '@/components/Footer';
 import LoginFrom from './components/Login';
 import styles from './style.less';
 import { UserLogin } from '@/pages/base/user/service';
-import { LoginParamsType } from '@/pages/base/user/data';
+import type { LoginParamsType } from '@/pages/base/user/data';
 
 const { Tab, Username, Password, Mobile, Captcha, Submit } = LoginFrom;
 

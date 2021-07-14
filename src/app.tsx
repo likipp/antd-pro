@@ -1,18 +1,18 @@
 // import React from 'react';
-import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { notification, message } from 'antd';
-import type { RequestConfig } from 'umi';
-import { history, Link } from 'umi';
+import type {Settings as LayoutSettings} from '@ant-design/pro-layout';
+import {message, notification} from 'antd';
+import type {RequestConfig} from 'umi';
+import {history, Link} from 'umi';
 // import RightContent from '@/components/RightContent';
 // import Footer from '@/components/Footer';
-import type { RequestOptionsInit, ResponseError } from 'umi-request';
-import { queryCurrent } from './services/user';
+import type {RequestOptionsInit, ResponseError} from 'umi-request';
+import {queryCurrent} from './services/user';
 // import defaultSettings from '../config/defaultSettings';
-import type { RunTimeLayoutConfig } from '@@/plugin-layout/layoutExports';
-import { getMenus } from '@/pages/base/user/service';
+import type {RunTimeLayoutConfig} from '@@/plugin-layout/layoutExports';
+import {getMenus} from '@/pages/base/user/service';
 import fixMenuStruct from '@/utils/fixMenuStruct';
-// @ts-ignore
-import routes from '/config/defaultRoutes'
+// Cannot find module '/config/defaultRoutes' or its corresponding type declarations.
+import routes from '../config/defaultRoutes'
 
 const loginPath = '/user/login';
 
@@ -26,8 +26,10 @@ export async function getInitialState(): Promise<{
 
   const fetchUserInfo = async () => {
     try {
-      const res = await queryCurrent().then((res) => {return res.data});
-      return res;
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      return await queryCurrent().then((res) => {
+        return res.data
+      });
     } catch (error) {
       history.push(loginPath);
     }
@@ -37,7 +39,7 @@ export async function getInitialState(): Promise<{
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
     const name = currentUser?.nickname
-    const avatar = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimage.biaobaiju.com%2Fuploads%2F20180918%2F13%2F1537250307-HetVZUNjfl.jpeg&refer=http%3A%2F%2Fimage.biaobaiju.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1628773629&t=fd4a02aa421a363d37dcdd3f907d1042'
+    const avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png'
     return {
       name,
       avatar,
