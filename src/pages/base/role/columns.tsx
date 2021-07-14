@@ -1,5 +1,3 @@
-import React from "react";
-
 import type { ProColumns } from '@ant-design/pro-table';
 
 import {TableListItem} from "@/pages/base/role/data";

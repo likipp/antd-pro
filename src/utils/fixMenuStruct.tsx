@@ -4,9 +4,8 @@ import * as allIcons from '@ant-design/icons';
 
 // FIX从接口获取菜单时icon为string类型
 const fixMenuStruct = (menus: MenuDataItem[], iconType = 'Outlined'): MenuDataItem[] => {
-  console.log(menus, "项目")
   menus.forEach((item) => {
-    if (item.uuid !== "") {
+    if (item.uuid !== "" && item.uuid !== undefined) {
       if (item.parent_id === "") {
         // eslint-disable-next-line no-param-reassign
         delete item.component
@@ -17,7 +16,6 @@ const fixMenuStruct = (menus: MenuDataItem[], iconType = 'Outlined'): MenuDataIt
       }
     }
     const { icon, routes } = item;
-    console.log(icon, "icon", typeof icon)
     if (typeof icon === 'string') {
       const fixIconName = icon.slice(0, 1).toLocaleUpperCase() + icon.slice(1) + iconType;
       item.icon = React.createElement(allIcons[fixIconName] || allIcons[icon]);
