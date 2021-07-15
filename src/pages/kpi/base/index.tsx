@@ -1,112 +1,149 @@
-import { useState } from 'react';
-import type { ProColumns, ColumnsState } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
+import { useRef, useState } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import ProTable, { TableDropdown } from '@ant-design/pro-table';
+import { getKPIList } from './service';
+import { PageContainer } from '@ant-design/pro-layout';
+import AllotSetpsForm from '../components/kpiOwers';
 
-const valueEnum = {
-  0: 'close',
-  1: 'running',
-  2: 'online',
-  3: 'error',
-};
+const TableList: React.FC = () => {
+  const actionRef = useRef<ActionType>();
+  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
 
-export type TableListItem = {
-  key: number;
-  name: string;
-  status: string;
-  updatedAt: number;
-  createdAt: number;
-  money: number;
-};
-const tableListDataSource: TableListItem[] = [];
+  type KPIItem = {
+    id: number;
+    uuid: string;
+    name: string;
+    unit: string;
+    status: string;
+  };
 
-for (let i = 0; i < 2; i += 1) {
-  tableListDataSource.push({
-    key: i,
-    name: `TradeCode ${i}`,
-    status: valueEnum[Math.floor(Math.random() * 10) % 4],
-    updatedAt: Date.now() - Math.floor(Math.random() * 1000),
-    createdAt: Date.now() - Math.floor(Math.random() * 2000),
-    money: Math.floor(Math.random() * 2000) * i,
-  });
-}
-
-const columns: ProColumns<TableListItem>[] = [
-  {
-    title: '标题',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    initialValue: 'all',
-    filters: true,
-    onFilter: true,
-    valueType: 'select',
-    valueEnum: {
-      all: { text: '全部', status: 'Default' },
-      close: { text: '关闭', status: 'Default' },
-      running: { text: '运行中', status: 'Processing' },
-      online: { text: '已上线', status: 'Success' },
-      error: { text: '异常', status: 'Error' },
+  const valueEnum = {
+    all: { text: '全部', status: 'Default' },
+    1: {
+      text: '启用',
+      status: 'Success'
     },
-  },
-  {
-    title: '创建时间',
-    key: 'since',
-    dataIndex: 'createdAt',
-    valueType: 'dateTime',
-  },
-  {
-    title: '更新时间',
-    key: 'since2',
-    dataIndex: 'createdAt',
-    valueType: 'date',
-    hideInSetting: true,
-  },
+    2: {
+      text: '禁用',
+      status: 'Error'
+    }
+  };
 
-  {
-    title: '操作',
-    key: 'option',
-    width: 120,
-    valueType: 'option',
-    render: () => [<a key="1">操作</a>, <a key="2">删除</a>],
-  },
-];
 
-export default () => {
-  const [columnsStateMap, setColumnsStateMap] = useState<Record<string, ColumnsState>>({
-    name: {
-      show: false,
-      order: 2,
+  const columns: ProColumns<KPIItem>[] = [
+    {
+      dataIndex: 'id',
+      title: '序号',
+      align: 'center',
+      valueType: 'indexBorder',
+      width: 100,
     },
-  });
+    {
+      title: '名称',
+      dataIndex: 'name',
+      align: 'center',
+      copyable: true,
+      ellipsis: true,
+      // tip: '标题过长会自动收缩',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
+      },
+    },
+    {
+      title: '单位',
+      dataIndex: 'unit',
+      align: 'center',
+      ellipsis: true,
+      hideInSearch: true
+    },
+    {
+      title: '状态',
+      key: 'raido',
+      dataIndex: 'status',
+      initialValue: 'all',
+      align: 'center',
+      filters: true,
+      onFilter: true,
+      valueType: 'radio',
+      valueEnum
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      render: (text, record, _, action) => [
+        <a
+          key="editable"
+          onClick={() => {
+            action?.startEditable?.(record.id);
+          }}
+        >
+          编辑
+        </a>,
+        <a key="view"
+           onClick={() => {handleModalVisible(true)}}
+        >
+          分配部门
+        </a>,
+        <TableDropdown
+          key="actionGroup"
+          onSelect={() => action?.reload()}
+          menus={[
+            { key: 'delete', name: '删除' },
+          ]}
+        />,
+      ],
+    },
+  ];
+
   return (
-    <ProTable<TableListItem, { keyWord?: string }>
-      columns={columns}
-      request={(params) =>
-        Promise.resolve({
-          data: tableListDataSource.filter((item) => {
-            if (!params?.keyWord) {
-              return true;
+    <PageContainer>
+      <ProTable<KPIItem>
+        columns={columns}
+        actionRef={actionRef}
+        request={async (params = {}, sorter, filter) => {
+          return Promise.resolve(getKPIList({ sorter, filter })).then((res) => res)
+        }}
+        editable={{
+          type: 'multiple',
+        }}
+        rowKey="id"
+        search={{
+          labelWidth: 'auto',
+        }}
+        form={{
+          // 由于配置了 transform，提交的参与与定义的不同这里需要转化一下
+          syncToUrl: (values, type) => {
+            if (type === 'get') {
+              return {
+                ...values,
+                created_at: [values.startTime, values.endTime],
+              };
             }
-            if (item.name.includes(params?.keyWord) || item.status.includes(params?.keyWord)) {
-              return true;
-            }
-            return false;
-          }),
-          success: true,
-        })
-      }
-      options={{
-        search: true,
-      }}
-      rowKey="key"
-      columnsStateMap={columnsStateMap}
-      onColumnsStateChange={(map) => setColumnsStateMap(map)}
-      search={false}
-      dateFormatter="string"
-      headerTitle="受控模式"
-    />
-  );
+            return values;
+          },
+        }}
+        pagination={{
+          pageSize: 5,
+        }}
+        dateFormatter="string"
+        headerTitle="高级表格"
+        toolBarRender={() => [
+          <Button key="button" icon={<PlusOutlined />} type="primary">
+            新建
+          </Button>
+        ]}
+      />);
+      <AllotSetpsForm
+        onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}
+      ></AllotSetpsForm>
+    </PageContainer>)
 };
+
+export default TableList
