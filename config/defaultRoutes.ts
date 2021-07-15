@@ -17,15 +17,28 @@ export default [
     component: './Welcome',
   },
   {
-    path: '/kpi',
+    path: '/dashboard',
     name: '仪表盘',
     icon: 'dashboard',
     routes: [
       {
-        path: '/kpi/dashboard',
+        path: '/dashboard/kpi',
         icon: 'lineChart',
         name: 'KPI视图',
-        component: '@/pages/kpi/dashboard',
+        component: '@/pages/dashboard/kpi',
+      },
+    ]
+  },
+  {
+    path: '/kpibase',
+    name: 'KPI模块',
+    icon: 'dashboard',
+    routes: [
+      {
+        path: '/kpi/base',
+        icon: 'lineChart',
+        name: '基础数据',
+        component: '@/pages/kpi/base',
       },
     ]
   },
