@@ -1,38 +1,38 @@
 import React, { useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import {Badge, Button, Tag} from 'antd';
+import {Badge, Button, message, Radio} from 'antd';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
-import { getKPIList } from './service';
+import { getKPIList, updateKPI } from './service';
 import { PageContainer } from '@ant-design/pro-layout';
 import AllotStepsForm from '../components/kpiOwers';
 import RadioList from "@/pages/kpi/components/radioList";
+import { KPIItem } from '../data';
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
 
-  type KPIItem = {
-    id: number;
-    uuid: string;
-    name: string;
-    unit: string;
-    status: number;
-  };
+  // type KPIItem = {
+  //   id: number;
+  //   uuid: string;
+  //   name: string;
+  //   unit: string;
+  //   status: number;
+  // };
 
-  const valueEnum = {
-    // all: { text: '全部', status: 'Default' },
-    1: {
-      text: '启用',
-      status: 'Success'
-    },
-    2: {
-      text: '禁用',
-      status: 'Error'
-    }
-  };
-
+  // const valueEnum = {
+  //   // all: { text: '全部', status: 'Default' },
+  //   1: {
+  //     text: '启用',
+  //     status: 'Success'
+  //   },
+  //   2: {
+  //     text: '禁用',
+  //     status: 'Error'
+  //   }
+  // };
 
   const columns: ProColumns<KPIItem>[] = [
     {
@@ -67,21 +67,30 @@ const TableList: React.FC = () => {
     },
     {
       title: '状态',
-      key: 'radio',
       dataIndex: 'status',
-      // initialValue: 'all',
+      initialValue: 1,
       align: 'center',
-      filters: true,
-      onFilter: true,
+      // filters: true,
+      // onFilter: true,
       valueType: 'radio',
-      valueEnum,
-      // renderFormItem: () => <RadioList />,
-      // render: (_, row) => {
-      //   if (row?.status === 1) {
-      //     return <Badge color="green" text="启用" />
-      //   }
-      //   return <Badge color="red" text="禁用" />
-      // }
+      // valueEnum,
+      renderFormItem: (_, { type, defaultRender, formItemProps, fieldProps, ...rest }, form) => {
+        if (type === 'form') {
+          return (
+            <Radio.Group>
+              <Radio value={1}>启用</Radio>
+              <Radio value={2}>禁用</Radio>
+            </Radio.Group>
+          );
+        }
+        return defaultRender(_);defaultRender
+      },
+      render: (_, row) => {
+        if (row?.status === 1) {
+          return <Badge color="green" text="启用" />
+        }
+        return <Badge color="red" text="禁用" />
+      }
     },
     {
       title: '操作',
@@ -124,9 +133,17 @@ const TableList: React.FC = () => {
           editableKeys,
           onChange: setEditableRowKeys,
           actionRender: (row, config, dom) => [dom.save, dom.cancel],
-          // onSave: (value) => {
-          //    console.log("点击了保存");
-          // }
+          onSave: (_, row) => {
+            return updateKPI(row).then((res) => {
+              console.log(res, "res")
+              if (res.success) {
+                message.success(res.errorMessage);
+              }
+            });
+          },
+          onValuesChange: (changeValues, allValues) => {
+            console.log(changeValues, allValues)
+          }
         }}
         rowKey="id"
         search={{
@@ -154,7 +171,7 @@ const TableList: React.FC = () => {
             新建
           </Button>
         ]}
-      />);
+      />
       <AllotStepsForm
         onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}
       ></AllotStepsForm>
