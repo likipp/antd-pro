@@ -1,26 +1,28 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import {Badge, Button, Tag} from 'antd';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import { getKPIList } from './service';
 import { PageContainer } from '@ant-design/pro-layout';
-import AllotSetpsForm from '../components/kpiOwers';
+import AllotStepsForm from '../components/kpiOwers';
+import RadioList from "@/pages/kpi/components/radioList";
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
+  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
 
   type KPIItem = {
     id: number;
     uuid: string;
     name: string;
     unit: string;
-    status: string;
+    status: number;
   };
 
   const valueEnum = {
-    all: { text: '全部', status: 'Default' },
+    // all: { text: '全部', status: 'Default' },
     1: {
       text: '启用',
       status: 'Success'
@@ -65,14 +67,21 @@ const TableList: React.FC = () => {
     },
     {
       title: '状态',
-      key: 'raido',
+      key: 'radio',
       dataIndex: 'status',
-      initialValue: 'all',
+      // initialValue: 'all',
       align: 'center',
       filters: true,
       onFilter: true,
       valueType: 'radio',
-      valueEnum
+      valueEnum,
+      // renderFormItem: () => <RadioList />,
+      // render: (_, row) => {
+      //   if (row?.status === 1) {
+      //     return <Badge color="green" text="启用" />
+      //   }
+      //   return <Badge color="red" text="禁用" />
+      // }
     },
     {
       title: '操作',
@@ -111,7 +120,13 @@ const TableList: React.FC = () => {
           return Promise.resolve(getKPIList({ sorter, filter })).then((res) => res)
         }}
         editable={{
-          type: 'multiple',
+          type: 'single',
+          editableKeys,
+          onChange: setEditableRowKeys,
+          actionRender: (row, config, dom) => [dom.save, dom.cancel],
+          // onSave: (value) => {
+          //    console.log("点击了保存");
+          // }
         }}
         rowKey="id"
         search={{
@@ -140,9 +155,9 @@ const TableList: React.FC = () => {
           </Button>
         ]}
       />);
-      <AllotSetpsForm
+      <AllotStepsForm
         onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}
-      ></AllotSetpsForm>
+      ></AllotStepsForm>
     </PageContainer>)
 };
 

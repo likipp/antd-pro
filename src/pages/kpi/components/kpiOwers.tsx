@@ -9,7 +9,7 @@ interface StepsFormProps {
   onCancel: () => void;
 }
 
-const AllotSetpsForm: React.FC<StepsFormProps> = (props) => {
+const AllotStepsForm: React.FC<StepsFormProps> = (props) => {
   const { modalVisible, onCancel } = props;
   type FormValue = {
     jobInfo: {
@@ -73,4 +73,4 @@ const AllotSetpsForm: React.FC<StepsFormProps> = (props) => {
   </ModalForm>;
 }
 
-export default AllotSetpsForm
+export default AllotStepsForm
