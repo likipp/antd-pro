@@ -3,11 +3,15 @@ import React from "react";
 
 const RadioList: React.FC<{
   value?: {
-    status: string
+    status: number,
+    unit: string,
+    name: string
   };
   onChange?: (
     value: {
-      status: number
+      status: number,
+      unit: string,
+      name: string
     },
   ) => void;
   onSave?: (
@@ -18,7 +22,7 @@ const RadioList: React.FC<{
 }> = ({ value, onChange }) => {
   // const [value, setValue] = useState(3)
   return (
-    <Radio.Group value={value}>
+    <Radio.Group>
       <Radio value={1}>启用</Radio>
       <Radio value={2}>禁用</Radio>
     </Radio.Group>

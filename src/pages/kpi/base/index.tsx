@@ -6,8 +6,8 @@ import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import { getKPIList, updateKPI } from './service';
 import { PageContainer } from '@ant-design/pro-layout';
 import AllotStepsForm from '../components/kpiOwers';
-import RadioList from "@/pages/kpi/components/radioList";
-import { KPIItem } from '../data';
+import type { KPIItem } from '../data';
+// import RadioList from "@/pages/kpi/components/radioList";
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -34,6 +34,7 @@ const TableList: React.FC = () => {
   //   }
   // };
 
+  // @ts-ignore
   const columns: ProColumns<KPIItem>[] = [
     {
       dataIndex: 'id',
@@ -63,17 +64,33 @@ const TableList: React.FC = () => {
       dataIndex: 'unit',
       align: 'center',
       ellipsis: true,
-      hideInSearch: true
+      hideInSearch: true,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
+      },
     },
     {
       title: '状态',
       dataIndex: 'status',
       initialValue: 1,
       align: 'center',
-      // filters: true,
-      // onFilter: true,
+      filters: true,
+      onFilter: true,
       valueType: 'radio',
       // valueEnum,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
+      },
       renderFormItem: (_, { type, defaultRender, formItemProps, fieldProps, ...rest }, form) => {
         if (type === 'form') {
           return (
@@ -83,8 +100,9 @@ const TableList: React.FC = () => {
             </Radio.Group>
           );
         }
-        return defaultRender(_);defaultRender
+        // return defaultRender(_);defaultRender
       },
+      // renderFormItem: () => <RadioList/>,
       render: (_, row) => {
         if (row?.status === 1) {
           return <Badge color="green" text="启用" />
@@ -135,15 +153,15 @@ const TableList: React.FC = () => {
           actionRender: (row, config, dom) => [dom.save, dom.cancel],
           onSave: (_, row) => {
             return updateKPI(row).then((res) => {
-              console.log(res, "res")
+              // console.log(res, "res")
               if (res.success) {
                 message.success(res.errorMessage);
               }
             });
           },
-          onValuesChange: (changeValues, allValues) => {
-            console.log(changeValues, allValues)
-          }
+          // onValuesChange: (changeValues, allValues) => {
+          //   console.log(changeValues, allValues)
+          // }
         }}
         rowKey="id"
         search={{
@@ -174,7 +192,7 @@ const TableList: React.FC = () => {
       />
       <AllotStepsForm
         onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}
-      ></AllotStepsForm>
+      />
     </PageContainer>)
 };
 

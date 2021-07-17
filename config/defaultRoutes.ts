@@ -40,6 +40,12 @@ export default [
         name: '基础数据',
         component: '@/pages/kpi/base',
       },
+      {
+        path: '/kpi/assign',
+        icon: 'lineChart',
+        name: '分配部门',
+        component: '@/pages/kpi/assign',
+      },
     ]
   },
   {
