@@ -46,6 +46,12 @@ export default [
         name: '分配部门',
         component: '@/pages/kpi/assign',
       },
+      {
+        path: '/kpi/commit',
+        icon: 'lineChart',
+        name: 'KPI汇报',
+        component: '@/pages/kpi/commit',
+      },
     ]
   },
   {
