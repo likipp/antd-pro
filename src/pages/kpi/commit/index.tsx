@@ -5,7 +5,6 @@ import {
   Tag,
   Progress,
   Form,
-  DatePicker,
   Select,
   Input,
   Row,
@@ -23,10 +22,10 @@ import TextArea from 'antd/es/input/TextArea';
 export default () => {
   const [kpi, setKpi] = useState([]);
   const [value, setValue] = useState<ValueItem>();
-  const [month, setMonth] = useState('2021-07');
+  const [month, setMonth] = useState('2021-07-01');
   useEffect(() => {
-    setMonth(moment().format('YYYY-MM'));
-  });
+    setMonth(moment().format('YYYY-MM-DD'));
+  }, []);
   const data = [
     '语雀的天空',
     'Ant Design',
@@ -92,6 +91,7 @@ export default () => {
         t_limit: option.t_limit,
       };
     });
+
   };
 
   // const onChange = (value, option, array) => {
@@ -100,7 +100,7 @@ export default () => {
   const options = kpi.map((d: KPISelectItem) => (
     <Option
       key={d.uuid}
-      value={d.KPIName}
+      value={d.uuid}
       t_limit={d.t_limit}
       l_limit={d.l_limit}
       u_limit={d.u_limit}
@@ -142,7 +142,9 @@ export default () => {
           <Row gutter={[16, 16]}>
             <Col span={12}>
               <Form.Item name="month" label="当前月份">
-                <DatePicker picker="month" disabled bordered={false} />
+                {/*<DatePicker picker="month" disabled bordered={false} />*/}
+                {/*<span>{month}</span>*/}
+                <Input disabled bordered={false} />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -193,7 +195,12 @@ export default () => {
           </Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" onClick={() => {
+                console.log(form.getFieldsValue(), "form")
+                let data = form.getFieldsValue()
+                data.month = data.month.toString()
+                console.log(data, "转换后")
+              }}>
                 保存
               </Button>
               <Button
