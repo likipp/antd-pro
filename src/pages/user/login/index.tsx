@@ -64,8 +64,12 @@ const Login: React.FC<{}> = () => {
       const msg = await UserLogin({ ...values });
       if (msg.success) {
         message.success('登录成功！');
+        console.log(msg)
         replaceGoto();
         localStorage.setItem('token', msg.data.token);
+        localStorage.setItem('uuid', msg.data.user.uuid);
+        localStorage.setItem('username', msg.data.user.username);
+        localStorage.setItem('nickname', msg.data.user.nickname);
         return;
       }
       // 如果失败去设置用户错误信息

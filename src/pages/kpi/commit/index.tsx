@@ -11,6 +11,7 @@ import {
   Col,
   Button,
   Alert,
+  DatePicker,
 } from 'antd';
 import ProList from '@ant-design/pro-list';
 import { getKPIWithDeptList } from '@/pages/dashboard/kpi/service';
@@ -18,6 +19,7 @@ import { useEffect, useState } from 'react';
 import type { KPISelectItem, ValueItem } from '@/pages/kpi/commit/data';
 import moment from 'moment';
 import TextArea from 'antd/es/input/TextArea';
+import { createKPIData } from './service';
 
 export default () => {
   const [kpi, setKpi] = useState([]);
@@ -124,12 +126,12 @@ export default () => {
           name="KPIInput"
           {...formItemLayout}
           form={form}
-          initialValues={{ name: '冯十五', month: moment(month), kpi: '' }}
+          initialValues={{ user: '冯十五', in_time: moment(month), r_value: '' }}
           scrollToFirstError
         >
           <Row gutter={[16, 16]}>
             <Col span={12}>
-              <Form.Item name="name" label="录入人">
+              <Form.Item name="user" label="录入人">
                 <Input disabled bordered={false} />
               </Form.Item>
             </Col>
@@ -141,15 +143,15 @@ export default () => {
           </Row>
           <Row gutter={[16, 16]}>
             <Col span={12}>
-              <Form.Item name="month" label="当前月份">
-                {/*<DatePicker picker="month" disabled bordered={false} />*/}
+              <Form.Item name="in_time" label="当前月份">
+                <DatePicker picker="month" disabled bordered={false} />
                 {/*<span>{month}</span>*/}
-                <Input disabled bordered={false} />
+                {/*<Input disabled bordered={false} />*/}
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="kpi_name"
+                name="group_kpi"
                 label="KPI名称"
                 rules={[{ required: true, message: '请至少选择一项KPI' }]}
               >
@@ -168,7 +170,7 @@ export default () => {
           <Row gutter={[16, 16]}>
             <Col span={12}>
               <Form.Item
-                name="kpi"
+                name="r_value"
                 label="实际KPI"
                 rules={[{ required: true, message: '请实际KPI值' }]}
               >
@@ -196,11 +198,15 @@ export default () => {
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit" onClick={() => {
-                console.log(form.getFieldsValue(), "form")
                 let data = form.getFieldsValue()
-                data.month = data.month.toString()
-                console.log(data, "转换后")
-              }}>
+                data.in_time = moment().format('YYYY-MM')
+                data.user = localStorage.getItem("uuid")
+                console.log(data)
+                createKPIData(data).then((res) => {
+                  console.log(res, "添加成功")
+                })
+              }}
+              >
                 保存
               </Button>
               <Button
