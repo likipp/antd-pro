@@ -22,6 +22,7 @@ import TextArea from 'antd/es/input/TextArea';
 import { createKPIData } from './service';
 
 export default () => {
+  // const [loading, setLoading] = useState(true)
   const [kpi, setKpi] = useState([]);
   const [value, setValue] = useState<ValueItem>();
   const [month, setMonth] = useState('2021-07-01');
@@ -74,12 +75,13 @@ export default () => {
   };
 
   const [form] = Form.useForm();
-  // let dae_now = Date.now()
-  // eslint-disable-next-line global-require
-  // const moment = require('moment')
 
-  const onDropdownVisibleChange = () => {
+  const onDropdownVisibleChange = (open: boolean) => {
+    if (!open) {
+      return
+    }
     getKPIWithDeptList().then((res) => {
+      if (!res.success) {return}
       setKpi(res.data);
     });
   };
@@ -156,6 +158,7 @@ export default () => {
                 <Select
                   placeholder="请选择一项KPI"
                   allowClear
+                  notFoundContent={null}
                   onDropdownVisibleChange={onDropdownVisibleChange}
                   // @ts-ignore
                   onSelect={onSelect}
