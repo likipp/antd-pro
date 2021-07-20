@@ -1,8 +1,8 @@
 import { AlipayCircleOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from '@ant-design/icons';
 import { Alert, Checkbox, message } from 'antd';
 import React, { useState } from 'react';
-import { Link, SelectLang, history } from 'umi';
-import { getPageQuery } from '@/utils/utils';
+import { Link, SelectLang, history, useModel, useIntl } from 'umi';
+// import { getPageQuery } from '@/utils/utils';
 import logo from '@/assets/logo.svg';
 // import { LoginParamsType } from '@/services/login';
 import Footer from '@/components/Footer';
@@ -29,24 +29,24 @@ const LoginMessage: React.FC<{
 /**
  * 此方法会跳转到 redirect 参数所在的位置
  */
-const replaceGoto = () => {
-  const urlParams = new URL(window.location.href);
-  const params = getPageQuery();
-  let { redirect } = params as { redirect: string };
-  if (redirect) {
-    const redirectUrlParams = new URL(redirect);
-    if (redirectUrlParams.origin === urlParams.origin) {
-      redirect = redirect.substr(urlParams.origin.length);
-      if (redirect.match(/^\/.*#/)) {
-        redirect = redirect.substr(redirect.indexOf('#') + 1);
-      }
-    } else {
-      window.location.href = '/';
-      return;
-    }
-  }
-  history.replace(redirect || '/');
-};
+// const replaceGoto = () => {
+//   const urlParams = new URL(window.location.href);
+//   const params = getPageQuery();
+//   let { redirect } = params as { redirect: string };
+//   if (redirect) {
+//     const redirectUrlParams = new URL(redirect);
+//     if (redirectUrlParams.origin === urlParams.origin) {
+//       redirect = redirect.substr(urlParams.origin.length);
+//       if (redirect.match(/^\/.*#/)) {
+//         redirect = redirect.substr(redirect.indexOf('#') + 1);
+//       }
+//     } else {
+//       window.location.href = '/';
+//       return;
+//     }
+//   }
+//   history.replace(redirect || '/');
+// };
 
 const Login: React.FC<{}> = () => {
   // @ts-ignore
@@ -56,6 +56,20 @@ const Login: React.FC<{}> = () => {
   // const { refresh } = useModel('@@initialState');
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState<string>('account');
+  const { initialState, setInitialState } = useModel('@@initialState');
+
+  const intl = useIntl();
+  const fetchUserInfo = async () => {
+    const userInfo = await initialState?.fetchUserInfo?.();
+    console.log(userInfo, "userInfo")
+    if (userInfo) {
+      // @ts-ignore
+      setInitialState((s) => ({
+        ...s,
+        currentUser: userInfo,
+      }));
+    }
+  };
 
   const handleSubmit = async (values: LoginParamsType) => {
     setSubmitting(true);
@@ -63,19 +77,33 @@ const Login: React.FC<{}> = () => {
       // 登录
       const msg = await UserLogin({ ...values });
       if (msg.success) {
-        message.success('登录成功！');
-        console.log(msg)
-        replaceGoto();
+        const defaultLoginSuccessMessage = intl.formatMessage({
+          id: 'pages.login.success',
+          defaultMessage: '登录成功！',
+        });
+        message.success(defaultLoginSuccessMessage);
         localStorage.setItem('token', msg.data.token);
         localStorage.setItem('uuid', msg.data.user.uuid);
         localStorage.setItem('username', msg.data.user.username);
         localStorage.setItem('nickname', msg.data.user.nickname);
+        await fetchUserInfo()
+
+        if (!history) return
+        const { query } = history.location;
+        const { redirect } = query as { redirect: string };
+        history.push(redirect || '/');
+        // replaceGoto();
         return;
       }
       // 如果失败去设置用户错误信息
-      // setUserLoginState(msg);
+      setUserLoginState(msg);
     } catch (error) {
-      message.error('登录失败，请重试！');
+      const defaultLoginFailureMessage = intl.formatMessage({
+        id: 'pages.login.failure',
+        defaultMessage: '登录失败，请重试！',
+      });
+
+      message.error(defaultLoginFailureMessage);
     }
     setSubmitting(false);
   };

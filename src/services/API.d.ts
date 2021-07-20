@@ -1,6 +1,6 @@
 declare namespace API {
   export interface CurrentUser {
-    // data?: any;
+    data: any;
     avatar?: string;
     nickname?: string;
     title?: string;

@@ -1,20 +1,22 @@
-// import React from 'react';
-import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import {PageLoading, Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { message, notification } from 'antd';
 import type { RequestConfig } from 'umi';
 import { history, Link } from 'umi';
-// import RightContent from '@/components/RightContent';
-// import Footer from '@/components/Footer';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import { queryCurrent } from './services/user';
-// import defaultSettings from '../config/defaultSettings';
 import type { RunTimeLayoutConfig } from '@@/plugin-layout/layoutExports';
 import { getMenus } from '@/pages/base/user/service';
 import fixMenuStruct from '@/utils/fixMenuStruct';
-// Cannot find module '/config/defaultRoutes' or its corresponding type declarations.
 import routes from '../config/defaultRoutes';
+import RightContent from './components/RightContent';
 
 const loginPath = '/user/login';
+const initPaht = '/'
+
+/** 获取用户信息比较慢的时候会展示一个 loading */
+export const initialStateConfig = {
+  loading: <PageLoading />,
+};
 
 export async function getInitialState(): Promise<{
   name?: string;
@@ -25,17 +27,21 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      return await queryCurrent().then((res) => {
-        return res.data;
-      });
+      // // eslint-disable-next-line @typescript-eslint/no-shadow
+      // return await queryCurrent().then((res) => {
+      //   return res.data;
+      // });
+      console.log("跳转到此处")
+      const msg = await queryCurrent();
+      console.log(msg, "msg")
+      return msg.data;
     } catch (error) {
       history.push(loginPath);
     }
     return undefined;
   };
   // 如果是登录页面，不执行
-  if (history.location.pathname !== loginPath) {
+  if (history.location.pathname !== loginPath && history.location.pathname !== initPaht) {
     const currentUser = await fetchUserInfo();
     const name = currentUser?.nickname;
     const avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
@@ -55,8 +61,8 @@ export async function getInitialState(): Promise<{
 
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
-    // subMenuItemRender: (_, dom) => <div>pre {dom}</div>,
-    // onMenuHeaderClick: () => {history.push('/')},
+    rightContentRender: () => <RightContent />,
+    // menuDataRender: () => [],
     menuItemRender: (menuItemProps, defaultDom) => {
       if (
         menuItemProps.isUrl ||
@@ -79,10 +85,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       locale: false,
       // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request
       params: {
-        UUID: initialState?.currentUser?.uuid,
+        uuid: initialState?.currentUser?.uuid,
       },
       // params: initialState,
       request: async () => {
+        const haveToken = localStorage.getItem("token")
+        if (haveToken === null) {
+          return []
+        }
         // initialState.currentUser 中包含了所有用户信息
         const menuData = await getMenus().then((res) => {
           return [...routes, ...res.data];
@@ -92,26 +102,28 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       },
     },
     menuHeaderRenderer: undefined,
-    ...initialState?.settings,
-    // rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     // 页面水印
-    // waterMarkProps: {
-    //   content: initialState?.currentUser?.data.nickname,
-    // },
-    // footerRender: () => <Footer />,
-    // onPageChange: () => {
-    //   const { location } = history;
-    //   // 如果没有登录，重定向到 login
-    //   if (!initialState?.currentUser && location.pathname !== loginPath) {
-    //     history.push(loginPath);
-    //   }
-    // },
+    waterMarkProps: {
+      content: initialState?.currentUser?.nickname,
+    },
+    onPageChange: () => {
+      const { location } = history;
+      // 暂时不知道initialState 不知道怎么使用， 先用localStorage临时代替
+      // 如果没有登录，重定向到 login
+      // if (!initialState?.currentUser?.uuid && location.pathname !== loginPath) {
+      //   history.push(loginPath);
+      // }
+      if (localStorage.getItem("token") === null && location.pathname !== loginPath) {
+        history.push(loginPath);
+      }
+    },
     logout: () => {
       localStorage.removeItem('token');
       message.success('退出登录成功,即将跳转到登录页');
       history.push('/');
     },
+    ...initialState?.settings,
   };
 };
 
