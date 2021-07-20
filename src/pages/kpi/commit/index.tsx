@@ -11,7 +11,7 @@ import {
   Col,
   Button,
   Alert,
-  DatePicker,
+  DatePicker, InputNumber, message,
 } from 'antd';
 import ProList from '@ant-design/pro-list';
 import { getKPIWithDeptList } from '@/pages/dashboard/kpi/service';
@@ -126,7 +126,7 @@ export default () => {
           name="KPIInput"
           {...formItemLayout}
           form={form}
-          initialValues={{ user: '冯十五', in_time: moment(month), r_value: '' }}
+          initialValues={{ user: '冯十五', in_time: moment(month) }}
           scrollToFirstError
         >
           <Row gutter={[16, 16]}>
@@ -145,8 +145,6 @@ export default () => {
             <Col span={12}>
               <Form.Item name="in_time" label="当前月份">
                 <DatePicker picker="month" disabled bordered={false} />
-                {/*<span>{month}</span>*/}
-                {/*<Input disabled bordered={false} />*/}
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -174,7 +172,7 @@ export default () => {
                 label="实际KPI"
                 rules={[{ required: true, message: '请实际KPI值' }]}
               >
-                <Input />
+                <InputNumber />
               </Form.Item>
             </Col>
             <Col span={11} offset={1}>
@@ -198,13 +196,16 @@ export default () => {
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit" onClick={() => {
-                let data = form.getFieldsValue()
-                data.in_time = moment().format('YYYY-MM')
-                data.user = localStorage.getItem("uuid")
-                console.log(data)
-                createKPIData(data).then((res) => {
-                  console.log(res, "添加成功")
-                })
+                const form_data = form.getFieldsValue()
+                form_data.in_time = moment().format('YYYY-MM')
+                form_data.user = localStorage.getItem("uuid")
+                createKPIData(form_data).then((res) => {
+                  if (res.success) {
+                    message.success("数据添加成功")
+                  }
+                }).catch(
+                  // message.error("数据添加失败")
+                )
               }}
               >
                 保存

@@ -1,12 +1,13 @@
 import {request} from 'umi'
+import {KPIDataInfo} from "@/pages/kpi/commit/data";
 
-export async function createKPIData(params: any) {
+export async function createKPIData(params: KPIDataInfo) {
   console.log(params, "params")
   return request('/api/v1/base/kpi-data', {
     method: 'POST',
     body: JSON.stringify(params),
     headers: {
-      'content-type': 'application/json',
+      'Content-Type': 'application/json',
     }
   })
 }

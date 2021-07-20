@@ -13,3 +13,10 @@ export interface ValueItem {
   u_limit: string;
   dept_name: string;
 }
+
+export interface KPIDataInfo {
+  r_value: number,
+  user: string,
+  in_time: string,
+  group_kpi: string
+}
