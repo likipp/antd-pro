@@ -1,17 +1,19 @@
-import {PageLoading, Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { message, notification } from 'antd';
-import type { RequestConfig } from 'umi';
-import { history, Link } from 'umi';
-import type { RequestOptionsInit, ResponseError } from 'umi-request';
-import { queryCurrent } from './services/user';
-import type { RunTimeLayoutConfig } from '@@/plugin-layout/layoutExports';
-import { getMenus } from '@/pages/base/user/service';
+import type {Settings as LayoutSettings} from '@ant-design/pro-layout';
+import {PageLoading} from '@ant-design/pro-layout';
+import {message, notification} from 'antd';
+import type {RequestConfig} from 'umi';
+import {history, Link} from 'umi';
+import type {RequestOptionsInit, ResponseError} from 'umi-request';
+import {queryCurrent} from './services/user';
+import type {RunTimeLayoutConfig} from '@@/plugin-layout/layoutExports';
+import {getMenus} from '@/pages/base/user/service';
 import fixMenuStruct from '@/utils/fixMenuStruct';
 import routes from '../config/defaultRoutes';
 import RightContent from './components/RightContent';
 
+// const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
-const initPaht = '/'
+const initPath = '/'
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -27,24 +29,21 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      // // eslint-disable-next-line @typescript-eslint/no-shadow
-      // return await queryCurrent().then((res) => {
-      //   return res.data;
-      // });
-      console.log("跳转到此处")
-      const msg = await queryCurrent();
-      console.log(msg, "msg")
-      return msg.data;
+      const res = await queryCurrent();
+      console.log(res, "app.tsx中的fetchUserInfo")
+      return res
     } catch (error) {
       history.push(loginPath);
     }
     return undefined;
   };
   // 如果是登录页面，不执行
-  if (history.location.pathname !== loginPath && history.location.pathname !== initPaht) {
+  if (history.location.pathname !== loginPath && history.location.pathname !== initPath) {
     const currentUser = await fetchUserInfo();
+    console.log(currentUser, "登录后的currentUser")
     const name = currentUser?.nickname;
-    const avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
+    // const avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
+    const avatar = currentUser?.avatar
     return {
       name,
       avatar,
@@ -60,6 +59,7 @@ export async function getInitialState(): Promise<{
 }
 
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+  console.log("layout中的initialState", initialState)
   return {
     rightContentRender: () => <RightContent />,
     // menuDataRender: () => [],
@@ -113,7 +113,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       // 如果没有登录，重定向到 login
       // if (!initialState?.currentUser?.uuid && location.pathname !== loginPath) {
       //   history.push(loginPath);
+      //
+      // initialState?.currentUser
       // }
+      console.log(initialState?.currentUser?.uuid, "initialState?.currentUser?.uuid", initialState?.currentUser?.nickname)
       if (localStorage.getItem("token") === null && location.pathname !== loginPath) {
         history.push(loginPath);
       }

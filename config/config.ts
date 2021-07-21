@@ -17,18 +17,18 @@ export default defineConfig({
   },
   // Can't read property 'ModuleFederationPlugin' of undefined.
   webpack5: {},
-  // layout: {
-  //   name: 'Ant Design Pro',
-  //   locale: false,
-  //   siderWidth: 208,
-  // },
-  layout: 'sidemenu',
-  contentWidth: 'Fluid',
-  fixedHeader: false,
-  fixSiderbar: false,
-  title: 'Ant Design Pro',
-  pwa: false,
-  iconfontUrl: '',
+  layout: {
+    name: 'Ant Design Pro',
+    locale: false,
+    siderWidth: 208,
+  },
+  // layout: 'sidemenu',
+  // contentWidth: 'Fluid',
+  // fixedHeader: false,
+  // fixSiderbar: false,
+  // title: 'Ant Design Pro',
+  // pwa: false,
+  // iconfontUrl: '',
   locale: {
     // default zh-CN
     default: 'zh-CN',

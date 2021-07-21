@@ -29,26 +29,16 @@ const LoginMessage: React.FC<{
 /**
  * 此方法会跳转到 redirect 参数所在的位置
  */
-// const replaceGoto = () => {
-//   const urlParams = new URL(window.location.href);
-//   const params = getPageQuery();
-//   let { redirect } = params as { redirect: string };
-//   if (redirect) {
-//     const redirectUrlParams = new URL(redirect);
-//     if (redirectUrlParams.origin === urlParams.origin) {
-//       redirect = redirect.substr(urlParams.origin.length);
-//       if (redirect.match(/^\/.*#/)) {
-//         redirect = redirect.substr(redirect.indexOf('#') + 1);
-//       }
-//     } else {
-//       window.location.href = '/';
-//       return;
-//     }
-//   }
-//   history.replace(redirect || '/');
-// };
+const goto = () => {
+  if (!history) return;
+  setTimeout(() => {
+    const { query } = history.location;
+    const { redirect } = query as { redirect: string };
+    history.push(redirect || '/');
+  }, 10);
+};
 
-const Login: React.FC<{}> = () => {
+const Login: React.FC = () => {
   // @ts-ignore
   const [userLoginState, setUserLoginState] = useState<API.LoginStateType>({});
   const [submitting, setSubmitting] = useState(false);
@@ -61,13 +51,12 @@ const Login: React.FC<{}> = () => {
   const intl = useIntl();
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
-    console.log(userInfo, "userInfo")
+    console.log("登录页中的userInfo", userInfo)
     if (userInfo) {
-      // @ts-ignore
-      setInitialState((s) => ({
-        ...s,
+      setInitialState({
+        ...initialState,
         currentUser: userInfo,
-      }));
+      });
     }
   };
 
@@ -86,13 +75,8 @@ const Login: React.FC<{}> = () => {
         localStorage.setItem('uuid', msg.data.user.uuid);
         localStorage.setItem('username', msg.data.user.username);
         localStorage.setItem('nickname', msg.data.user.nickname);
-        await fetchUserInfo()
-
-        if (!history) return
-        const { query } = history.location;
-        const { redirect } = query as { redirect: string };
-        history.push(redirect || '/');
-        // replaceGoto();
+        await fetchUserInfo();
+        goto();
         return;
       }
       // 如果失败去设置用户错误信息
