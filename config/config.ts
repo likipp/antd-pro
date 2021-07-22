@@ -2,6 +2,7 @@
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
+import routes from './defaultRoutes'
 
 const { REACT_APP_ENV } = process.env;
 
@@ -17,11 +18,11 @@ export default defineConfig({
   },
   // Can't read property 'ModuleFederationPlugin' of undefined.
   webpack5: {},
-  layout: {
-    name: 'Ant Design Pro',
-    locale: false,
-    siderWidth: 208,
-  },
+  // layout: {
+  //   name: 'Ant Design Pro',
+  //   locale: false,
+  //   siderWidth: 208,
+  // },
   // layout: 'sidemenu',
   // contentWidth: 'Fluid',
   // fixedHeader: false,
@@ -109,20 +110,6 @@ export default defineConfig({
   //     ],
   //   },
   //   {
-  //     parent_id: '362166697114730497',
-  //     path: '/kpi',
-  //     name: '仪表盘',
-  //     icon: 'setting',
-  //     routes: [
-  //       {
-  //
-  //         path: '/kpi/dashboard',
-  //         name: 'KPI视图',
-  //         component: '@/pages/kpi/dashboard',
-  //       },
-  //     ],
-  //   },
-  //   {
   //     name: 'list.table-list',
   //     icon: 'table',
   //     path: '/list',
@@ -148,4 +135,32 @@ export default defineConfig({
   manifest: {
     basePath: '/',
   },
+  layout: {
+    // https://umijs.org/zh-CN/plugins/plugin-layout
+    locale: true,
+    siderWidth: 208,
+    ...defaultSettings,
+  },
+  // esbuild is father build tools
+  // https://umijs.org/plugins/plugin-esbuild
+  esbuild: {},
+  // Fast Refresh 热更新
+  fastRefresh: {},
+  routes,
+  // openAPI: [
+  //   {
+  //     requestLibPath: "import { request } from 'umi'",
+  //     // 或者使用在线的版本
+  //     // schemaPath: "https://gw.alipayobjects.com/os/antfincdn/M%24jrzTTYJN/oneapi.json"
+  //     // schemaPath: join(__dirname, 'oneapi.json'),
+  //     mock: false,
+  //   },
+  //   {
+  //     requestLibPath: "import { request } from 'umi'",
+  //     schemaPath: 'https://gw.alipayobjects.com/os/antfincdn/CA1dOm%2631B/openapi.json',
+  //     projectName: 'swagger',
+  //   },
+  // ],
+  nodeModulesTransform: { type: 'none' },
+  exportStatic: {},
 });

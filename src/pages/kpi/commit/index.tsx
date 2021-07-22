@@ -117,12 +117,7 @@ export default () => {
     <PageContainer title="输入表单">
       <Card>
         <div style={{ margin: '0px 0px 10px 80px', width: '50%' }}>
-          <Alert
-            message="温馨提示"
-            description="注意：录入及修改日期为每月1~15号.如果不在区间内,提交按钮不可用！"
-            type="info"
-            showIcon
-          />
+
         </div>
         <Form
           name="KPIInput"
@@ -195,6 +190,14 @@ export default () => {
               <Form.Item label="备注" name="comments">
                 <TextArea allowClear showCount maxLength={100} />
               </Form.Item>
+            </Col>
+            <Col span={8} offset={2}>
+              <Alert
+                message="温馨提示"
+                description="注意：录入及修改日期为每月1~15号.如果不在区间内,提交按钮不可用！"
+                type="info"
+                showIcon
+              />
             </Col>
           </Row>
           <Row>

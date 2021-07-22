@@ -73,8 +73,8 @@ const Login: React.FC = () => {
         message.success(defaultLoginSuccessMessage);
         localStorage.setItem('token', msg.data.token);
         localStorage.setItem('uuid', msg.data.user.uuid);
-        localStorage.setItem('username', msg.data.user.username);
-        localStorage.setItem('nickname', msg.data.user.nickname);
+        // localStorage.setItem('username', msg.data.user.username);
+        // localStorage.setItem('nickname', msg.data.user.nickname);
         await fetchUserInfo();
         goto();
         return;

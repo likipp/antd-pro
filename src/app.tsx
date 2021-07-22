@@ -40,7 +40,7 @@ export async function getInitialState(): Promise<{
   // 如果是登录页面，不执行
   if (history.location.pathname !== loginPath && history.location.pathname !== initPath) {
     const currentUser = await fetchUserInfo();
-    console.log(currentUser, "登录后的currentUser")
+    console.log(currentUser?.nickname, "登录后的currentUser", currentUser?.name)
     const name = currentUser?.nickname;
     // const avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
     const avatar = currentUser?.avatar

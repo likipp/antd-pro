@@ -29,31 +29,31 @@ export default [
       },
     ]
   },
-  {
-    path: '/kpibase',
-    name: 'KPI模块',
-    icon: 'dashboard',
-    routes: [
-      {
-        path: '/kpi/base',
-        icon: 'lineChart',
-        name: '基础数据',
-        component: '@/pages/kpi/base',
-      },
-      {
-        path: '/kpi/assign',
-        icon: 'lineChart',
-        name: '分配部门',
-        component: '@/pages/kpi/assign',
-      },
-      {
-        path: '/kpi/commit',
-        icon: 'lineChart',
-        name: 'KPI汇报',
-        component: '@/pages/kpi/commit',
-      },
-    ]
-  },
+  // {
+  //   path: '/kpibase',
+  //   name: 'KPI模块',
+  //   icon: 'dashboard',
+  //   routes: [
+  //     {
+  //       path: '/kpibase/base',
+  //       icon: 'lineChart',
+  //       name: '基础数据',
+  //       component: '@/pages/kpi/base',
+  //     },
+  //     {
+  //       path: '/kpibase/assign',
+  //       icon: 'lineChart',
+  //       name: '分配部门',
+  //       component: '@/pages/kpi/assign',
+  //     },
+  //     {
+  //       path: '/kpibase/commit',
+  //       icon: 'lineChart',
+  //       name: 'KPI汇报',
+  //       component: '@/pages/kpi/commit',
+  //     },
+  //   ]
+  // },
   {
       path: '/',
       redirect: '/welcome',
