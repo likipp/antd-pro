@@ -8,7 +8,8 @@ import {queryCurrent} from './services/user';
 import type {RunTimeLayoutConfig} from '@@/plugin-layout/layoutExports';
 import {getMenus} from '@/pages/base/user/service';
 import fixMenuStruct from '@/utils/fixMenuStruct';
-import routes from '../config/defaultRoutes';
+import {defaultRoutes} from '../config/defaultRoutes';
+import baseRoutes from '../config/baseRoutes';
 import RightContent from './components/RightContent';
 
 // const isDev = process.env.NODE_ENV === 'development';
@@ -21,8 +22,6 @@ export const initialStateConfig = {
 };
 
 export async function getInitialState(): Promise<{
-  name?: string;
-  avatar?: string;
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
@@ -30,7 +29,6 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     try {
       const res = await queryCurrent();
-      console.log(res, "app.tsx中的fetchUserInfo")
       return res
     } catch (error) {
       history.push(loginPath);
@@ -40,13 +38,7 @@ export async function getInitialState(): Promise<{
   // 如果是登录页面，不执行
   if (history.location.pathname !== loginPath && history.location.pathname !== initPath) {
     const currentUser = await fetchUserInfo();
-    console.log(currentUser?.nickname, "登录后的currentUser", currentUser?.name)
-    const name = currentUser?.nickname;
-    // const avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
-    const avatar = currentUser?.avatar
     return {
-      name,
-      avatar,
       fetchUserInfo,
       currentUser,
       settings: {},
@@ -59,10 +51,11 @@ export async function getInitialState(): Promise<{
 }
 
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
-  console.log("layout中的initialState", initialState)
   return {
     rightContentRender: () => <RightContent />,
-    // menuDataRender: () => [],
+    // menuDataRender: (menuData) => [
+    //   console.log(menuData)
+    // ],
     menuItemRender: (menuItemProps, defaultDom) => {
       if (
         menuItemProps.isUrl ||
@@ -80,6 +73,19 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         </Link>
       );
     },
+  //   itemRender: (route, params, routes, paths) => {
+  //   const first = routes.indexOf(route) === 0;
+  //   console.log(route, paths)
+  //   return first ? (
+  //     <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
+  //   ) : (
+  //     <span>{route.breadcrumbName}</span>
+  //   );
+  // },
+    // postMenuData: (menusData) => {
+    //   console.log(menusData, "menusData")
+    //   return menusData
+    // },
     menu: {
       // 取消菜单多国语言报错
       locale: false,
@@ -89,15 +95,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       },
       // params: initialState,
       request: async () => {
-        const haveToken = localStorage.getItem("token")
-        if (haveToken === null) {
-          return []
-        }
+        // const haveToken = localStorage.getItem("token")
+        // if (haveToken === null) {
+        //   return []
+        // }
         // initialState.currentUser 中包含了所有用户信息
         const menuData = await getMenus().then((res) => {
-          return [...routes, ...res.data];
+          return [...defaultRoutes, ...res.data, ...baseRoutes];
         });
         fixMenuStruct(menuData);
+        console.log(menuData)
         return menuData;
       },
     },
@@ -114,10 +121,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       // if (!initialState?.currentUser?.uuid && location.pathname !== loginPath) {
       //   history.push(loginPath);
       //
-      // initialState?.currentUser
+      // localStorage.getItem("token") === null
       // }
-      console.log(initialState?.currentUser?.uuid, "initialState?.currentUser?.uuid", initialState?.currentUser?.nickname)
-      if (localStorage.getItem("token") === null && location.pathname !== loginPath) {
+      if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
       }
     },
