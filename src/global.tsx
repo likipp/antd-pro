@@ -1,10 +1,9 @@
 import { Button, message, notification } from 'antd';
-
-import React from 'react';
 import { useIntl } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 
 const { pwa } = defaultSettings;
+const isHttps = document.location.protocol === 'https:';
 
 // if pwa is true
 if (pwa) {
@@ -56,10 +55,10 @@ if (pwa) {
       description: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
       btn,
       key,
-      onClose: async () => {},
+      onClose: async () => null,
     });
   });
-} else if ('serviceWorker' in navigator) {
+} else if ('serviceWorker' in navigator && isHttps) {
   // unregister service worker
   const { serviceWorker } = navigator;
   if (serviceWorker.getRegistrations) {
@@ -74,7 +73,7 @@ if (pwa) {
   });
 
   // remove all caches
-  if (window.caches && window.caches.keys) {
+  if (window.caches && window.caches.keys()) {
     caches.keys().then((keys) => {
       keys.forEach((key) => {
         caches.delete(key);

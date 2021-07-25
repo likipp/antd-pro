@@ -207,6 +207,7 @@ export default () => {
                 form_data.in_time = moment().format('YYYY-MM')
                 form_data.user = localStorage.getItem("uuid")
                 createKPIData(form_data).then((res) => {
+                  // @ts-ignore
                   if (res.success) {
                     message.success("数据添加成功")
                   }
