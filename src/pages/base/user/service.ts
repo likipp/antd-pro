@@ -1,5 +1,5 @@
 import { request } from 'umi';
-import {TableListParams, UserStatus, UserInfo, LoginParamsType} from './data';
+import type {TableListParams, UserStatus, UserInfo, LoginParamsType} from './data';
 
 export async function queryUser(params?: TableListParams) {
   // console.log(params, "这是一个params")

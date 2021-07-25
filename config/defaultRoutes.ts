@@ -4,32 +4,37 @@ export const defaultRoutes = [
     layout: false,
     routes: [
       {
-        name: 'login',
-        path: '/user/login',
-        component: './user/login',
+        path: '/user',
+        routes: [
+          {
+            name: 'login',
+            path: '/user/login',
+            component: './user/Login',
+          },
+        ],
       },
     ],
   },
-  {
-    path: '/welcome',
-    name: '欢迎',
-    icon: 'smile',
-    component: './Welcome',
-  },
-  {
-    path: '/dashboard',
-    name: '仪表盘',
-    icon: 'dashboard',
-    routes: [
-      {
-        path: '/dashboard/kpi',
-        icon: 'lineChart',
-        name: 'KPI视图',
-        // component: '@/pages/dashboard/kpi',
-        component: './dashboard/kpi',
-      },
-    ]
-  }
+  // {
+  //   path: '/welcome',
+  //   name: '欢迎',
+  //   icon: 'smile',
+  //   component: './Welcome',
+  // },
+  // {
+  //   path: '/dashboard',
+  //   name: '仪表盘',
+  //   icon: 'dashboard',
+  //   routes: [
+  //     {
+  //       path: '/dashboard/kpi',
+  //       icon: 'lineChart',
+  //       name: 'KPI视图',
+  //       // component: '@/pages/dashboard/kpi',
+  //       component: './dashboard/kpi',
+  //     },
+  //   ]
+  // }
 ]
 
 
