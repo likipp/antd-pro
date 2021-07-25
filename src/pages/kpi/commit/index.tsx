@@ -171,19 +171,16 @@ export default () => {
                 rules={[{ required: true, message: '请实际KPI值' }]}
               >
                 <InputNumber />
-                <Space style={{ marginBottom: '30px', alignItems: 'center', marginLeft: '100px'}}>
-                  <span>下限值:</span>
-                  <Tag color="#f5222d">{value?.l_limit}</Tag>
-                  <span>目标值:</span>
-                  <Tag color="#faad14">{value?.t_limit}</Tag>
-                  <span>上限值:</span>
-                  <Tag color="#52c41a">{value?.u_limit}</Tag>
-                </Space>
               </Form.Item>
             </Col>
-            <Col span={11} offset={1}>
-
-            </Col>
+            <Space style={{ marginBottom: '30px', alignItems: 'center', marginLeft: '100px'}}>
+              <span>下限值:</span>
+              <Tag color="#f5222d">{value?.l_limit}</Tag>
+              <span>目标值:</span>
+              <Tag color="#faad14">{value?.t_limit}</Tag>
+              <span>上限值:</span>
+              <Tag color="#52c41a">{value?.u_limit}</Tag>
+            </Space>
           </Row>
           <Row gutter={[16, 16]}>
             <Col span={12}>
@@ -192,12 +189,7 @@ export default () => {
               </Form.Item>
             </Col>
             <Col span={8} offset={2}>
-              <Alert
-                message="温馨提示"
-                description="注意：录入及修改日期为每月1~15号.如果不在区间内,提交按钮不可用！"
-                type="info"
-                showIcon
-              />
+              <Alert message="温馨提示：录入及修改日期为每月1~15号.如果不在区间内,提交按钮不可用！" type="info" />
             </Col>
           </Row>
           <Row>

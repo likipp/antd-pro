@@ -54,7 +54,7 @@ export default {
   'menu.base.deptManager': '部门管理',
   'menu.base.roleManager': '角色管理',
   'menu.dashboard': '仪表盘',
-  'menu.dashboard.kpiDashboard': 'KPI图表',
+  'menu.dashboard.kpi': 'KPI图表',
   'menu.kpi': 'KPI模块',
   'menu.kpi.base': '基础数据',
   'menu.kpi.assign': '分配部门',

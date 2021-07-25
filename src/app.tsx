@@ -6,10 +6,10 @@ import {history, Link} from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import {queryCurrent} from './services/ant-design-pro/api';
-import {getMenus} from '@/pages/base/user/service';
-import fixMenuStruct from '@/utils/fixMenuStruct';
-import {defaultRoutes} from '../config/defaultRoutes';
-import baseRoutes from '../config/baseRoutes';
+// import {getMenus} from '@/pages/base/user/service';
+// import fixMenuStruct from '@/utils/fixMenuStruct';
+// import {defaultRoutes} from '../config/defaultRoutes';
+// import baseRoutes from '../config/baseRoutes';
 // import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 
 // const isDev = process.env.NODE_ENV === 'development';

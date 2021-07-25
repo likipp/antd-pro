@@ -16,73 +16,73 @@
     ],
   },
   {
+    path: '/welcome',
+    name: 'welcome',
+    icon: 'smile',
+    component: './Welcome',
+  },
+  {
     path: '/dashboard',
-    name: '仪表盘',
+    name: 'dashboard',
     icon: 'dashboard',
     routes: [
       {
         path: '/dashboard/kpi',
         icon: 'lineChart',
-        name: 'KPI视图',
+        name: 'kpi',
         component: '@/pages/dashboard/kpi',
       },
     ]
   },
   {
   path: '/kpi',
-  name: 'KPI模块',
-  icon: 'dashboard',
+  name: 'kpi',
+  icon: 'safety',
   routes: [
     {
       path: '/kpi/base',
-      icon: 'lineChart',
-      name: '基础数据',
+      icon: 'file',
+      name: 'base',
       component: '@/pages/kpi/base',
     },
     {
       path: '/kpi/assign',
-      icon: 'lineChart',
-      name: '分配部门',
+      icon: 'antDesign',
+      name: 'assign',
       component: '@/pages/kpi/assign',
     },
     {
       path: '/kpi/commit',
-      icon: 'lineChart',
-      name: 'KPI汇报',
+      icon: 'form',
+      name: 'commit',
       component: '@/pages/kpi/commit',
     },
   ]
 },
   {
     path: '/base',
-    name: '基础资料',
-    icon: 'dashboard',
+    name: 'base',
+    icon: 'setting',
     routes: [
       {
         path: '/base/department',
-        icon: 'lineChart',
-        name: '部门',
+        icon: 'apartment',
+        name: 'deptManager',
         component: '@/pages/base/department',
       },
       {
         path: '/base/role',
-        icon: 'lineChart',
-        name: '角色',
+        icon: 'team',
+        name: 'roleManager',
         component: '@/pages/base/role',
       },
       {
         path: '/base/user',
-        icon: 'lineChart',
-        name: '用户',
+        icon: 'user',
+        name: 'userManager',
         component: '@/pages/base/user',
       },
     ]
-  },
-  {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
   },
   // {
   //   path: '/admin',
