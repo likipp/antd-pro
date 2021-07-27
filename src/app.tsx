@@ -6,6 +6,7 @@ import {history, Link} from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import {queryCurrent} from './services/ant-design-pro/api';
+import cookie from 'react-cookies'
 // import {getMenus} from '@/pages/base/user/service';
 // import fixMenuStruct from '@/utils/fixMenuStruct';
 // import {defaultRoutes} from '../config/defaultRoutes';

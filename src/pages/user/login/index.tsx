@@ -69,8 +69,10 @@ const Login: React.FC = () => {
         });
         message.success(defaultLoginSuccessMessage);
         // 要先存入token, 才可以去获取其它信息
-        localStorage.setItem('token', msg.data.token);
-        localStorage.setItem('uuid', msg.data.user.uuid);
+        // localStorage.setItem('token', msg.data.token);
+        // localStorage.setItem('uuid', msg.data.user.uuid);
+        // const user = sessionStorage.getItem('session')
+        // console.log(user, "session中的user信息")
         await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */
         // if (!history) return;
