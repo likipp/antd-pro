@@ -13,6 +13,8 @@ declare namespace API {
     name?: string
     uuid?: string;
     access?: 'user' | 'guest' | 'admin';
+    // isAdmin: boolean,
+    // hasRoutes: any[]
     // unreadCount?: number;
   }
 
