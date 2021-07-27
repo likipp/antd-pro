@@ -6,6 +6,7 @@ import {history, Link} from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import {queryCurrent} from './services/ant-design-pro/api';
+import { logout } from './services/user';
 // import {getMenus} from '@/pages/base/user/service';
 // import fixMenuStruct from '@/utils/fixMenuStruct';
 // import {defaultRoutes} from '../config/defaultRoutes';
@@ -188,10 +189,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
    // 自定义 403 页面
     unAccessible: <div>unAccessible</div>,
     logout: () => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('uuid');
-      message.success('退出登录成功,即将跳转到登录页');
-      history.push('/');
+      alert('退出登录成功');
+      console.log("点击退出按钮")
+      logout().then((res) => {
+        message.success('退出登录成功,即将跳转到登录页');
+        history.push('/');
+      })
     },
     ...initialState?.settings,
   };

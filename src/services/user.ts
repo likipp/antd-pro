@@ -11,3 +11,7 @@ export async function queryCurrent(options?: { [key: string]: any }) {
 export async function queryNotices(): Promise<any> {
   return request<{ data: API.NoticeIconData[] }>('/api/notices');
 }
+
+export async function logout() {
+  return request('/api/v1/base/logout', {method: 'POST'})
+}
