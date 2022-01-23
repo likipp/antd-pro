@@ -59,7 +59,7 @@ const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const ref = useRef<FormInstance>();
   const [,setDataSource] = useState<TableListItem[]>([]);
-  const [initPageInfo, setPageInfo] = useState<TableListParams>({pageSize: 5, current: 1})
+  const [initPageInfo, setPageInfo] = useState<TableListParams>({pageSize: 5, current: 1, page: 1})
 
   const menu = (
     <Menu>
@@ -139,6 +139,7 @@ const TableList: React.FC = () => {
 
   // @ts-ignore
   // @ts-ignore
+  // @ts-ignore
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '序号',
@@ -148,7 +149,7 @@ const TableList: React.FC = () => {
     },
     {
       title: '帐号',
-      dataIndex: 'username',
+      dataIndex: 'userName',
       formItemProps: {
         hasFeedback: true,
         rules: [
@@ -167,7 +168,7 @@ const TableList: React.FC = () => {
     },
     {
       title: '姓名',
-      dataIndex: 'nickname',
+      dataIndex: 'nickName',
       copyable: true,
       ellipsis: true,
       formItemProps: {
@@ -415,7 +416,7 @@ const TableList: React.FC = () => {
         });
       }
     } catch (error) {
-      message.error(error);
+      message.error(error as string);
     }
   };
 
@@ -532,13 +533,15 @@ const TableList: React.FC = () => {
         // request={(params, sorter, filter) => queryUser()}
         // 使用dataSource时， actionRef.current.reload()不能生效， 需要手动重新获取列表
         // request={(params, sorter, filter) => queryUser({ ...initPageInfo, sorter, filter })}
-        request={async (
-          params,
-          sorter,
-          filter,
-        ) => {
+        request={async (params) => {
+          const msg = await queryUser({page: 1, pageSize: 5})
+          return {
+            data: msg.data.list,
+            success: msg.code === 0,
+            total: msg.data.total
+          }
           // @ts-ignore
-          return Promise.resolve(queryUser({ ...initPageInfo, sorter, filter })).then((res) => res)
+          // return Promise.resolve(queryUser({ ...initPageInfo, sorter, filter })).then((res) => res)
         }}
         // dataSource={dataSource}
         onRow={(record) => {

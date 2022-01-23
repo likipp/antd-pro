@@ -50,6 +50,7 @@ export interface TableListParams {
   nickname?: string;
   pageSize?: number;
   current?: number;
+  page?: number;
   id?: number;
   members?: boolean;
   filter?: { [key: string]: any[] };

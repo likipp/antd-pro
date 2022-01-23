@@ -1,12 +1,9 @@
 import {
-  AlipayCircleOutlined,
   LockOutlined,
   MobileOutlined,
-  TaobaoCircleOutlined,
   UserOutlined,
-  WeiboCircleOutlined,
 } from '@ant-design/icons';
-import { Alert, Space, message, Tabs } from 'antd';
+import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, Link, FormattedMessage, SelectLang, useModel, history } from 'umi';
@@ -42,6 +39,7 @@ const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   // @ts-ignore
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const [result, setResult] = useState('')
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
 
@@ -62,15 +60,17 @@ const Login: React.FC = () => {
     try {
       // 登录
       const msg = await UserLogin({ ...values, type });
-      if (msg.success) {
+      console.log(msg.code)
+      setResult(msg.msg)
+      if (msg.code !== 7) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
         });
         message.success(defaultLoginSuccessMessage);
         // 要先存入token, 才可以去获取其它信息
-        // localStorage.setItem('token', msg.data.token);
-        // localStorage.setItem('uuid', msg.data.user.uuid);
+        localStorage.setItem('x-token', msg.data.token);
+        localStorage.setItem('x-user-id', msg.data.user.uuid);
         // const user = sessionStorage.getItem('session')
         // console.log(user, "session中的user信息")
         await fetchUserInfo();
@@ -83,11 +83,11 @@ const Login: React.FC = () => {
         return;
       }
       // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
+      setUserLoginState({success: false, ...msg});
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
-        defaultMessage: '登录失败，请重试！',
+        defaultMessage: result,
       });
 
       message.error(defaultLoginFailureMessage);
@@ -312,12 +312,12 @@ const Login: React.FC = () => {
               </a>
             </div>
           </ProForm>
-          <Space className={styles.other}>
-            <FormattedMessage id="pages.login.loginWith" defaultMessage="其他登录方式" />
-            <AlipayCircleOutlined className={styles.icon} />
-            <TaobaoCircleOutlined className={styles.icon} />
-            <WeiboCircleOutlined className={styles.icon} />
-          </Space>
+          {/*<Space className={styles.other}>*/}
+          {/*  <FormattedMessage id="pages.login.loginWith" defaultMessage="其他登录方式" />*/}
+          {/*  <AlipayCircleOutlined className={styles.icon} />*/}
+          {/*  <TaobaoCircleOutlined className={styles.icon} />*/}
+          {/*  <WeiboCircleOutlined className={styles.icon} />*/}
+          {/*</Space>*/}
         </div>
       </div>
       <Footer />

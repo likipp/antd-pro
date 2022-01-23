@@ -2,24 +2,36 @@ import { request } from 'umi';
 import type {TableListParams, UserStatus, UserInfo, LoginParamsType} from './data';
 
 export async function queryUser(params?: TableListParams) {
-  // console.log(params, "这是一个params")
-  if (params?.filter !== undefined) {
-    if (Object.keys(params.filter).length) {
-      if (params.filter.status !== null) {
-        return request('/api/v1/base/users', {
-          params: {
-            current: params.current,
-            pageSize: params.pageSize,
-            status: params.filter.status[0],
-          },
-        });
-      }
-    }
-    return request('/api/v1/base/users', {
-      params,
-    });
-  }
-  return request('/api/v1/base/users', { params });
+  return request('/api/user/getUserList', {
+    params,
+    method: 'POST',
+  });
+  // if (params?.filter !== undefined) {
+  //   if (Object.keys(params.filter).length) {
+  //     if (params.filter.status !== null) {
+  //       return request('/api/user/getUserList', {
+  //         method: 'POST',
+  //         params: {
+  //           page: 1,
+  //           pageSize: 6,
+  //         },
+  //       });
+  //     }
+  //   }
+  //   return request('/api/user/getUserList', {
+  //     method: 'POST',
+  //     params: {
+  //       page: 1,
+  //       pageSize: 5,
+  //     },
+  //   });
+  // }
+  // return request('/api/user/getUserList', { params: {
+  //     page: 1,
+  //     pageSize: 5,
+  //   },
+  //   method: 'POST',
+  // });
 }
 
 export async function queryUserByID(params: string) {

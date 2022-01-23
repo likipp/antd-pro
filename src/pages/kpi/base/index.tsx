@@ -1,18 +1,20 @@
 import React, { useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import {Badge, Button, message, Radio} from 'antd';
+import {Badge, Button, message, Switch} from 'antd';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import { getKPIList, updateKPI } from './service';
 import { PageContainer } from '@ant-design/pro-layout';
 import AllotStepsForm from '../components/kpiOwers';
 import type { KPIItem } from '../data';
+import CreateKPI from "@/pages/kpi/base/create";
 // import RadioList from "@/pages/kpi/components/radioList";
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
+  const [createModal, setCreateModal] = useState(false)
 
   // type KPIItem = {
   //   id: number;
@@ -34,7 +36,6 @@ const TableList: React.FC = () => {
   //   }
   // };
 
-  // @ts-ignore
   const columns: ProColumns<KPIItem>[] = [
     {
       dataIndex: 'id',
@@ -91,20 +92,16 @@ const TableList: React.FC = () => {
           },
         ],
       },
-      renderFormItem: (_, { type, defaultRender, formItemProps, fieldProps, ...rest }, form) => {
+      renderFormItem: (_, { type, defaultRender }) => {
         if (type === 'form') {
           return (
-            <Radio.Group>
-              <Radio value={1}>启用</Radio>
-              <Radio value={2}>禁用</Radio>
-            </Radio.Group>
+            <Switch checkedChildren="启用" unCheckedChildren="禁用" defaultChecked />
           );
         }
-        // return defaultRender(_);defaultRender
+        return defaultRender(_);
       },
-      // renderFormItem: () => <RadioList/>,
       render: (_, row) => {
-        if (row?.status === 1) {
+        if (row?.status) {
           return <Badge color="green" text="启用" />
         }
         return <Badge color="red" text="禁用" />
@@ -143,8 +140,14 @@ const TableList: React.FC = () => {
       <ProTable<KPIItem>
         columns={columns}
         actionRef={actionRef}
-        request={async (params = {}, sorter, filter) => {
-          return Promise.resolve(getKPIList({ sorter, filter })).then((res) => res)
+        request={async (params) => {
+          const msg = await getKPIList({ params })
+          return {
+            data: msg.data.list,
+            success: msg.code === 0,
+            total: msg.data.total
+          }
+          // return Promise.resolve(getKPIList({ params })).then((res) => res)
         }}
         editable={{
           type: 'single',
@@ -185,7 +188,7 @@ const TableList: React.FC = () => {
         dateFormatter="string"
         headerTitle="高级表格"
         toolBarRender={() => [
-          <Button key="button" icon={<PlusOutlined />} type="primary">
+          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => {setCreateModal(true)}}>
             新建
           </Button>
         ]}
@@ -193,6 +196,9 @@ const TableList: React.FC = () => {
       <AllotStepsForm
         onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}
       />
+      {
+        createModal ? <CreateKPI modalVisible={createModal} onCancel={setCreateModal}/> : null
+      }
     </PageContainer>)
 };
 

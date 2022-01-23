@@ -9,10 +9,10 @@ export interface LoginParamsType {
 }
 
 export async function fakeAccountLogin(params: LoginParamsType) {
-  return request<API.LoginStateType>('/api/v1/base/login', {
-    method: 'POST',
-    data: params,
-  });
+  // return request<API.LoginStateType>('/base/login', {
+  //   method: 'POST',
+  //   data: params,
+  // });
 }
 
 export async function getFakeCaptcha(mobile: string) {

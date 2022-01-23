@@ -12,7 +12,7 @@ export default {
       // target: 'https://preview.pro.ant.design',
       // changeOrigin: true,
       pathRewrite: { '^': '' },
-      target: 'http://127.0.0.1:8080',
+      target: 'http://127.0.0.1:8888',
       ws: false,
       changeOrigin: true
     },

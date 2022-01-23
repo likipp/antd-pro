@@ -94,7 +94,8 @@ export async function getInitialState(): Promise<{
 
 // 验证Header传递的token
 const authHeaderInterceptor = (url: string, options: any) => {
-  const authHeader = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+  // const authHeader = { Authorization: `Bearer ${localStorage.getItem('x-token')}` };
+  const authHeader = { "x-token": `${localStorage.getItem('x-token')}` };
   return {
     url: `${url}`,
     options: { ...options, interceptors: true, headers: authHeader },

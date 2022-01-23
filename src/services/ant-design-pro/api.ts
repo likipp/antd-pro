@@ -12,7 +12,7 @@ import { request } from 'umi';
 //   });
 // }
 export async function queryCurrent(options?: { [key: string]: any }) {
-  return request<API.CurrentUser>('/api/v1/base/currentUser', {method: 'GET', ...(options || {})})
+  return request<API.CurrentUser>('/api/user/getUserInfo', {method: 'GET', ...(options || {})})
 }
 
 /** 退出登录接口 POST /api/login/outLogin */
@@ -36,7 +36,7 @@ export async function outLogin(options?: { [key: string]: any }) {
 // }
 
 export async function UserLogin(params: API.LoginParams) {
-  return request<API.LoginResult>('/api/v1/base/login', {
+  return request<API.LoginResult>('/api/base/login', {
     method: 'POST',
     data: params,
   });
