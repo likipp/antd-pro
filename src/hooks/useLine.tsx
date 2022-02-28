@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { LineValues } from '@/pages/kpi/dashboard/data';
+import type { LineValues } from '@/pages/kpi/dashboard/data';
 import { CompareWithArray } from '@/utils/compare';
 
 export default function useLine(values: LineValues[]) {

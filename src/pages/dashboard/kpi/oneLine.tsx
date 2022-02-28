@@ -3,7 +3,7 @@ import { Line } from '@ant-design/charts';
 
 import { queryKPILine } from '@/pages/dashboard/kpi/service';
 import DashContext from '@/pages/dashboard/kpi/dashContext';
-import lineReducer from '@/reducers/lineReducer';
+import reducer from '@/reducers/lineReducer';
 import { CompareWithArray } from '@/utils/compare';
 import useLine from '@/hooks/useLine';
 
@@ -16,9 +16,10 @@ const OneLineChart: React.FC = () => {
   // const [lineMax, setLinMax] = useState(0);
   const [lineMin, lineMax] = useLine(data);
 
-  const initValues = { type: '', unit: '' };
-  const [values, dispatch] = useReducer(lineReducer, initValues);
+  const initValues = { type: '信息维护满意度', unit: '%' };
+  const [values, dispatch] = useReducer(reducer, initValues);
   useMemo(() => {
+    console.log(values, "values")
     const asyncFetch = () => {
       queryKPILine({ dept, kpi }).then((res) => {
         setData(res.data);
@@ -50,6 +51,9 @@ const OneLineChart: React.FC = () => {
         //   return value;
         // });
         dispatch({ type: 'change', payload: res.data[0] });
+        console.log(res.data[0], "线值")
+        console.log(values, "dispatch后")
+
       });
     };
     asyncFetch();

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext, useReducer } from 'react';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
+import type { ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { Tag, Space } from 'antd';
 
 import { queryKPIData } from '@/pages/dashboard/kpi/service';
-import { TableListItem } from '@/pages/dashboard/kpi/data';
+import type { TableListItem } from '@/pages/dashboard/kpi/data';
 import DashContext from '@/pages/dashboard/kpi/dashContext';
 import tableReducer from '@/reducers/tableReducer';
 
